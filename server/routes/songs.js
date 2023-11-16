@@ -1,29 +1,11 @@
 const song = require("../models/song");
 
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
 
-router.get("/getAll", async (req, res) => {
-  const options = {
-    // sort returned documents in ascending order
-    sort: { createdAt: 1 },
-    // Include only the following
-    // projection : {}
-  };
+const songsControllers = require("../controllers/songs-controllers");
 
-  const cursor = await song.find(options);
-  if (cursor) {
-    res.json({
-      songs: cursor.map((cursor) => {
-        const obj = cursor.toObject({ getters: true });
-
-        return obj;
-      }),
-      success: true,
-    });
-  } else {
-    res.status(200).send({ success: true, msg: "No Data Found" });
-  }
-});
+router.get("/GetAll", songsControllers.getAllSongs);
 
 router.get("/getOne/:getOne", async (req, res) => {
   const filter = { _id: req.params.getOne };
