@@ -10,7 +10,8 @@ router.get("/getAll", async (req, res) => {
     // projection : {}
   };
 
-  const cursor = await song.find(options);
+  const cursor = await song.find();
+
   if (cursor) {
     res.status(200).send({ data: cursor, success: true });
     console.log("cursor: ", cursor);
