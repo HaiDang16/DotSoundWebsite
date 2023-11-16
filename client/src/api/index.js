@@ -45,7 +45,7 @@ export const removeUser = async (userId) => {
 export const getAllSongs = async () => {
   try {
     const res = await axios.get(`${baseURL}api/songs/getAll`);
-    return res.data;
+    return res.data.data;
   } catch (error) {
     return null;
   }
