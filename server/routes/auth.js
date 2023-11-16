@@ -66,6 +66,7 @@ router.get("/getUser/:userId", async (req, res) => {
     return res.status(400).send({ success: false, msg: "Invalid User ID" });
   if (userExists.favourites) {
     res.status(200).send({ success: true, data: userExists });
+    console.log(userExists);
   } else {
     res.status(200).send({ success: false, data: null });
   }
