@@ -12,7 +12,8 @@ router.get("/getAll", async (req, res) => {
 
   const cursor = await song.find(options);
   if (cursor) {
-    res.status(200).send({ success: true, data: cursor });
+    res.status(200).send({ data: cursor });
+    console.log("cursor: ", cursor);
   } else {
     res.status(200).send({ success: true, msg: "No Data Found" });
   }
@@ -40,10 +41,13 @@ router.post("/save", async (req, res) => {
     language: req.body.language,
     category: req.body.category,
   });
+  console.log("Saving");
   try {
     const savedSong = await newSong.save();
     res.status(200).send({ song: savedSong });
+    console.log("Saved");
   } catch (error) {
+    console.log("Error: ", error);
     res.status(400).send({ success: false, msg: error });
   }
 });

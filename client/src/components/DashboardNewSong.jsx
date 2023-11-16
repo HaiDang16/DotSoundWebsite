@@ -223,27 +223,42 @@ const DashboardNewSong = () => {
         language: languageFilter,
         category: filterTerm,
       };
+      console.log("Bắt đầu lưu bài hát");
 
       saveNewSong(data).then((res) => {
-        getAllSongs().then((songs) => {
-          dispatch({ type: actionType.SET_ALL_SONGS, allSongs: songs.data });
-        });
+        if (data.status === 200) {
+          getAllSongs().then((songs) => {
+            dispatch({ type: actionType.SET_ALL_SONGS, allSongs: songs.data });
+          });
+          setSetAlert("success");
+          setAlertMsg("Data saved successfully");
+          setTimeout(() => {
+            setSetAlert(null);
+          }, 4000);
+          setIsImageLoading(false);
+          setIsAudioLoading(false);
+          setSongName("");
+          setSongImageUrl(null);
+          setAudioAsset(null);
+          dispatch({ type: actionType.SET_ARTIST_FILTER, artistFilter: null });
+          dispatch({
+            type: actionType.SET_LANGUAGE_FILTER,
+            languageFilter: null,
+          });
+          dispatch({ type: actionType.SET_ALBUM_FILTER, albumFilter: null });
+          dispatch({ type: actionType.SET_FILTER_TERM, filterTerm: null });
+          setDuration(null);
+        } else {
+          setSetAlert("error");
+          setAlertMsg("Lỗi tải lên bài hát");
+          setTimeout(() => {
+            setSetAlert(null);
+          }, 4000);
+          setIsImageLoading(false);
+          setIsAudioLoading(false);
+          setDuration(null);
+        }
       });
-      setSetAlert("success");
-      setAlertMsg("Data saved successfully");
-      setTimeout(() => {
-        setSetAlert(null);
-      }, 4000);
-      setIsImageLoading(false);
-      setIsAudioLoading(false);
-      setSongName("");
-      setSongImageUrl(null);
-      setAudioAsset(null);
-      dispatch({ type: actionType.SET_ARTIST_FILTER, artistFilter: null });
-      dispatch({ type: actionType.SET_LANGUAGE_FILTER, languageFilter: null });
-      dispatch({ type: actionType.SET_ALBUM_FILTER, albumFilter: null });
-      dispatch({ type: actionType.SET_FILTER_TERM, filterTerm: null });
-      setDuration(null);
     }
   };
 
