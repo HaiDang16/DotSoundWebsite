@@ -12,7 +12,7 @@ router.get("/getAll", async (req, res) => {
 
   const cursor = await song.find(options);
   if (cursor) {
-    res.status(200).send({ data: cursor });
+    res.status(200).send({ data: cursor, success: true });
     console.log("cursor: ", cursor);
   } else {
     res.status(200).send({ success: true, msg: "No Data Found" });
