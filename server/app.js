@@ -27,7 +27,7 @@ app.use("/api/songs/", songRoute);
 // mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true }, () => {
 //   console.log("Mongodb Connected");
 // });
-
+mongoose.set("strictQuery", false);
 mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true });
 mongoose.connection
   .once("open", () => console.log("Connected"))
