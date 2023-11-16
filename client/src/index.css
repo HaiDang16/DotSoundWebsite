@@ -1,0 +1,155 @@
+@import url(https://fonts.googleapis.com/css?family=Jost:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+@import url('https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap');
+body {
+  background: #f5f3f3;
+  margin: 0;
+  font-family: "Jost", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.fonts-leOne {
+  font-family: 'Leckerli One', cursive; 
+}
+.bg_website{
+  background-color: #394867;
+}
+.bg_website_02{
+  background-color: #212A3E;
+}
+.bg_website_03{
+  background-color: #464a52;
+}
+.bg_website_04{
+  background-color: #F1F6F9;
+}
+.rhap_container{
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.rhap_play-pause-button{
+  color: #ff0000 !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.rhap_play-pause-button:hover{
+  transform: scale(1.2);
+}
+
+.rhap_forward-button, .rhap_rewind-button, .rhap_skip-button, .rhap_volume-button, .rhap_repeat-button{
+  transition: all 0.3s ease-in-out;
+}
+
+.rhap_forward-button:hover, .rhap_rewind-button:hover, .rhap_skip-button:hover, .rhap_volume-button:hover, .rhap_repeat-button:hover{
+  transform: scale(1.2);
+  color : #555 !important;
+}
+
+.rhap_progress-filled{
+  background-color: #ff0000 !important;
+}
+
+.rhap_progress-indicator, .rhap_volume-indicator{
+  background: #b4b4b4  !important;
+}
+
+.rhap_progress-indicator:hover, .rhap_volume-indicator:hover{
+  transform: scale(1.2);
+}
+
+.rhap_download-progress, .rhap_volume-bar{
+  background-color: #ff000033 !important; 
+}
+.scroll-hidden::-webkit-scrollbar {
+  height: 3px; /* chiều cao thanh scroll */
+}
+
+.scroll-hidden::-webkit-scrollbar-track {
+  background: #212A3E; /* màu nền đường ray */
+}
+
+.scroll-hidden::-webkit-scrollbar-thumb {
+  background: #888; /* màu thanh scroll */
+  border-radius: 15px;
+}
+
+.scroll-hidden::-webkit-scrollbar-thumb:hover {
+  background: #555; /* màu khi hover */ 
+}
+
+.scroll-hidden {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
+}
+.background {
+  width: 100%;
+  background: linear-gradient(to right, rgba(35, 56, 223), rgba(33, 42, 62) 60%, rgba(140, 223, 254));
+}
+.z-1-3{
+  z-index: 0.3;
+}
+.z-2-3{
+  z-index: 0.6;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.card {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  gap: 20px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.055);
+}
+a{
+  text-decoration: none!important;
+}
+.socialContainer {
+  width: 52px;
+  height: 52px;
+  background: #0F2027;  /* fallback for old browsers */
+  background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition-duration: .3s;
+  border-radius: 15px;
+}
+.container:hover {
+  background-color: #464a52;
+  transition-duration: .3s;
+}
+.socialContainer:active {
+  transform: scale(0.9);
+  transition-duration: .3s;
+}
+.socialIcon {
+  color: white;
+}
+.socialContainer:hover .socialIcon {
+  animation: slide-in-top 0.3s both;
+}
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
