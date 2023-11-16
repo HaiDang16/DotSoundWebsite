@@ -5,16 +5,21 @@ const router = require("express").Router();
 router.get("/getAll", async (req, res) => {
   const options = {
     // sort returned documents in ascending order
-    //sort: { createdAt: 1 },
+    sort: { createdAt: 1 },
     // Include only the following
     // projection : {}
   };
 
-  const cursor = await song.find();
-
+  const cursor = await song.find(options);
   if (cursor) {
-    res.status(200).send({ data: cursor, success: true });
-    console.log("cursor: ", cursor);
+    res.json({
+      songs: cursor.map((cursor) => {
+        const obj = cursor.toObject({ getters: true });
+
+        return obj;
+      }),
+      success: true,
+    });
   } else {
     res.status(200).send({ success: true, msg: "No Data Found" });
   }
