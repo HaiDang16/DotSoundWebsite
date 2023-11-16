@@ -32,6 +32,7 @@ const DashBoardHome = () => {
           type: actionType.SET_ALL_USERS,
           allUsers: data.data,
         });
+        console.log("user: ", data);
       });
     }
 
