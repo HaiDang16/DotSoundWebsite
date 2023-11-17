@@ -1,11 +1,11 @@
-import AlertError from "../components/AlertError";
-import AlertSuccess from "../components/AlertSuccess";
+import AlertErrorBottom from "../components/AlertErrorBottom";
+import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import { BsApp, BsCheckSquare } from "react-icons/bs";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogoDotSounds } from "../assets/img";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 // Đăng nhập bằng google
 import { app } from "../config/firebase.config";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -21,8 +21,12 @@ const Login = () => {
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isAlert, setIsAlert] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -49,7 +53,6 @@ const Login = () => {
           auth: true,
         });
         window.localStorage.setItem("auth", "true");
-
         firebaseAuth.onAuthStateChanged((userCred) => {
           if (userCred) {
             userCred.getIdToken().then((token) => {
@@ -59,7 +62,6 @@ const Login = () => {
                   type: SET_USER,
                   user: data,
                 });
-                console.log("login Google data:", data);
                 window.localStorage.setItem("userData", JSON.stringify(data));
               });
             });
@@ -80,33 +82,49 @@ const Login = () => {
     });
   };
 
-  // Khúc này của Đăng nhập chay
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState({ email: "", password: "" });
-  const [accountValid, setAccoutValid] = useState("");
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setIsAlert(null);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setIsAlert(null);
+  };
+  const togglePasswordVisibility = () => {
+    setIsShowPassword(!isShowPassword);
+  };
 
   async function submit(e) {
     e.preventDefault();
 
-    if (!email || !password) {
-      // alert("Tên đăng nhập và mật khẩu không được để trống");
-      setError({
-        email: "Email không được để trống",
-        password: "Mật khẩu không được để trống",
-      });
+    if (!email) {
+      setIsAlert("error");
+      setAlertMessage("Vui lòng nhập email!");
+      return;
+    } else if (!emailRegex.test(email)) {
+      setIsAlert("error");
+      setAlertMessage("Email không hợp lệ. Vui lòng kiểm tra lại");
+      return;
+    } else if (!password) {
+      setIsAlert("error");
+      setAlertMessage("Vui lòng nhập mật khẩu!");
       return;
     }
-    const data = { email, password };
+    const dataReq = { email, password };
+    console.log("Login dataReq: ", dataReq);
     try {
-      loginAccount(data).then((data) => {
-        dispatch({
-          type: SET_USER,
-          user: data,
-        });
-        if (data.message === "Account exist") {
+      loginAccount(dataReq).then((res) => {
+        console.log("Login res: ", res);
+        if (res.data.message === "Account exist") {
+          dispatch({
+            type: SET_USER,
+            user: res,
+          });
           navigate("/");
-          console.log(data.user);
+          console.log(res.data.user);
           dispatch({
             type: SET_AUTH,
             auth: true,
@@ -114,11 +132,13 @@ const Login = () => {
           window.localStorage.setItem("auth", "true");
           dispatch({
             type: SET_USER,
-            user: data,
+            user: res,
           });
-          window.localStorage.setItem("userData", JSON.stringify(data));
-        } else if (data.message === "Invalid account") {
-          setAccoutValid("Email hoặc mật khẩu không đúng");
+          window.localStorage.setItem("userData", JSON.stringify(res.data));
+        } else if (res.data.message === "Invalid account") {
+          setIsAlert("error");
+          setAlertMessage("Email hoặc mật khẩu không đúng");
+          return;
         }
       });
     } catch (error) {
@@ -152,46 +172,33 @@ const Login = () => {
               type="email"
               placeholder="Địa chỉ email"
               name="email"
-              //  value={formData.email}
-              // onChange={handleInputChange}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError({ ...error, email: "" }); // Xóa thông báo lỗi khi người dùng thay đổi dữ liệu
-              }}
+              value={email}
+              onChange={handleEmailChange}
             />
           </div>
 
           <div className="mt-8">
-            <div className="my-3">
-              <label className="text-lg font-bold text-white">Mật khẩu:</label>
-            </div>
+            <label className="text-lg font-bold text-white">Mật khẩu:</label>
+          </div>
+          <div className="relative my-3">
             <input
               className="w-full px-4 py-3 border-b border-solid border-[#9BA4B5] focus:outline-none focus:border-blue-900 text[16px] 
-                    leading-7 placeholder:text-zinc-600  rounded-md cursor-text  bg-slate-200"
-              type={showPassword ? "text" : "password"}
+                    leading-7 placeholder:text-zinc-600 rounded-md cursor-text  bg-slate-200"
+              type={isShowPassword ? "text" : "password"}
               placeholder="Mật khẩu"
               name="password"
-              // value={formData.email}
-              // onChange={handleInputChange}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError({ ...error, password: "" }); // Xóa thông báo lỗi khi người dùng thay đổi dữ liệu
-              }}
+              value={password}
+              onChange={handlePasswordChange}
             />
-            <svg
-              onClick={() => setShowPassword(!showPassword)}
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5 text-gray-500"
-            ></svg>
+            <button
+              type="button"
+              className="absolute top-1/2 transform -translate-y-1/2 right-4"
+              onClick={togglePasswordVisibility}
+            >
+              {isShowPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
-          {accountValid && <AlertError msg={accountValid} />}
-          {/* {accountValid && (
-            <div className="mb-5 text-red-500 italic text-lg text-center w-full font-semibold">
-              {accountValid}
-            </div>
-          )} */}
+
           <div className="text-white mt-5 ml-4 flex items-center">
             {isBsApp ? (
               <BsApp onClick={handleIconClick} />
@@ -245,6 +252,15 @@ const Login = () => {
           </div>
         </form>
       </section>
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMessage} />
+          ) : (
+            <AlertErrorBottom msg={alertMessage} />
+          )}
+        </>
+      )}
     </div>
   );
 };

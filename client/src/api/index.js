@@ -119,7 +119,7 @@ export const deleteAlbumsById = async (id) => {
 
 export const loginAccount = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/users/Login`);
+    const res = axios.post(`${baseURL}api/users/Login`, data);
     return res;
   } catch (error) {
     return null;

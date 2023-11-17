@@ -97,7 +97,7 @@ const Register = async (req, res) => {
 
   if (userEmail) {
     // Đã tồn tại email
-    return res.status(200).json({ message: "Email exist" });
+    return res.status(200).json({ message: "Email đã tồn tại" });
   }
 
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
@@ -105,17 +105,7 @@ const Register = async (req, res) => {
 
   if (userPhone) {
     // Đã tồn tại email
-    return res.status(200).json({ message: "PhoneNum exist" });
-  }
-
-  // Định nghĩa biểu thức chính quy cho kiểm tra định dạng email
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-  if (!emailRegex.test(email)) {
-    // Nếu địa chỉ email không khớp với biểu thức chính quy
-    return res
-      .status(200)
-      .json({ message: "Email không hợp lệ. Vui lòng kiểm tra lại." });
+    return res.status(200).json({ message: "Số điện thoại đã tồn tại" });
   }
 
   try {
@@ -153,28 +143,19 @@ const Register = async (req, res) => {
 // Login
 const Login = async (req, res) => {
   const { email, password } = req.body;
-  // Kiểm tra xem email và mật khẩu có bị để trống
-  if (!email || !password) {
-    return res.status(200).json({ message: "Không được để trống" });
-  }
-
+  const dataReq = { email, password };
+  console.log("dataReq: ", dataReq);
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
-
-  const user = await User.findOne({ CusEmail: email, GoogleID: null });
-
+  const user = await User.findOne({ cusEmail: email, googleID: null });
   if (!user) {
-    // Nếu không tìm thấy tài khoản với email
     return res.status(200).json({ message: "Invalid account" });
   }
 
-  const isPasswordValid = await bcrypt.compare(password, user.CusPassword);
-
+  const isPasswordValid = await bcrypt.compare(password, user.cusPassword);
   if (!isPasswordValid) {
-    // Nếu mật khẩu không khớp
     return res.status(200).json({ message: "Invalid account" });
   }
 
-  // Nếu email và mật khẩu đúng
   res.status(200).json({ message: "Account exist", user: user });
 };
 

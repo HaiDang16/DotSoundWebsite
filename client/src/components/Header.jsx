@@ -66,12 +66,17 @@ const Header = () => {
           onMouseEnter={() => setIsMenu(true)}
           onMouseLeave={() => setIsMenu(false)}
         >
-          <img
-            className="w-12 min-w-[44px] object-cover rounded-full shadow-lg"
-            src={user?.user?.cusAvatar}
-            alt=""
-            referrerpolicy="no-referrer"
-          />
+          {user?.user.cusAvatar ? (
+            <img
+              className="w-12 min-w-[44px] object-cover rounded-full shadow-lg"
+              src={user?.user?.cusAvatar}
+              alt=""
+              referrerpolicy="no-referrer"
+            />
+          ) : (
+            <IoPersonSharp className="text-white w-8 h-8 min-w-[30px] object-cover rounded-full shadow-lg mr-3" />
+          )}
+
           <div className="flex flex-col">
             <p className="text-white text-lg hover:text-headingColor font-semibold">
               {`${user?.user.cusLastName} ${user?.user.cusFirstName}`}
