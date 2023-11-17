@@ -1,5 +1,4 @@
-
-export { default as Login } from "../pages/Login";
+export { default as Login } from "./LoginGoogle";
 export { default as ThinhHanh } from "./Trending";
 export { default as Filter } from "../pages/Filter";
 export { default as Release } from "../pages/Release";
