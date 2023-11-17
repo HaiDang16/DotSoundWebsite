@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const baseURL = "https://dotsounds.onrender.com/";
+const baseURL = "http://localhost:4000/";
 
 export const validateUser = async (token) => {
   try {
-    const res = await axios.get(`${baseURL}api/users/login`, {
+    const res = await axios.get(`${baseURL}api/users/Login`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
+    console.log("validateUser res: ", res);
     return res.data;
   } catch (error) {
     return null;
@@ -17,7 +18,7 @@ export const validateUser = async (token) => {
 
 export const getAllArtist = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/artists/getAll`);
+    const res = await axios.get(`${baseURL}api/artists/GetAllArtist`);
     return res.data;
   } catch (error) {
     return null;
@@ -26,7 +27,7 @@ export const getAllArtist = async () => {
 
 export const getAllUsers = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/users/getUsers`);
+    const res = await axios.get(`${baseURL}api/users/GetAllUsers`);
     return res.data;
   } catch (error) {
     return null;
@@ -44,8 +45,8 @@ export const removeUser = async (userId) => {
 
 export const getAllSongs = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/songs/getAll`);
-    console.log(res.data.data);
+    const res = await axios.get(`${baseURL}api/songs/GetAllSongs`);
+    console.log("getAllSongs: ", res.data);
     return res.data;
   } catch (error) {
     return null;
@@ -54,7 +55,7 @@ export const getAllSongs = async () => {
 
 export const getAllAlbums = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/albums/getAll`);
+    const res = await axios.get(`${baseURL}api/albums/GetAllAlbums`);
     return res.data;
   } catch (error) {
     return null;
@@ -72,28 +73,28 @@ export const changingUserRole = async (userId, role) => {
   }
 };
 
-export const saveNewArtist = async (data) => {
+export const createArtist = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/artists/save`, { ...data });
-    return (await res).data.artist;
+    const res = axios.post(`${baseURL}api/artists/CreateArtist`, { ...data });
+    return (await res);
   } catch (error) {
     return null;
   }
 };
 
-export const saveNewAlbum = async (data) => {
+export const createAlbum = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/albums/save`, { ...data });
-    return (await res).data.album;
+    const res = axios.post(`${baseURL}api/albums/CreateAlbum`, { ...data });
+    return (await res);
   } catch (error) {
     return null;
   }
 };
 
-export const saveNewSong = async (data) => {
+export const createSong = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/songs/save`, { ...data });
-    return (await res).data.song;
+    const res = axios.post(`${baseURL}api/songs/CreateSong`, { ...data });
+    return (await res);
   } catch (error) {
     return null;
   }
@@ -101,7 +102,7 @@ export const saveNewSong = async (data) => {
 
 export const deleteSongById = async (id) => {
   try {
-    const res = axios.delete(`${baseURL}api/songs/delete/${id}`);
+    const res = axios.delete(`${baseURL}api/songs/DeleteSong/${id}`);
     return res;
   } catch (error) {
     return null;
@@ -109,8 +110,53 @@ export const deleteSongById = async (id) => {
 };
 export const deleteAlbumsById = async (id) => {
   try {
-    const res = axios.delete(`${baseURL}api/albums/delete/${id}`);
+    const res = axios.delete(`${baseURL}api/albums/DeleteAlbum/${id}`);
     return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const loginAccount = async (data) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/Login`, data);
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const register = async (dataReq) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/Register`, { ...dataReq });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const checkAccountForgotPassword = async (dataReq) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/CheckAccountForgotPassword`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+export const resetPassword = async (dataReq) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/ResetPassword`, { ...dataReq });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+export const getAllCategories = async () => {
+  try {
+    const res = await axios.get(`${baseURL}api/categories/GetAllCategories`);
+    return res.data;
   } catch (error) {
     return null;
   }

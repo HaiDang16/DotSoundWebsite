@@ -6,8 +6,17 @@ import { getAllAlbums, getAllArtist, getAllSongs, getAllUsers } from "../api";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { bgColors } from "../utils/styles";
-
+import { useSelector, useDispatch } from "react-redux";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ALL_USERS,
+  SET_ARTISTS,
+  SET_ALL_ALBUMS,
+} from "../store/actions";
 export const DashboardCard = ({ icon, name, count }) => {
+  const dispatch = useDispatch();
+
   const bg_color = bgColors[parseInt(Math.random() * bgColors.length)];
 
   return (
@@ -22,14 +31,18 @@ export const DashboardCard = ({ icon, name, count }) => {
   );
 };
 
-const DashBoardHome = () => {
-  const [{ allUsers, allSongs, artists, allAlbums }, dispatch] =
-    useStateValue();
+const DashboardHome = () => {
+  const dispatch = useDispatch();
+  const allUsers = useSelector((state) => state.customization.allUsers);
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  const artists = useSelector((state) => state.customization.artists);
+  const allAlbums = useSelector((state) => state.customization.allAlbums);
   useEffect(() => {
     if (!allUsers) {
       getAllUsers().then((data) => {
+        console.log(data.data);
         dispatch({
-          type: actionType.SET_ALL_USERS,
+          type: SET_ALL_USERS,
           allUsers: data.data,
         });
         console.log("user: ", data);
@@ -39,21 +52,21 @@ const DashBoardHome = () => {
     if (!allSongs) {
       getAllSongs().then((data) => {
         dispatch({
-          type: actionType.SET_ALL_SONGS,
-          allSongs: data.data,
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
         });
       });
     }
 
     if (!artists) {
       getAllArtist().then((data) => {
-        dispatch({ type: actionType.SET_ARTISTS, artists: data.data });
+        dispatch({ type: SET_ARTISTS, artists: data.data });
       });
     }
 
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        dispatch({ type: actionType.SET_ALL_ALBUMNS, allAlbums: data.data });
+        dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.data });
       });
     }
   }, []);
@@ -74,4 +87,4 @@ const DashBoardHome = () => {
   );
 };
 
-export default DashBoardHome;
+export default DashboardHome;

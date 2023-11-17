@@ -1,26 +1,23 @@
 const mongoose = require("mongoose");
-
 const artistSchema = mongoose.Schema(
   {
-    name: {
+    artistName: {
       type: String,
       required: true,
     },
-
-    imageURL: {
+    artistImageURL: {
       type: String,
       required: true,
     },
-    twitter: {
+    artistTwitter: {
       type: String,
-      required: true,
+      required: false,
     },
-    instagram: {
+    artistInstagram: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
 );
-
 module.exports = mongoose.model("artist", artistSchema);

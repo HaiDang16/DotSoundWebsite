@@ -6,22 +6,24 @@ import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
-import AlertSuccess from "./AlertSuccess";
-import AlertError from "./AlertError";
-
+import AlertSuccess from "../components/AlertSuccess";
+import AlertError from "../components/AlertError";
+import { useSelector, useDispatch } from "react-redux";
+import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
 const DashboardSongs = () => {
+  const dispatch = useDispatch();
+  const allSongs = useSelector((state) => state.customization.allSongs);
   const [songFilter, setSongFilter] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   const [filteredSongs, setFilteredSongs] = useState(null);
 
-  const [{ allSongs }, dispatch] = useStateValue();
-
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
+        console.log(" data.songs: ", data.songs);
         dispatch({
-          type: actionType.SET_ALL_SONGS,
-          allSongs: data.data,
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
         });
       });
     }
@@ -29,11 +31,8 @@ const DashboardSongs = () => {
 
   useEffect(() => {
     if (songFilter.length > 0) {
-      const filtered = allSongs.filter(
-        (data) =>
-          data.artist.toLowerCase().includes(songFilter) ||
-          data.language.toLowerCase().includes(songFilter) ||
-          data.name.toLowerCase().includes(songFilter)
+      const filtered = allSongs.filter((data) =>
+        data.songName.toLowerCase().includes(songFilter)
       );
       setFilteredSongs(filtered);
     } else {
@@ -45,7 +44,7 @@ const DashboardSongs = () => {
     <div className="w-full p-4 flex items-center justify-center flex-col">
       <div className="w-full flex justify-center items-center gap-24">
         <NavLink
-          to={"/dashboard/newSong"}
+          to={"/Admin/ManageSongs/Add"}
           className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
         >
           <IoAdd />
@@ -105,22 +104,27 @@ export const SongContainer = ({ data }) => {
 };
 
 export const SongCard = ({ data, index }) => {
+  const dispatch = useDispatch();
   const [isDeleted, setIsDeleted] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState(null);
 
-  const [{ allSongs, song, isSongPlaying }, dispatch] = useStateValue();
+  const song = useSelector((state) => state.customization.song);
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  const isSongPlaying = useSelector(
+    (state) => state.customization.isSongPlaying
+  );
 
   const addSongToContext = () => {
     if (!isSongPlaying) {
       dispatch({
-        type: actionType.SET_SONG_PLAYING,
+        type: SET_SONG_PLAYING,
         isSongPlaying: true,
       });
     }
     if (song !== index) {
       dispatch({
-        type: actionType.SET_SONG,
+        type: SET_SONG,
         song: index,
       });
     }
@@ -191,15 +195,19 @@ export const SongCard = ({ data, index }) => {
       <div className="w-40 min-w-[160px] h-40 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
         <motion.img
           whileHover={{ scale: 1.05 }}
-          src={data.imageURL}
+          src={data.songImageURL}
           alt=""
           className=" w-full h-full rounded-lg object-cover"
         />
       </div>
 
       <p className="text-base text-white font-semibold my-2">
-        {data.name.length > 25 ? `${data.name.slice(0, 25)}` : data.name}
-        <span className="block text-sm text-gray-400 my-1">{data.artist}</span>
+        {data.songName.length > 25
+          ? `${data.songName.slice(0, 25)}`
+          : data.songName}
+        <span className="block text-sm text-gray-400 my-1">
+          {data.songArtist.songArtistName}
+        </span>
       </p>
 
       <motion.i whileTap={{ scale: 0.75 }} onClick={() => setIsDeleted(true)}>

@@ -3,23 +3,25 @@ const bodyParser = require("body-parser");
 
 require("dotenv/config");
 const cors = require("cors");
+
 const { default: mongoose } = require("mongoose");
 const HttpError = require("./models/http-error");
 
-const userRoute = require("./routes/auth");
+const usersRoutes = require("./routes/users-routes");
 const artistsRoute = require("./routes/artists");
 const albumRoute = require("./routes/albums");
 const songRoute = require("./routes/songs");
+const categoriesRoutes = require("./routes/categories-routes");
+const artistsRoutes = require("./routes/artists-routes");
+const albumsRoutes = require("./routes/albums-routes");
+const songsRoutes = require("./routes/songs-routes");
 
 const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({ origin: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -28,19 +30,21 @@ app.get("/", (req, res) => {
 
 // user authentication routes
 
-app.use("/api/users/", userRoute);
+app.use("/api/users", usersRoutes);
 
 // Artist links
 
-app.use("/api/artists/", artistsRoute);
+app.use("/api/artists/", artistsRoutes);
 
 // Album links
 
-app.use("/api/albums/", albumRoute);
+app.use("/api/albums/", albumsRoutes);
 
 // Songs links
 
-app.use("/api/songs/", songRoute);
+app.use("/api/songs/", songsRoutes);
+
+app.use("/api/categories/", categoriesRoutes);
 
 // If any depreciation warning add depreciation options
 // mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true }, () => {

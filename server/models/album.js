@@ -2,14 +2,24 @@ const mongoose = require("mongoose");
 
 const albumSchema = mongoose.Schema(
   {
-    name: {
+    albumName: {
       type: String,
       required: true,
     },
-
-    imageURL: {
+    albumImageURL: {
       type: String,
       required: true,
+    },
+    albumArtist: {
+      albumArtistID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "artist",
+        required: true,
+      },
+      albumArtistName: {
+        type: String,
+        required: true,
+      },
     },
   },
   { timestamps: true }

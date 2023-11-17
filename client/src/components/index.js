@@ -1,23 +1,20 @@
-export { default as Login } from "./Login";
-export { default as ThinhHanh } from "./ThinhHanh";
 export { default as Header } from "./Header";
 export { default as Loader } from "./Loader";
 export { default as SearchBar } from "./SearchBar";
-export { default as Filter } from "./Filter";
-export { default as Release } from "./Release";
-export { default as FilterButtons } from "./FilterButtons";
-export { default as UserProfile } from "./UserProfile";
-
-export { default as Dashboard } from "./Dashboard";
-export { default as DashboardHome } from "./DashboardHome";
-export { default as DashboardAlbum } from "./DashboardAlbum";
-export { default as DashboardArtist } from "./DashboardArtist";
-export { default as DashboardSongs } from "./DashboardSongs";
-export { default as DashboardUser } from "./DashboardUser";
-export { default as DashboardUserCard } from "./DashboardUserCard";
-export { default as DashboardNewSong } from "./DashboardNewSong";
-
 export { default as AlertSuccess } from "./AlertSuccess";
 export { default as AlertError } from "./AlertError";
-
-export { default as MusicPlayer } from "./MusicPlayer";
+export { default as MusicPlayer } from "../components/MusicPlayer";
+export { default as Footer } from "./Footer";
+export { default as PlaylistCard } from "./PlaylistCard";
+export { default as NewReleaseSongsCard } from "./Trending_NewReleaseSongsCard";
+export { default as DiscoverySongsCard } from "./Trending_DiscoverySongsCard";
+export { default as Top10SongsCard } from "./Trending_Top10SongsCard";
+export { default as CategorySongsCard } from "./Trending_CategorySongsCard";
+export { default as HeaderAdmin } from "./HeaderAdmin";
+export { default as FilterButtons } from "../components/FilterButtons";
+export { default as FilterButtonsCategory } from "./FilterButtonsCategory";
+export { default as ImageLoader } from "./ImageLoader";
+export { default as ImageUploader } from "./ImageUploader";
+export { default as DisabledButton } from "./DisabledButton";
+export { default as FilterButtonsArtist } from "./FilterButtonsArtist";
+export { default as FilterButtonsAlbum } from "./FilterButtonsAlbum";

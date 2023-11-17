@@ -7,7 +7,7 @@ export const actionType = {
   SET_LANGUAGE_FILTER: "SET_LANGUAGE_FILTER",
   SET_ALL_USERS: "SET_ALL_USERS",
   SET_ALL_SONGS: "SET_ALL_SONGS",
-  SET_ALL_ALBUMNS: "SET_ALL_ALBUMNS",
+  SET_ALL_ALBUMS: "SET_ALL_ALBUMS",
   SET_ALBUM_FILTER: "SET_ALBUM_FILTER",
   SET_SONG: "SET_SONG",
   SET_SONG_PLAYING: "SET_SONG_PLAYING",
@@ -66,7 +66,7 @@ const reducer = (state, action) => {
         allSongs: action.allSongs,
       };
 
-    case actionType.SET_ALL_ALBUMNS:
+    case actionType.SET_ALL_ALBUMS:
       return {
         ...state,
         allAlbums: action.allAlbums,

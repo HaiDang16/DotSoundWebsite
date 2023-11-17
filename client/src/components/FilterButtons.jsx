@@ -4,30 +4,42 @@ import { IoChevronDown } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ARTIST_FILTER,
+  SET_LANGUAGE_FILTER,
+  SET_ALBUM_FILTER,
+  SET_FILTER_TERM,
+  SET_CATEGORY_FILTER,
+} from "../store/actions";
 
 const FilterButtons = ({ filterData, flag }) => {
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
-
-  const [{ artistFilter, albumFilter, filterTerm }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+  const artistFilter = useSelector((state) => state.customization.artistFilter);
+  const albumFilter = useSelector((state) => state.customization.albumFilter);
+  const filterTerm = useSelector((state) => state.customization.filterTerm);
 
   const updateFilterButton = (name) => {
     setFilterName(name);
     setFilterMenu(false);
 
     if (flag === "Artist") {
-      dispatch({ type: actionType.SET_ARTIST_FILTER, artistFilter: name });
+      dispatch({ type: SET_ARTIST_FILTER, artistFilter: name });
     }
     if (flag === "Language") {
-      dispatch({ type: actionType.SET_LANGUAGE_FILTER, languageFilter: name });
+      dispatch({ type: SET_LANGUAGE_FILTER, languageFilter: name });
     }
 
     if (flag === "Albums") {
-      dispatch({ type: actionType.SET_ALBUM_FILTER, albumFilter: name });
+      dispatch({ type: SET_ALBUM_FILTER, albumFilter: name });
     }
 
     if (flag === "Category") {
-      dispatch({ type: actionType.SET_FILTER_TERM, filterTerm: name });
+      dispatch({ type: SET_CATEGORY_FILTER, categoryFilter: name });
     }
   };
 

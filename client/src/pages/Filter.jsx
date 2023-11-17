@@ -3,13 +3,17 @@ import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { getAllAlbums, getAllArtist } from "../api";
 import { filterByLanguage, filters } from "../utils/supportfunctions";
-import FilterButtons from "./FilterButtons";
+import FilterButtons from "../components/FilterButtons";
 import { MdClearAll } from "react-icons/md";
 import { motion } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
 
 const Filter = ({ setFilteredSongs }) => {
-  const [{ filterTerm, filterLang, artists, allAlbums }, dispatch] =
-    useStateValue();
+  const dispatch = useDispatch();
+  const filterTerm = useSelector((state) => state.customization.filterTerm);
+  const filterLang = useSelector((state) => state.customization.filterLang);
+  const artists = useSelector((state) => state.customization.artists);
+  const allAlbums = useSelector((state) => state.customization.allAlbums);
 
   useEffect(() => {
     if (!artists) {
@@ -20,7 +24,7 @@ const Filter = ({ setFilteredSongs }) => {
 
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        dispatch({ type: actionType.SET_ALL_ALBUMNS, allAlbums: data.data });
+        dispatch({ type: actionType.SET_ALL_ALBUMS, allAlbums: data.data });
       });
     }
   }, []);
@@ -46,25 +50,7 @@ const Filter = ({ setFilteredSongs }) => {
   };
   return (
     <div className="w-full my-4 px-6 py-4 flex items-start md:justify-start gap-10">
-      {/* <FilterButtons filterData={artists} flag={"Artist"} />
 
-      <div className=" flex items-center gap-6 mx-4">
-        {filters?.map((data) => (
-          <p
-            key={data.id}
-            onClick={() => updateFilter(data.value)}
-            className={`text-base ${
-              data.value === filterTerm ? "font-semibold" : "font-normal"
-            } text-white cursor-pointer hover:font-semibold transition-all duration-100 ease-in-out`}
-          >
-            {data.name}
-          </p>
-        ))}
-      </div>
-
-      <FilterButtons filterData={allAlbums} flag={"Albums"} /> */}
-
-      {/* <FilterButtons filterData={filterByLanguage} flag={"Language"} /> */}
 
       <div
         initial={{ opacity: 0 }}
