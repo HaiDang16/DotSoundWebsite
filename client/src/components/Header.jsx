@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Logo } from "../assets/img";
 import { useStateValue } from "../context/StateProvider";
+import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "./SearchBar";
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
 import { getAuth } from "firebase/auth";
@@ -12,7 +13,8 @@ import { FaCrown } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [{ user }, dispatch] = useStateValue();
+
+  const user = useSelector((state) => state.customization.user);
 
   const [isMenu, setIsMenu] = useState(false);
   const [isSearched, setIisSearched] = useState(false);

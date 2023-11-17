@@ -25,8 +25,8 @@ import {
 import { actionType } from "../context/reducer";
 import { filterByLanguage, filters } from "../utils/supportfunctions";
 import { IoMusicalNote } from "react-icons/io5";
-import AlertSuccess from "./AlertSuccess";
-import AlertError from "./AlertError";
+import AlertSuccess from "../components/AlertSuccess";
+import AlertError from "../components/AlertError";
 
 export const ImageLoader = ({ progress }) => {
   return (

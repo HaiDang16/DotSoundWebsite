@@ -6,10 +6,14 @@ import { filterByLanguage, filters } from "../utils/supportfunctions";
 import FilterButtons from "./FilterButtons";
 import { MdClearAll } from "react-icons/md";
 import { motion } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
 
 const Filter = ({ setFilteredSongs }) => {
-  const [{ filterTerm, filterLang, artists, allAlbums }, dispatch] =
-    useStateValue();
+  const dispatch = useDispatch();
+  const filterTerm = useSelector((state) => state.customization.filterTerm);
+  const filterLang = useSelector((state) => state.customization.filterLang);
+  const artists = useSelector((state) => state.customization.artists);
+  const allAlbums = useSelector((state) => state.customization.allAlbums);
 
   useEffect(() => {
     if (!artists) {

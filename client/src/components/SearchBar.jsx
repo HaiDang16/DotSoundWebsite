@@ -2,10 +2,11 @@ import React from "react";
 import { IoSearch } from "react-icons/io5";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
+import { useSelector, useDispatch } from "react-redux";
 
 const SearchBar = () => {
-  const [{ searchTerm }, dispatch] = useStateValue();
-
+  const dispatch = useDispatch();
+  const searchTerm = useSelector((state) => state.customization.searchTerm);
   const setSearchTerm = (value) => {
     dispatch({
       type: actionType.SET_SEARCH_TERM,

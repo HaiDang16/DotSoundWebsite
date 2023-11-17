@@ -6,8 +6,8 @@ import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
-import AlertSuccess from "./AlertSuccess";
-import AlertError from "./AlertError";
+import AlertSuccess from "../components/AlertSuccess";
+import AlertError from "../components/AlertError";
 
 const DashboardSongs = () => {
   const [songFilter, setSongFilter] = useState("");

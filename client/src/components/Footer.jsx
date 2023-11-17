@@ -12,7 +12,7 @@ import { LogoDotSounds, doiTac1, doiTac2 } from "../assets/img";
 
 const Footer = () => {
   return (
-    <div className="w-full h-auto md:px-16 z-10">
+    <div className="w-full h-auto md:px-16 z-10 bg_website_02">
       <hr />
 
       <div className="w-full text-center font-semibold text-2xl m-2 p-4 text-white uppercase">

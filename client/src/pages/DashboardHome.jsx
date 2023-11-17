@@ -7,7 +7,7 @@ import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { bgColors } from "../utils/styles";
 
-export const DashboardCard = ({ icon, name, count }) => {
+export const DashboardCard  = ({ icon, name, count }) => {
   const bg_color = bgColors[parseInt(Math.random() * bgColors.length)];
 
   return (
@@ -22,7 +22,7 @@ export const DashboardCard = ({ icon, name, count }) => {
   );
 };
 
-const DashBoardHome = () => {
+const DashboardHome = () => {
   const [{ allUsers, allSongs, artists, allAlbums }, dispatch] =
     useStateValue();
   useEffect(() => {
@@ -74,4 +74,4 @@ const DashBoardHome = () => {
   );
 };
 
-export default DashBoardHome;
+export default DashboardHome;
