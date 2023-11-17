@@ -16,6 +16,7 @@ export const initialState = {
   song: 0,
   isSongPlaying: false,
   miniPlayer: false,
+  allArtists: null,
 };
 
 // ==============================|| CUSTOMIZATION REDUCER ||============================== //
@@ -112,6 +113,11 @@ const customizationReducer = (state = initialState, action) => {
       return {
         ...state,
         categoryFilter: action.categoryFilter,
+      };
+    case actionTypes.SET_ALL_ARTISTS:
+      return {
+        ...state,
+        allArtists: action.allArtists,
       };
 
     default:

@@ -13,3 +13,6 @@ export { default as CategorySongsCard } from "./Trending_CategorySongsCard";
 export { default as HeaderAdmin } from "./HeaderAdmin";
 export { default as FilterButtons } from "../components/FilterButtons";
 export { default as FilterButtonsCategory } from "./FilterButtonsCategory";
+export { default as ImageLoader } from "./ImageLoader";
+export { default as ImageUploader } from "./ImageUploader";
+export { default as DisabledButton } from "./DisabledButton";

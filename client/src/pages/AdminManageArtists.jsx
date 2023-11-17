@@ -8,7 +8,12 @@ import { MdDelete } from "react-icons/md";
 import { getAllArtist } from "../api";
 import { actionType } from "../context/reducer";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_ALL_SONGS, SET_SONG_PLAYING } from "../store/actions";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ARTISTS,
+  SET_ALL_ARTISTS,
+} from "../store/actions";
 import { AiOutlineClear } from "react-icons/ai";
 import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
@@ -16,18 +21,30 @@ import AlertSuccess from "../components/AlertSuccess";
 import AlertError from "../components/AlertError";
 const DashboardArtist = () => {
   const dispatch = useDispatch();
-  const artists = useSelector((state) => state.customization.artists);
+  const allArtists = useSelector((state) => state.customization.allArtists);
   const [isFocus, setIsFocus] = useState(false);
-  const [songFilter, setSongFilter] = useState("");
-  const [filteredSongs, setFilteredSongs] = useState(null);
+  const [artistFilter, setArtistFilter] = useState("");
+  const [filteredArtists, setFilteredArtists] = useState(null);
 
   useEffect(() => {
-    if (!artists) {
+    if (!allArtists) {
       getAllArtist().then((data) => {
-        dispatch({ type: actionType.SET_ARTISTS, artists: data.data });
+        console.log("getAllArtist res: ", data.data);
+        dispatch({ type: SET_ALL_ARTISTS, allArtists: data.data });
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (artistFilter.length > 0) {
+      const filtered = allArtists.filter((data) =>
+        data.artistName.toLowerCase().includes(artistFilter)
+      );
+      setFilteredArtists(filtered);
+    } else {
+      setFilteredArtists(null);
+    }
+  }, [artistFilter]);
 
   return (
     <div className="w-full p-4 flex items-center justify-center flex-col">
@@ -40,45 +57,63 @@ const DashboardArtist = () => {
         </NavLink>
         <input
           type="text"
-          placeholder="Search here"
-          className={`w-52 px-4 py-2 border ${
+          placeholder="Tìm kiếm theo tên nghệ sĩ"
+          className={` w-64 px-4 py-2 border ${
             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
-          } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-textColor font-semibold`}
-          value={songFilter}
-          onChange={(e) => setSongFilter(e.target.value)}
+          } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-white font-semibold`}
+          value={artistFilter}
+          onChange={(e) => setArtistFilter(e.target.value)}
           onBlur={() => setIsFocus(false)}
           onFocus={() => setIsFocus(true)}
         />
 
-        {songFilter && (
+        {artistFilter && (
           <motion.i
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileTap={{ scale: 0.75 }}
             onClick={() => {
-              setSongFilter("");
-              setFilteredSongs(null);
+              setArtistFilter("");
+              setFilteredArtists(null);
             }}
           >
             <AiOutlineClear className="text-3xl text-white cursor-pointer" />
           </motion.i>
         )}
       </div>
-
-      <div className="relative w-full gap-3  my-4 p-4 py-12 border border-gray-300 rounded-md flex flex-wrap justify-evenly">
-        {artists &&
-          artists.map((data, index) => (
-            <>
-              <ArtistCard key={index} data={data} index={index} />
-            </>
-          ))}
+      <div className="relative w-full  my-4 p-4 py-12 border border-gray-300">
+        <div className="absolute top-4 left-4">
+          <p className="text-xl font-bold text-white">
+            <span className="text-sm font-semibold text-white">
+              Tổng nghệ sĩ:{" "}
+            </span>
+            {filteredArtists ? filteredArtists?.length : allArtists?.length}
+          </p>
+        </div>
+        {console.log("allArtists: ", allArtists)}
+        {allArtists && (
+          <AritstContainer
+            data={filteredArtists ? filteredArtists : allArtists}
+          />
+        )}
       </div>
+    </div>
+  );
+};
+
+export const AritstContainer = ({ data }) => {
+  return (
+    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly">
+      {data.map((data, index) => (
+        <ArtistCard key={index} data={data} index={index} />
+      ))}
     </div>
   );
 };
 
 export const ArtistCard = ({ data, index }) => {
   const [isDelete, setIsDelete] = useState(false);
+  console.log("ArtistCard data: ", data);
   return (
     <motion.div
       initial={{ opacity: 0, translateX: -50 }}
@@ -87,19 +122,19 @@ export const ArtistCard = ({ data, index }) => {
       className="relative w-44 min-w-180 px-2 py-4 gap-3 cursor-pointer hover:shadow-xl hover:bg-card bg-gray-100 shadow-md rounded-lg flex flex-col items-center"
     >
       <img
-        src={data?.imageURL}
+        src={data?.artistImageURL}
         className="w-full h-40 object-cover rounded-md"
         alt=""
       />
 
-      <p className="text-base text-textColor">{data.name}</p>
+      <p className="text-base text-textColor">{data.artistName}</p>
       <div className="flex items-center gap-4">
-        <a href={data.instagram} target="_blank">
+        <a href={data.artistInstagram} target="_blank">
           <motion.i whileTap={{ scale: 0.75 }}>
             <IoLogoInstagram className="text-gray-500 hover:text-headingColor text-xl" />
           </motion.i>
         </a>
-        <a href={data.twitter} target="_blank">
+        <a href={data.artistTwitter} target="_blank">
           <motion.i whileTap={{ scale: 0.75 }}>
             <IoLogoTwitter className="text-gray-500 hover:text-headingColor text-xl" />
           </motion.i>

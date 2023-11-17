@@ -18,7 +18,7 @@ export const validateUser = async (token) => {
 
 export const getAllArtist = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/artists/getAll`);
+    const res = await axios.get(`${baseURL}api/artists/GetAllArtist`);
     return res.data;
   } catch (error) {
     return null;
@@ -73,9 +73,9 @@ export const changingUserRole = async (userId, role) => {
   }
 };
 
-export const saveNewArtist = async (data) => {
+export const createArtist = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/artists/save`, { ...data });
+    const res = axios.post(`${baseURL}api/artists/CreateArtist`, { ...data });
     return (await res).data.artist;
   } catch (error) {
     return null;

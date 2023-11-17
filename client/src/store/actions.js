@@ -16,3 +16,4 @@ export const SET_SONG_PLAYING = "@customization/SET_SONG_PLAYING";
 export const SET_MINI_PLAYER = "@customization/v";
 export const SET_ALL_CATEGORIES = "@customization/SET_ALL_CATEGORIES";
 export const SET_CATEGORY_FILTER = "@customization/SET_ALBUM_FILTER";
+export const SET_ALL_ARTISTS = "@customization/SET_ALL_ARTISTS";

@@ -17,7 +17,7 @@ import {
   getAllCategories,
   getAllSongs,
   saveNewAlbum,
-  saveNewArtist,
+  createArtist,
   saveNewSong,
 } from "../api";
 import { actionType } from "../context/reducer";
@@ -33,7 +33,7 @@ import {
   SET_ALL_ALBUMS,
   SET_ALL_CATEGORIES,
 } from "../store/actions";
-import { FilterButtonsCategory, FilterButtons } from "../components";
+import { ImageLoader, ImageUploader, DisabledButton } from "../components";
 
 const AddNewArtist = () => {
   const [isArtist, setIsArtist] = useState(false);
@@ -78,7 +78,9 @@ const AddNewArtist = () => {
         twitter: twitter,
         instagram: instagram,
       };
-      saveNewArtist(data).then((res) => {
+      createArtist(data).then((res) => {
+        console.log("saveNewArtist res: ", res);
+
         getAllArtist().then((artistData) => {
           dispatch({ type: actionType.SET_ARTISTS, artists: artistData.data });
         });
@@ -132,7 +134,7 @@ const AddNewArtist = () => {
         <input
           type="text"
           placeholder="Tên nghệ sĩ"
-          className="w-full lg:w-300 p-3 rounded-md text-base font-semibold text-textColor outline-none shadow-sm border border-gray-300 bg-transparent"
+          className="w-full lg:w-300 p-3 rounded-md text-base font-semibold text-white outline-none shadow-sm border border-gray-300 bg-transparent"
           value={artistName}
           onChange={(e) => setArtistName(e.target.value)}
         />
@@ -144,7 +146,7 @@ const AddNewArtist = () => {
           <input
             type="text"
             placeholder="your id"
-            className="w-full text-base font-semibold text-textColor outline-none bg-transparent"
+            className="w-full text-base font-semibold text-white outline-none bg-transparent"
             value={twitter}
             onChange={(e) => setTwitter(e.target.value)}
           />
@@ -157,7 +159,7 @@ const AddNewArtist = () => {
           <input
             type="text"
             placeholder="your id"
-            className="w-full text-base font-semibold text-textColor outline-none bg-transparent"
+            className="w-full text-base font-semibold text-white outline-none bg-transparent"
             value={instagram}
             onChange={(e) => setInstagram(e.target.value)}
           />
