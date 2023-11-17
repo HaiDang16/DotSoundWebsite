@@ -138,6 +138,9 @@ const Login = () => {
         } else if (res.data.message === "Invalid account") {
           setIsAlert("error");
           setAlertMessage("Email hoặc mật khẩu không đúng");
+          setTimeout(() => {
+            setIsAlert(null);
+          }, 2000);
           return;
         }
       });

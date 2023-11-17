@@ -134,3 +134,22 @@ export const register = async (dataReq) => {
     return null;
   }
 };
+
+export const checkAccountForgotPassword = async (dataReq) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/CheckAccountForgotPassword`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+export const resetPassword = async (dataReq) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/ResetPassword`, { ...dataReq });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};

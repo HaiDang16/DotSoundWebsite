@@ -10,6 +10,8 @@ const Register = Loadable(lazy(() => import("../pages/Register")));
 const Trending = Loadable(lazy(() => import("../pages/Trending")));
 const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
+const ForgotPassword = Loadable(lazy(() => import("../pages/ForgotPass")));
+const ResetPassword = Loadable(lazy(() => import("../pages/ResetPassword")));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = [
@@ -42,6 +44,14 @@ const MainRoutes = [
   {
     path: "/Register",
     element: <Register />,
+  },
+  {
+    path: "/ForgotPassword",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/ResetPassword",
+    element: <ResetPassword />,
   },
 ];
 

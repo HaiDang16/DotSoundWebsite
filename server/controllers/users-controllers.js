@@ -225,7 +225,11 @@ const checkAccountForgotPassword = async (req, res) => {
 
   let userData;
   try {
-    userData = await User.findOne({ CusEmail: email, CusPhoneNum: phoneNum });
+    userData = await User.findOne({
+      cusEmail: email,
+      cusPhoneNum: phoneNum,
+      googleID: null,
+    });
   } catch (err) {
     return res
       .status(500)
@@ -245,14 +249,14 @@ const checkAccountForgotPassword = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  console.log("Start changePassword");
+  console.log("Start resetPassword");
   const email = req.body.userEmail;
   const password = req.body.userPassword;
   console.log("email: ", email);
 
   let userData;
   try {
-    userData = await User.findOne({ CusEmail: email });
+    userData = await User.findOne({ cusEmail: email });
   } catch (err) {
     console.log("Error: ", err);
     return res
@@ -272,7 +276,7 @@ const resetPassword = async (req, res) => {
     await userData.save();
     return res
       .status(200)
-      .json({ message: "Đổi mật khẩu thành công công", success: true });
+      .json({ message: "Đổi mật khẩu thành công", success: true });
   } catch (error) {
     console.log("Error: ", err);
     return res

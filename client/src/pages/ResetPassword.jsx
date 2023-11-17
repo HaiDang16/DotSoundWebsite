@@ -1,18 +1,20 @@
-import AlertError from "../../components/shared/AlertError";
-import AlertSuccess from "../../components/shared/AlertSuccess";
+import AlertErrorBottom from "../components/AlertErrorBottom";
+import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-import BackgroundLogin from "../../assets/img/background_Login.jpg";
+import BackgroundLogin from "../assets/img/background_Login.jpg";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { resetPassword } from "../api";
 const CryptoJS = require("crypto-js");
+
 const ResetPassword = () => {
-  let userEmailDecrypted;
   const navigate = useNavigate();
-  const baseURL = "http://localhost:4000/";
+  let userEmailDecrypted;
   const [searchParams] = useSearchParams();
   const userEmailQuery = searchParams.get("rs");
-
+  console.log("userEmailQuery: ", userEmailQuery);
   const decryptedBytes = CryptoJS.AES.decrypt(userEmailQuery, "secret key 123");
   userEmailDecrypted = decryptedBytes.toString(CryptoJS.enc.Utf8);
   console.log("userEmailDecrypted: ", userEmailDecrypted);
@@ -23,43 +25,66 @@ const ResetPassword = () => {
     errPass: "",
     errConfirmPass: "",
   });
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+  const [isAlert, setIsAlert] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const togglePasswordVisibility = () => {
+    setIsShowPassword(!isShowPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setIsShowConfirmPassword(!isShowConfirmPassword);
+  };
   const handlePassChange = (e) => {
     setUserPassword(e.target.value);
     setHandleError({ errPass: "" });
+    setIsAlert(null);
   };
 
   const handleConfirmPassChange = (e) => {
     setUserConfirmPassword(e.target.value);
     setHandleError({ errConfirmPass: "" });
+    setIsAlert(null);
   };
   const handleForgotPassword = async () => {
     if (!userPassword) {
-      setHandleError({ errPass: "Vui lòng nhập mật khẩu" });
+      setIsAlert("error");
+      setAlertMessage("Vui lòng nhập mật khẩu mới");
       return;
     } else if (!userConfirmPassword) {
-      setHandleError({ errConfirmPass: "Vui lòng nhập xác nhận mật khẩu" });
+      setIsAlert("error");
+      setAlertMessage("Vui lòng nhập xác nhận mật khẩu");
       return;
     } else if (userPassword !== userConfirmPassword) {
-      setHandleError({
-        errConfirmPass: "Mật khẩu không khớp. Vui lòng kiểm tra lại",
-      });
+      setIsAlert("error");
+      setAlertMessage("Mật khẩu không khớp. Vui lòng kiểm tra lại");
       return;
     }
-
-    const apiUrl = `${baseURL}api/users/ResetPassword`;
-
-    const data = { userPassword: userPassword, userEmail: userEmailDecrypted };
+    console.log("userEmailDecrypted: ", userEmailDecrypted);
+    const dataReq = {
+      userPassword: userPassword,
+      userEmail: userEmailDecrypted,
+    };
     try {
-      const response = await axios.post(apiUrl, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("response: ", response);
+      resetPassword(dataReq).then((res) => {
+        console.log("Reset Password res: ", res);
 
-      if (response.data.message === "Đổi mật khẩu thành công công") {
-        navigate("/Login");
-      }
+        if (res.data.message === "Đổi mật khẩu thành công") {
+          setIsAlert("success");
+          setAlertMessage("Đổi mật khẩu thành công");
+          setTimeout(() => {
+            setIsAlert(null);
+            navigate("/Login");
+          }, 2000);
+        } else {
+          setIsAlert("error");
+          setAlertMessage("Đổi mật khẩu thất bại");
+          setTimeout(() => {
+            setIsAlert(null);
+          }, 2000);
+        }
+      });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -74,52 +99,63 @@ const ResetPassword = () => {
         <h1 class="text-3xl font-bold my-10 text-white text-center">
           Đặt lại mật khẩu
         </h1>
-        <div className="my-10">
-          <label class="block text-white font-medium mb-2" for="email">
-            Nhập mật khẩu mới:
-          </label>
 
+        <label class="block text-white font-medium mb-2 mt-10" for="email">
+          Nhập mật khẩu mới:
+        </label>
+        <div className="relative">
           <input
             class="border p-3 w-full rounded px-3 focus:outline-none"
             id="password"
-            type="password"
+            type={`${isShowPassword ? "text" : "password"}`}
             placeholder="***"
             value={userPassword}
             onChange={handlePassChange}
           />
-          {handleError.errPass && <AlertError msg={handleError.errPass} />}
-          {/* {handleError && (
-            <p className="text-red-500 mt-2 font-medium ml-1">
-              {handleError.errPass}
-            </p>
-          )} */}
+          <button
+            type="button"
+            className="absolute top-1/2 transform -translate-y-1/2 right-4"
+            onClick={togglePasswordVisibility}
+          >
+            {isShowPassword ? <FaEye /> : <FaEyeSlash />}
+          </button>
         </div>
-        <div className="my-10">
-          <label class="block text-white font-medium mb-2" for="email">
-            Xác nhận mật khẩu mới:
-          </label>
+        <label class="mt-10 block text-white font-medium mb-2" for="email">
+          Xác nhận mật khẩu mới:
+        </label>
+        <div className="relative">
           <input
             class="border p-3 w-full rounded px-3 focus:outline-none"
             id="confirmPassword"
-            type="password"
+            type={`${isShowConfirmPassword ? "text" : "password"}`}
             value={userConfirmPassword}
             onChange={handleConfirmPassChange}
             placeholder="***"
           />
-          {handleError.errConfirmPass && <AlertError msg={handleError.errConfirmPass} />}
-          {/* {handleError && (
-            <p className="text-red-500 mt-2 font-medium ml-1">
-              {handleError.errConfirmPass}
-            </p>
-          )} */}
+          <button
+            type="button"
+            className="absolute top-1/2 transform -translate-y-1/2 right-4"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {isShowConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+          </button>
         </div>
         <button
-          class="bg-white  text-gray-700 hover:bg-card  py-2  font-medium rounded hover:bg-blue-600 items-center w-full"
+          class="mt-10 bg-white  text-gray-700 hover:bg-card  py-2  font-medium rounded hover:bg-blue-600 items-center w-full"
           onClick={handleForgotPassword}
         >
           Đặt lại
         </button>
       </div>
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMessage} />
+          ) : (
+            <AlertErrorBottom msg={alertMessage} />
+          )}
+        </>
+      )}
     </div>
   );
 };

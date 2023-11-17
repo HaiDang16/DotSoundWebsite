@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import BackgroundLogin from "../../assets/img/background_Login.jpg";
+import BackgroundLogin from "../assets/img/background_Login.jpg";
+import { checkAccountForgotPassword } from "../api";
+import AlertErrorBottom from "../components/AlertErrorBottom";
+import AlertSuccessBottom from "../components/AlertSuccessBottom";
 const CryptoJS = require("crypto-js");
 
 const ForgotPass = () => {
   const navigate = useNavigate();
-  const baseURL = "http://localhost:4000/";
   const [userEmail, setUserEmail] = useState("");
   const [userPhoneNum, setUserPhoneNum] = useState("");
+  const [isAlert, setIsAlert] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  const phoneRegex = /^\d{10,}$/;
+  const phoneRegex = /^\d{9,10}$/;
   const [handleError, setHandleError] = useState({
     errEmail: "",
     errPhoneNum: "",
@@ -35,11 +39,6 @@ const ForgotPass = () => {
     } else if (!userPhoneNum) {
       setHandleError({ errPhoneNum: "Số điện thoại không được để trống" });
       return;
-    } else if (userPhoneNum.length !== 10) {
-      setHandleError({
-        errPhoneNum: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại",
-      });
-      return;
     } else if (!phoneRegex.test(userPhoneNum)) {
       setHandleError({
         errPhoneNum: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại",
@@ -47,33 +46,27 @@ const ForgotPass = () => {
       return;
     }
 
-    const apiUrl = `${baseURL}api/users/CheckAccountForgotPassword`;
-
-    const data = {
+    const dataReq = {
       email: userEmail,
       phoneNum: userPhoneNum,
     };
     try {
-      const response = await axios.post(apiUrl, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      checkAccountForgotPassword(dataReq).then((res) => {
+        console.log("res: ", res);
+        if (res.data.message === "Thông tin người dùng có tồn tại") {
+          const encryptedString = CryptoJS.AES.encrypt(
+            userEmail,
+            "secret key 123"
+          ).toString();
+          navigate(`/ResetPassword?rs=${encryptedString}`);
+        } else if (res.data.message === "Không tìm thấy thông tin người dùng") {
+          setIsAlert("error");
+          setAlertMessage("Thông tin tài khoản không hợp lệ");
+          setTimeout(() => {
+            setIsAlert(null);
+          }, 2000);
+        }
       });
-      console.log("response: ", response);
-
-      if (response.data.message === "Thông tin người dùng có tồn tại") {
-        const encryptedString = CryptoJS.AES.encrypt(
-          userEmail,
-          "secret key 123"
-        ).toString();
-        navigate(`/ResetPassword?rs=${encryptedString}`);
-      } else if (
-        response.data.message === "Không tìm thấy thông tin người dùng"
-      ) {
-        //Thêm popup
-
-        alert("Thông tin tài khoản không hợp lệ");
-      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -132,6 +125,15 @@ const ForgotPass = () => {
           Quên mật khẩu
         </button>
       </div>
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMessage} />
+          ) : (
+            <AlertErrorBottom msg={alertMessage} />
+          )}
+        </>
+      )}
     </div>
   );
 };
