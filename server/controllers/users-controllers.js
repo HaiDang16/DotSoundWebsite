@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const HttpError = require("../models/http-error");
 const User = require("../models/account");
+const admin = require("../config/firebase.config");
 
 function splitFullName(fullName) {
   const parts = fullName.split(" ");
@@ -16,11 +17,12 @@ function splitFullName(fullName) {
   };
 }
 const LoginGoogle = async (req, res) => {
+  console.log("\n Start Login Google");
   if (!req.headers.authorization) {
     return res.status(500).send({ message: "Mã token không hợp lệ" });
   }
   const token = req.headers.authorization.split(" ")[1];
-
+  console.log("token: ", token);
   try {
     const decodeValue = await admin.auth().verifyIdToken(token);
     if (!decodeValue) {

@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const baseURL = "https://dotsounds.onrender.com/";
+const baseURL = "http://localhost:4000/";
 
 export const validateUser = async (token) => {
   try {
-    const res = await axios.get(`${baseURL}api/users/login`, {
+    const res = await axios.get(`${baseURL}api/users/Login`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
+    console.log("validateUser res: ", res);
     return res.data;
   } catch (error) {
     return null;
@@ -110,6 +111,15 @@ export const deleteSongById = async (id) => {
 export const deleteAlbumsById = async (id) => {
   try {
     const res = axios.delete(`${baseURL}api/albums/delete/${id}`);
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const loginAccount = async (data) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/Login`);
     return res;
   } catch (error) {
     return null;

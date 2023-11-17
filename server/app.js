@@ -3,23 +3,21 @@ const bodyParser = require("body-parser");
 
 require("dotenv/config");
 const cors = require("cors");
+
 const { default: mongoose } = require("mongoose");
 const HttpError = require("./models/http-error");
 
-const userRoute = require("./routes/auth");
+const usersRoutes = require("./routes/users-routes");
 const artistsRoute = require("./routes/artists");
 const albumRoute = require("./routes/albums");
 const songRoute = require("./routes/songs");
 
 const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({ origin: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -28,7 +26,7 @@ app.get("/", (req, res) => {
 
 // user authentication routes
 
-app.use("/api/users/", userRoute);
+app.use("/api/users", usersRoutes);
 
 // Artist links
 

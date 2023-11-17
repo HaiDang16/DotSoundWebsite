@@ -5,21 +5,25 @@ import { useStateValue } from "../context/StateProvider";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "./SearchBar";
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
+import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { motion } from "framer-motion";
 
 import { FaCrown } from "react-icons/fa";
+import { SET_USER, SET_AUTH } from "../store/actions";
 
 const Header = () => {
+  console.log("Header.jsx");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.customization.user);
+  const user = JSON.parse(window.localStorage.getItem("userData"));
 
   const [isMenu, setIsMenu] = useState(false);
   const [isSearched, setIisSearched] = useState(false);
 
-  const logout = () => {
+  const logOut = () => {
     const firebaseAuth = getAuth(app);
     firebaseAuth
       .signOut()
@@ -27,85 +31,124 @@ const Header = () => {
         window.localStorage.setItem("auth", "false");
       })
       .catch((e) => console.log(e));
-    navigate("/login", { replace: true });
+    window.localStorage.setItem("auth", "false");
+    window.localStorage.removeItem("userData");
+    dispatch({
+      type: SET_AUTH,
+      auth: false,
+    });
+    dispatch({
+      type: SET_USER,
+      user: null,
+    });
+    navigate("/Login", { replace: true });
   };
 
   return (
     <header className="flex fixed top-0 items-center w-full  background  md:px-20 z-30">
-      <NavLink to={"/ThinhHanh"}>
+      <NavLink to={"/Trending"}>
         <div className="fonts-leOne text-white text-2xl  ">DotSounds</div>
       </NavLink>
 
       <ul className="flex items-center justify-center ml-7">
         {/* prettier-ignore */}
-        <li className="mx-3 text-lg"><NavLink to={'/ThinhHanh'} className={({ isActive }) => isActive ? isActiveStyles : isNotActiveStyles}>Thịnh Hành</NavLink></li>
+        <li className="mx-3 text-lg"><NavLink to={'/Trending'} className={({ isActive }) => isActive ? isActiveStyles : isNotActiveStyles}>Thịnh Hành</NavLink></li>
         {/* prettier-ignore */}
-        <li className="mx-3 text-lg"><NavLink to={'/DanhChoBan'} className={({ isActive }) => isActive ? isActiveStyles : isNotActiveStyles}>Dành Cho Bạn</NavLink></li>
+        <li className="mx-3 text-lg"><NavLink to={'/ForYou'} className={({ isActive }) => isActive ? isActiveStyles : isNotActiveStyles}>Dành Cho Bạn</NavLink></li>
       </ul>
       <div className="w-1/2">
         {" "}
         <SearchBar />
       </div>
-      <div
-        className="flex items-center ml-auto cursor-pointer gap-2 relative "
-        onMouseEnter={() => setIsMenu(true)}
-        onMouseLeave={() => setIsMenu(false)}
-      >
-        <img
-          className="w-12 min-w-[44px] object-cover rounded-full shadow-lg"
-          src={user?.user?.imageURL}
-          alt=""
-          referrerpolicy="no-referrer"
-        />
-        <div className="flex flex-col">
-          <p className="text-white text-lg hover:text-headingColor font-semibold">
-            {user?.user.name}
-          </p>
-          {user?.user.role === "admin" && (
-            <>
-              <p className="flex items-center gap-2 text-xs text-gray-500 font-normal">
-                Premium Member.{" "}
-                <FaCrown className="text-xm -ml-1 text-yellow-500" />{" "}
-              </p>
-            </>
-          )}
-        </div>
-
-        {isMenu && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="absolute z-20 top-10 right-0 w-275 p-4 gap-4 bg-card shadow-lg rounded-lg backdrop-blur-sm flex flex-col"
-          >
-            <NavLink to={"/userProfile"}>
-              <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
-                Profile
-              </p>
-            </NavLink>
-            <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
-              My Favourites
+      {user?.user.cusRole ? (
+        <div
+          className="flex items-center ml-auto cursor-pointer gap-2 relative "
+          onMouseEnter={() => setIsMenu(true)}
+          onMouseLeave={() => setIsMenu(false)}
+        >
+          <img
+            className="w-12 min-w-[44px] object-cover rounded-full shadow-lg"
+            src={user?.user?.cusAvatar}
+            alt=""
+            referrerpolicy="no-referrer"
+          />
+          <div className="flex flex-col">
+            <p className="text-white text-lg hover:text-headingColor font-semibold">
+              {user?.user.cusFirstName}
             </p>
-            <hr />
-            {user?.user.role === "admin" && (
+            {user?.user.cusRole === "admin" && (
               <>
-                <NavLink to={"/dashboard/home"}>
-                  <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
-                    Dashboard
-                  </p>
-                </NavLink>
-                <hr />
+                <p className="flex items-center gap-2 text-xs text-gray-500 font-normal">
+                  Thành viên VIP{" "}
+                  <FaCrown className="text-xm -ml-1 text-yellow-500" />{" "}
+                </p>
               </>
             )}
-            <p
-              className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out"
-              onClick={logout}
+          </div>
+          {isMenu && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="absolute z-20 top-10 right-0 w-275 p-4 gap-4 bg-card shadow-lg rounded-lg backdrop-blur-sm flex flex-col"
             >
-              Sign out
-            </p>
-          </motion.div>
-        )}
-      </div>
+              {user?.user.cusRole === "admin" ? (
+                <>
+                  <NavLink to={"/dashboard/home"}>
+                    <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
+                      Quản lý
+                    </p>
+                  </NavLink>
+                  <hr />
+                </>
+              ) : (
+                <NavLink to={"/UserProfile"}>
+                  <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
+                    Trang cá nhân
+                  </p>
+                </NavLink>
+              )}
+              <hr />
+              <p
+                className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out"
+                onClick={logOut}
+              >
+                Đăng xuất
+              </p>
+            </motion.div>
+          )}
+        </div>
+      ) : (
+        <div
+          onMouseEnter={() => setIsMenu(true)}
+          onMouseLeave={() => setIsMenu(false)}
+          className="flex items-center ml-auto cursor-pointer gap-2 relative"
+        >
+          <IoPersonSharp className="text-white w-8 h-8 min-w-[30px] object-cover rounded-full shadow-lg " />
+          {isMenu && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="absolute z-10 top-8 p-6 flex flex-col right-0 w-190 gap-3 bg-card shadow-lg rounded-lg backdrop-blur-sm "
+            >
+              <NavLink to={"/Login"}>
+                <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
+                  Đăng nhập
+                </p>
+              </NavLink>
+
+              <NavLink
+                to={"/Register"}
+                className="text-base text-textColor hover:font-semibold 
+              duration-150 transition-all ease-in-out"
+              >
+                Đăng ký
+              </NavLink>
+            </motion.div>
+          )}
+        </div>
+      )}
     </header>
   );
 };

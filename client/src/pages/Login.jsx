@@ -1,25 +1,22 @@
-import AlertError from "../../components/shared/AlertError";
-import AlertSuccess from "../../components/shared/AlertSuccess";
+import AlertError from "../components/AlertError";
+import AlertSuccess from "../components/AlertSuccess";
 import { BsApp, BsCheckSquare } from "react-icons/bs";
-import logoGoogle from "../../assets/img/logoGoogle.png";
-import logoGu from "../../assets/img/logoGu.png";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { LogoDotSounds } from "../assets/img";
+import { loginAccount } from "../api";
 
 // Đăng nhập bằng google
-import { app } from "../../config/firebase.config";
+import { app } from "../config/firebase.config";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import React, { useEffect } from "react";
-import { useStateValue } from "../../context/StateProvider";
-import { actionType } from "../../context/reducer";
-import { validateUser } from "../../api";
-import { LoginBg } from "../../assets/video";
+import { validateUser } from "../api";
 import { IoSearch, IoCartOutline } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_USER, SET_AUTH } from "../../store/actions";
-import BackgroundLogin from "../../assets/img/background_Login.jpg";
+import { SET_USER, SET_AUTH } from "../store/actions";
+import BackgroundLogin from "../assets/img/background_Login.jpg";
 const Login = () => {
   const firebaseAuth = getAuth(app);
   const provider = new GoogleAuthProvider();
@@ -63,7 +60,7 @@ const Login = () => {
                   type: SET_USER,
                   user: data,
                 });
-                console.log(data);
+                console.log("login Google data:", data);
                 window.localStorage.setItem("userData", JSON.stringify(data));
               });
             });
@@ -136,23 +133,14 @@ const Login = () => {
   return (
     <div
       style={{ backgroundImage: `url(${BackgroundLogin})` }}
-      className="w-full h-auto mt-20 flex flex-col justify-center items-center rounded-lg shadow-md md:p-10 bg-center bg-cover bg-size font-sans relative"
+      className="w-full h-auto flex flex-col justify-center items-center rounded-lg shadow-md md:p-10 bg-center bg-cover bg-size font-sans relative"
     >
       {" "}
       <section className="px-5 lg:px-0 max-w-[570px]">
         <div className="flex justify-center mb-4">
-          <img className="h-30 w-20" src={logoGu} alt="" />
+          <img className="h-45 w-40" src={LogoDotSounds} alt="" />
         </div>
-        <div className="text-white text-center mt-2 mb-6 text-[15px]">
-          <p>
-            <span className="ml-2">
-              Nhận voucher giảm giá và quà tặng độc quyền từ các thương hiệu làm
-              đẹp, thời trang và phong cách sống
-            </span>
-            .
-          </p>
-          <p>Gợi ý bài viết và sản phẩm dựa trên sở thích của bạn</p>
-        </div>
+
         <h1 className=" text-[30px] leading-9 font-bold mb-8 font-sans mx-auto text-white text-center">
           Đăng Nhập
         </h1>
