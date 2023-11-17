@@ -25,7 +25,8 @@ const DashboardAlbum = () => {
   useEffect(() => {
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.data });
+        console.log("getAllAlbums res: ", data);
+        dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.albums });
       });
     }
   }, []);

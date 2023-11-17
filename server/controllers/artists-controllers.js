@@ -9,9 +9,15 @@ const getAllArtist = async (req, res) => {
   const options = {
     sort: { createdAt: 1 },
   };
-  const cursor = await Artist.find(options);
-  if (cursor) {
-    res.status(200).send({ success: true, data: cursor });
+  const artists = await Artist.find(options);
+  if (artists) {
+    res.status(200).json({
+      artists: artists.map((art) => {
+        const obj = art.toObject({ getters: true });
+        return obj;
+      }),
+      success: true,
+    });
   } else {
     res.status(200).send({ success: true, msg: "No Data Found" });
   }

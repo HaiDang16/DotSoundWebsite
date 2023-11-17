@@ -24,7 +24,6 @@ const songSchema = mongoose.Schema(
         type: String,
         required: false,
       },
-      default: null,
     },
     songArtist: {
       songArtistID: {
@@ -36,7 +35,6 @@ const songSchema = mongoose.Schema(
         type: String,
         required: false,
       },
-      require: true,
     },
     songLanguage: {
       type: String,
@@ -52,8 +50,6 @@ const songSchema = mongoose.Schema(
         type: String,
         required: false,
       },
-      default: null,
-      require: true,
     },
   },
   { timestamps: true }

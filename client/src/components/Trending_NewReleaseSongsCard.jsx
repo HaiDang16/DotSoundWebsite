@@ -40,16 +40,18 @@ const NewReleaseSongContainer = ({ musics }) => {
           <div className=" max-w-[80px] h-40 max-h-[80px] rounded-lg drop-shadow-lg relative overflow-hidden">
             <motion.img
               whileHover={{ scale: 1.05 }}
-              src={data.imageURL}
+              src={data.songImageURL}
               alt=""
               className=" w-40 h-40 rounded-lg object-cover"
             />
           </div>
 
           <p className="text-base text-white font-semibold m-2">
-            {data.name.length > 25 ? `${data.name.slice(0, 25)}` : data.name}
+            {data.songName.length > 25
+              ? `${data.songName.slice(0, 25)}`
+              : data.songName}
             <span className="block text-sm text-gray-400 my-1">
-              {data.artist}
+              {data.songArtist.songArtistName}
             </span>
           </p>
         </motion.div>

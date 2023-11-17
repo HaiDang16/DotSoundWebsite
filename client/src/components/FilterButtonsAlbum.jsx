@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_CATEGORY_FILTER } from "../store/actions";
+import { SET_ALBUM_FILTER } from "../store/actions";
 
-const FilterButtonsCategory = ({ filterData, flag }) => {
+const FilterButtonsAlbum = ({ filterData, flag }) => {
+  console.log("FilterButtonsAlbum");
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
   const dispatch = useDispatch();
@@ -15,10 +16,9 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
   const updateFilterButton = (name, id) => {
     setFilterName(name);
     setFilterMenu(false);
-    console.log("catid: ", id);
-    dispatch({ type: SET_CATEGORY_FILTER, categoryFilter: id });
+    console.log("id: ", id);
+    dispatch({ type: SET_ALBUM_FILTER, albumFilter: id });
   };
-
   return (
     <div
       className="border border-gray-300 rounded-md px-4 py-1 relative cursor-pointer hover:border-gray-400"
@@ -48,14 +48,14 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
         >
           {filterData?.map((data) => (
             <div
-              key={data.catName}
+              key={data.albumName}
               className="flex items-center gap-2 px-4 py-1 hover:bg-gray-200"
-              onClick={() => updateFilterButton(data.catName, data._id)}
+              onClick={() => updateFilterButton(data.albumName, data._id)}
             >
               <p className="w-full">
-                {data.catName.length > 15
-                  ? `${data.catName.slice(0, 14)}...`
-                  : data.catName}
+                {data.albumName.length > 15
+                  ? `${data.albumName.slice(0, 14)}...`
+                  : data.albumName}
               </p>
             </div>
           ))}
@@ -65,4 +65,4 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
   );
 };
 
-export default FilterButtonsCategory;
+export default FilterButtonsAlbum;

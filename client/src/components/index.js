@@ -16,3 +16,5 @@ export { default as FilterButtonsCategory } from "./FilterButtonsCategory";
 export { default as ImageLoader } from "./ImageLoader";
 export { default as ImageUploader } from "./ImageUploader";
 export { default as DisabledButton } from "./DisabledButton";
+export { default as FilterButtonsArtist } from "./FilterButtonsArtist";
+export { default as FilterButtonsAlbum } from "./FilterButtonsAlbum";

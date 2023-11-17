@@ -46,7 +46,7 @@ const DiscoverySongsContainer = ({ musics }) => {
             <div className="w-full min-w-[160px] h-40 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
               <motion.img
                 whileHover={{ scale: 1.05 }}
-                src={data.imageURL}
+                src={data.songImageURL}
                 alt=""
                 className=" w-full h-full rounded-lg object-cover"
               />

@@ -14,6 +14,7 @@ const songRoute = require("./routes/songs");
 const categoriesRoutes = require("./routes/categories-routes");
 const artistsRoutes = require("./routes/artists-routes");
 const albumsRoutes = require("./routes/albums-routes");
+const songsRoutes = require("./routes/songs-routes");
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -41,7 +42,7 @@ app.use("/api/albums/", albumsRoutes);
 
 // Songs links
 
-app.use("/api/songs/", songRoute);
+app.use("/api/songs/", songsRoutes);
 
 app.use("/api/categories/", categoriesRoutes);
 

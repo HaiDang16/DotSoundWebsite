@@ -29,8 +29,8 @@ const DashboardArtist = () => {
   useEffect(() => {
     if (!allArtists) {
       getAllArtist().then((data) => {
-        console.log("getAllArtist res: ", data.data);
-        dispatch({ type: SET_ALL_ARTISTS, allArtists: data.data });
+        console.log("getAllArtist res: ", data.artists);
+        dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artist });
       });
     }
   }, []);

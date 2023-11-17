@@ -45,7 +45,7 @@ export const removeUser = async (userId) => {
 
 export const getAllSongs = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/songs/getAll`);
+    const res = await axios.get(`${baseURL}api/songs/GetAllSongs`);
     console.log("getAllSongs: ", res.data);
     return res.data;
   } catch (error) {
@@ -76,7 +76,7 @@ export const changingUserRole = async (userId, role) => {
 export const createArtist = async (data) => {
   try {
     const res = axios.post(`${baseURL}api/artists/CreateArtist`, { ...data });
-    return (await res).data.artist;
+    return (await res);
   } catch (error) {
     return null;
   }
@@ -85,16 +85,16 @@ export const createArtist = async (data) => {
 export const createAlbum = async (data) => {
   try {
     const res = axios.post(`${baseURL}api/albums/CreateAlbum`, { ...data });
-    return (await res).data.album;
+    return (await res);
   } catch (error) {
     return null;
   }
 };
 
-export const saveNewSong = async (data) => {
+export const createSong = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/songs/save`, { ...data });
-    return (await res).data.song;
+    const res = axios.post(`${baseURL}api/songs/CreateSong`, { ...data });
+    return (await res);
   } catch (error) {
     return null;
   }
@@ -102,7 +102,7 @@ export const saveNewSong = async (data) => {
 
 export const deleteSongById = async (id) => {
   try {
-    const res = axios.delete(`${baseURL}api/songs/delete/${id}`);
+    const res = axios.delete(`${baseURL}api/songs/DeleteSong/${id}`);
     return res;
   } catch (error) {
     return null;

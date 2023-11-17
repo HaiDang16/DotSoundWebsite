@@ -46,7 +46,7 @@ const Top10SongsCard = ({ musics }) => {
             <div className="h-56 min-w-[160px] w-56 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
               <motion.img
                 whileHover={{ scale: 1.05 }}
-                src={data.imageURL}
+                src={data.songImageURL}
                 alt=""
                 className=" w-full h-full rounded-lg object-cover"
               />

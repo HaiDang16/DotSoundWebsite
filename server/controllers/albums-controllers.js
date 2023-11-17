@@ -8,15 +8,18 @@ const Album = require("../models/album");
 
 const getAllAlbums = async (req, res) => {
   const options = {
-    // sort returned documents in ascending order
     sort: { createdAt: 1 },
-    // Include only the following
-    // projection : {}
   };
 
-  const cursor = await Album.find(options);
-  if (cursor) {
-    res.status(200).send({ success: true, data: cursor });
+  const albums = await Album.find(options);
+  if (albums) {
+    res.status(200).json({
+      albums: albums.map((album) => {
+        const obj = album.toObject({ getters: true });
+        return obj;
+      }),
+      success: true,
+    });
   } else {
     res.status(200).send({ success: true, msg: "No Data Found" });
   }
@@ -59,6 +62,7 @@ const createAlbum = async (req, res) => {
 
   try {
     const savedAlbum = await newAlbum.save();
+
     return res.status(200).send({ album: savedAlbum });
   } catch (error) {
     return res.status(400).send({ success: false, msg: error });

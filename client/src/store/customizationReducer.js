@@ -16,7 +16,7 @@ export const initialState = {
   song: 0,
   isSongPlaying: false,
   miniPlayer: false,
-  allArtists: null,
+  categoryFilter: null,
 };
 
 // ==============================|| CUSTOMIZATION REDUCER ||============================== //

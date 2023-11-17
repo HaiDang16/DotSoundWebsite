@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_CATEGORY_FILTER } from "../store/actions";
+import { SET_ARTIST_FILTER } from "../store/actions";
 
-const FilterButtonsCategory = ({ filterData, flag }) => {
+const FilterButtonsArtist = ({ filterData, flag }) => {
+  console.log("FilterButtonsArtist");
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
   const dispatch = useDispatch();
@@ -15,8 +16,7 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
   const updateFilterButton = (name, id) => {
     setFilterName(name);
     setFilterMenu(false);
-    console.log("catid: ", id);
-    dispatch({ type: SET_CATEGORY_FILTER, categoryFilter: id });
+    dispatch({ type: SET_ARTIST_FILTER, artistFilter: id });
   };
 
   return (
@@ -48,14 +48,14 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
         >
           {filterData?.map((data) => (
             <div
-              key={data.catName}
+              key={data.artistName}
               className="flex items-center gap-2 px-4 py-1 hover:bg-gray-200"
-              onClick={() => updateFilterButton(data.catName, data._id)}
+              onClick={() => updateFilterButton(data.artistName, data._id)}
             >
               <p className="w-full">
-                {data.catName.length > 15
-                  ? `${data.catName.slice(0, 14)}...`
-                  : data.catName}
+                {data.artistName.length > 15
+                  ? `${data.artistName.slice(0, 14)}...`
+                  : data.artistName}
               </p>
             </div>
           ))}
@@ -65,4 +65,4 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
   );
 };
 
-export default FilterButtonsCategory;
+export default FilterButtonsArtist;

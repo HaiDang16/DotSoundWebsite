@@ -44,16 +44,16 @@ export const HomeSongContainer = ({ musics }) => {
           <div className="w-40 min-w-[160px] h-40 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
             <motion.img
               whileHover={{ scale: 1.05 }}
-              src={data.imageURL}
+              src={data.songImageURL}
               alt=""
               className=" w-full h-full rounded-lg object-cover"
             />
           </div>
 
           <p className="text-base text-headingColor font-semibold my-2">
-            {data.name}
+            {data.songName}
             <span className="block text-sm text-gray-400 my-1">
-              {data.artist}
+              {data.songArtist.songArtistName}
             </span>
           </p>
         </motion.div>

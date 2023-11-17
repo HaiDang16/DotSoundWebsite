@@ -20,9 +20,10 @@ const DashboardSongs = () => {
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
+        console.log(" data.songs: ", data.songs);
         dispatch({
           type: SET_ALL_SONGS,
-          allSongs: data.data,
+          allSongs: data.songs,
         });
       });
     }
@@ -30,11 +31,8 @@ const DashboardSongs = () => {
 
   useEffect(() => {
     if (songFilter.length > 0) {
-      const filtered = allSongs.filter(
-        (data) =>
-          data.artist.toLowerCase().includes(songFilter) ||
-          data.language.toLowerCase().includes(songFilter) ||
-          data.name.toLowerCase().includes(songFilter)
+      const filtered = allSongs.filter((data) =>
+        data.songName.toLowerCase().includes(songFilter)
       );
       setFilteredSongs(filtered);
     } else {
@@ -197,15 +195,19 @@ export const SongCard = ({ data, index }) => {
       <div className="w-40 min-w-[160px] h-40 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
         <motion.img
           whileHover={{ scale: 1.05 }}
-          src={data.imageURL}
+          src={data.songImageURL}
           alt=""
           className=" w-full h-full rounded-lg object-cover"
         />
       </div>
 
       <p className="text-base text-white font-semibold my-2">
-        {data.name.length > 25 ? `${data.name.slice(0, 25)}` : data.name}
-        <span className="block text-sm text-gray-400 my-1">{data.artist}</span>
+        {data.songName.length > 25
+          ? `${data.songName.slice(0, 25)}`
+          : data.songName}
+        <span className="block text-sm text-gray-400 my-1">
+          {data.songArtist.songArtistName}
+        </span>
       </p>
 
       <motion.i whileTap={{ scale: 0.75 }} onClick={() => setIsDeleted(true)}>
