@@ -7,6 +7,7 @@ export { default as Filter } from "./Filter";
 export { default as Release } from "./Release";
 export { default as FilterButtons } from "./FilterButtons";
 export { default as UserProfile } from "./UserProfile";
+export { default as ForYou } from "./ForYou";
 
 export { default as Dashboard } from "./Dashboard";
 export { default as DashboardHome } from "./DashboardHome";

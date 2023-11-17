@@ -16,6 +16,7 @@ import {
   MusicPlayer,
   ThinhHanh,
   UserProfile,
+  ForYou,
 } from "./components";
 import { useStateValue } from "./context/StateProvider";
 import { actionType } from "./context/reducer";
@@ -83,6 +84,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login setAuth={setAuth} />} />
           <Route path="/ThinhHanh" element={<ThinhHanh />} />
+          <Route path="/ForYou" element={<ForYou />} />
           <Route path="/*" element={<ThinhHanh />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/userProfile" element={<UserProfile />} />
