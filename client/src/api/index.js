@@ -55,7 +55,7 @@ export const getAllSongs = async () => {
 
 export const getAllAlbums = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/albums/getAll`);
+    const res = await axios.get(`${baseURL}api/albums/GetAllAlbums`);
     return res.data;
   } catch (error) {
     return null;
@@ -82,9 +82,9 @@ export const createArtist = async (data) => {
   }
 };
 
-export const saveNewAlbum = async (data) => {
+export const createAlbum = async (data) => {
   try {
-    const res = axios.post(`${baseURL}api/albums/save`, { ...data });
+    const res = axios.post(`${baseURL}api/albums/CreateAlbum`, { ...data });
     return (await res).data.album;
   } catch (error) {
     return null;
@@ -110,7 +110,7 @@ export const deleteSongById = async (id) => {
 };
 export const deleteAlbumsById = async (id) => {
   try {
-    const res = axios.delete(`${baseURL}api/albums/delete/${id}`);
+    const res = axios.delete(`${baseURL}api/albums/DeleteAlbum/${id}`);
     return res;
   } catch (error) {
     return null;

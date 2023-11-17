@@ -31,6 +31,9 @@ const AdminManageSongsAdd = Loadable(
 const AdminManageArtistAdd = Loadable(
   lazy(() => import("../pages/AdminManageArtistAdd"))
 );
+const AdminManageAlbumAdd = Loadable(
+  lazy(() => import("../pages/AdminManageAlbumAdd"))
+);
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = [
@@ -103,6 +106,10 @@ const MainRoutes = [
       {
         path: "/Admin/ManageArtists/Add",
         element: <AdminManageArtistAdd />,
+      },
+      {
+        path: "/Admin/ManageAlbums/Add",
+        element: <AdminManageAlbumAdd />,
       },
     ],
   },

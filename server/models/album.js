@@ -10,10 +10,16 @@ const albumSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    albumArtistIS: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "artist",
-      required: true,
+    albumArtist: {
+      albumArtistID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "artist",
+        required: true,
+      },
+      albumArtistName: {
+        type: String,
+        required: true,
+      },
     },
   },
   { timestamps: true }
