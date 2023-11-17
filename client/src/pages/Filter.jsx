@@ -50,25 +50,7 @@ const Filter = ({ setFilteredSongs }) => {
   };
   return (
     <div className="w-full my-4 px-6 py-4 flex items-start md:justify-start gap-10">
-      {/* <FilterButtons filterData={artists} flag={"Artist"} />
 
-      <div className=" flex items-center gap-6 mx-4">
-        {filters?.map((data) => (
-          <p
-            key={data.id}
-            onClick={() => updateFilter(data.value)}
-            className={`text-base ${
-              data.value === filterTerm ? "font-semibold" : "font-normal"
-            } text-white cursor-pointer hover:font-semibold transition-all duration-100 ease-in-out`}
-          >
-            {data.name}
-          </p>
-        ))}
-      </div>
-
-      <FilterButtons filterData={allAlbums} flag={"Albums"} /> */}
-
-      {/* <FilterButtons filterData={filterByLanguage} flag={"Language"} /> */}
 
       <div
         initial={{ opacity: 0 }}

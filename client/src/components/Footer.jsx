@@ -58,7 +58,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-row h-420">
+      <div className="flex flex-row h-300">
         <div className="flex-col w-1/2 ">
           <img src={LogoDotSounds} alt="" className="mx-10" />
         </div>

@@ -10,7 +10,7 @@ export const filters = [
 
 export const filterByLanguage = [
   { id: 1, name: "Việt Nam", value: "Việt Nam" },
-  { id: 2, name: "Quốc tế", value: "Quốc tế" },
+  { id: 2, name: "Quốc Tế", value: "Quốc Tế" },
 ];
 
 export const deleteAnObject = (referenceUrl) => {

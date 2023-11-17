@@ -33,7 +33,9 @@ const Home = () => {
   const languageFilter = useSelector(
     (state) => state.customization.languageFilter
   );
-
+  const categoryFilter = useSelector(
+    (state) => state.customization.categoryFilter
+  );
   const [filteredSongs, setFilteredSongs] = useState(null);
 
   useEffect(() => {
@@ -72,16 +74,16 @@ const Home = () => {
   //   }
   // }, [artistFilter]);
 
-  useEffect(() => {
-    const filterByLanguage = allSongs?.filter(
-      (data) => data.category.toLowerCase() === filterTerm
-    );
-    if (filterByLanguage) {
-      setFilteredSongs(filterByLanguage);
-    } else {
-      setFilteredSongs(null);
-    }
-  }, [filterTerm]);
+  // useEffect(() => {
+  //   const filterByLanguage = allSongs?.filter(
+  //     (data) => data.songLanguage.toLowerCase() === languageFilter
+  //   );
+  //   if (filterByLanguage) {
+  //     setFilteredSongs(filterByLanguage);
+  //   } else {
+  //     setFilteredSongs(null);
+  //   }
+  // }, [filterTerm]);
 
   // useEffect(() => {
   //   const filtered = allSongs?.filter((data) => data.album === albumFilter);
@@ -94,9 +96,8 @@ const Home = () => {
 
   useEffect(() => {
     const filterByLanguage = allSongs?.filter(
-      (data) => data.language === languageFilter
+      (data) => data.songLanguage === languageFilter
     );
-
     if (filterByLanguage) {
       setFilteredSongs(filterByLanguage);
     } else {
@@ -152,12 +153,10 @@ const Home = () => {
         <div className="my-2 text-2xl text-white font-medium">
           Mới phát hành
         </div>
-        <Filter className={"z-30"} setFilteredSongs={setFilteredSongs} />
-        <div className="w-full grid grid-cols-3 gap-4">
-          <NewReleaseSongsCard
-            musics={filteredSongs ? filteredSongs : allSongs}
-          />
-        </div>
+
+        <NewReleaseSongsCard
+          musics={allSongs}
+        />
 
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">

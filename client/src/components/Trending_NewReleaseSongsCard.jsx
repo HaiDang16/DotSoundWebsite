@@ -3,31 +3,111 @@ import { useSelector, useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import "react-h5-audio-player/lib/styles.css";
 import { actionType } from "../context/reducer";
-
+import { filterByLanguage, filters } from "../utils/supportfunctions";
+import {
+  SET_ALL_SONGS,
+  SET_ARTISTS,
+  SET_ALL_ARTISTS,
+  SET_LANGUAGE_FILTER,
+  SET_SONG,
+  SET_SONG_PLAYING,
+} from "../store/actions";
 const NewReleaseSongContainer = ({ musics }) => {
   const dispatch = useDispatch();
+  const [filteredSongs, setFilteredSongs] = useState();
+
+  const song = useSelector((state) => state.customization.song);
+  const filterLang = useSelector((state) => state.customization.filterLang);
+  const languageFilter = useSelector(
+    (state) => state.customization.languageFilter
+  );
+  useEffect(() => {
+    if (languageFilter !== null) {
+      const filtered = musics.filter(
+        (data) =>
+          data.songLanguage.toLowerCase() === languageFilter.toLowerCase()
+      );
+      setFilteredSongs(filtered);
+    } else {
+      setFilteredSongs(null);
+    }
+  }, [languageFilter]);
+
+  const updateFilterLanguage = (value) => {
+    dispatch({
+      type: SET_LANGUAGE_FILTER,
+      languageFilter: value,
+    });
+  };
+
+  const clearAllFilter = () => {
+    setFilteredSongs(null);
+    dispatch({ type: actionType.SET_ARTIST_FILTER, artistFilter: null });
+    dispatch({ type: actionType.SET_LANGUAGE_FILTER, languageFilter: null });
+    dispatch({ type: actionType.SET_ALBUM_FILTER, albumFilter: null });
+    dispatch({ type: actionType.SET_FILTER_TERM, filterTerm: null });
+  };
+  return (
+    <>
+      <div className="w-full my-4 px-6 py-4 flex items-start md:justify-start gap-10 z-30 ">
+        <div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          whileTap={{ scale: 0.75 }}
+          onClick={clearAllFilter}
+        >
+          <p className="text-white font-normal text-base cursor-pointer border px-8 min-w-[120px] focus:bg-blue-700 hover:bg-blue-900 text-center rounded-full hover:font-semibold">
+            Tất cả{" "}
+          </p>
+        </div>
+        <div className=" flex items-center gap-16 mx-4">
+          {filterByLanguage?.map((data) => (
+            <p
+              key={data.id}
+              onClick={() => updateFilterLanguage(data.value)}
+              className={`text-base text-center ${
+                languageFilter &&
+                data.value.toLowerCase() === languageFilter.toLowerCase()
+                  ? "font-semibold"
+                  : "font-normal"
+              } text-white cursor-pointer hover:font-semibold transition-all duration-100 ease-in-out px-8 focus:bg-blue-700 hover:bg-blue-900 bg_website_02 border rounded-full min-w-[100px]`}
+            >
+              {data.name}
+            </p>
+          ))}
+        </div>
+      </div>
+      {musics && (
+        <SongContainer data={filteredSongs ? filteredSongs : musics} />
+      )}
+    </>
+  );
+};
+
+export const SongContainer = ({ data }) => {
+  const dispatch = useDispatch();
+  const song = useSelector((state) => state.customization.song);
   const isSongPlaying = useSelector(
     (state) => state.customization.isSongPlaying
   );
-  const song = useSelector((state) => state.customization.song);
 
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
-        type: actionType.SET_SONG_PLAYING,
+        type: SET_SONG_PLAYING,
         isSongPlaying: true,
       });
     }
     if (song !== index) {
       dispatch({
-        type: actionType.SET_SONG,
+        type: SET_SONG,
         song: index,
       });
     }
   };
   return (
-    <>
-      {musics?.map((data, index) => (
+    <div className="w-full grid grid-cols-3 gap-4">
+      {data?.map((data, index) => (
         <motion.div
           key={data._id}
           whileTap={{ scale: 0.8 }}
@@ -56,7 +136,7 @@ const NewReleaseSongContainer = ({ musics }) => {
           </p>
         </motion.div>
       ))}
-    </>
+    </div>
   );
 };
 
