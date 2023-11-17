@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const HttpError = require("../models/http-error");
-const User = require("../models/account");
+const User = require("../models/user");
 const admin = require("../config/firebase.config");
 
 function splitFullName(fullName) {

@@ -11,6 +11,7 @@ const usersRoutes = require("./routes/users-routes");
 const artistsRoute = require("./routes/artists");
 const albumRoute = require("./routes/albums");
 const songRoute = require("./routes/songs");
+const categoriesRoutes = require("./routes/categories-routes");
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -39,6 +40,8 @@ app.use("/api/albums/", albumRoute);
 // Songs links
 
 app.use("/api/songs/", songRoute);
+
+app.use("/api/categories/", categoriesRoutes);
 
 // If any depreciation warning add depreciation options
 // mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true }, () => {
