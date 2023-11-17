@@ -6,7 +6,6 @@ const songSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
     songImageURL: {
       type: String,
       required: true,
@@ -37,7 +36,6 @@ const songSchema = mongoose.Schema(
         type: String,
         required: false,
       },
-      default: null,
       require: true,
     },
     songLanguage: {

@@ -68,7 +68,7 @@ const Header = () => {
         >
           {user?.user.cusAvatar ? (
             <img
-              className="w-12 min-w-[44px] object-cover rounded-full shadow-lg"
+              className="w-12 min-w-[44px] object-cover rounded-full shadow-lg mr-2"
               src={user?.user?.cusAvatar}
               alt=""
               referrerpolicy="no-referrer"
@@ -86,6 +86,12 @@ const Header = () => {
                 <p className="flex items-center gap-2 text-xs text-black font-normal">
                   <FaCrown className="text-xm -ml-1 text-yellow-500" /> Thành
                   viên VIP{" "}
+                </p>
+              </>
+            ) : user?.user.cusRole === "admin" ? (
+              <>
+                <p className="flex items-center gap-2 text-xs text-black font-normal">
+                  <FaCrown className="text-xm -ml-1 text-red-500" /> Quản lý
                 </p>
               </>
             ) : (
@@ -106,12 +112,11 @@ const Header = () => {
             >
               {user?.user.cusRole === "admin" ? (
                 <>
-                  <NavLink to={"/dashboard/home"}>
+                  <NavLink to={"/Admin/Dashboard"}>
                     <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
                       Quản lý
                     </p>
                   </NavLink>
-                  <hr />
                 </>
               ) : (
                 <NavLink to={"/UserProfile"}>

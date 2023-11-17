@@ -5,20 +5,27 @@ import { getAllUsers } from "../api";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import DashboardUserCard from "./DashboardUserCard";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ALL_USERS,
+} from "../store/actions";
 
 const DashboardUser = () => {
+  const dispatch = useDispatch();
   const [emailFilter, setEmailFilter] = useState("");
   const [isFocus, setIsFocus] = useState(false);
 
   const [filtereUsers, setFiltereUsers] = useState(null);
-
-  const [{ allUsers }, dispatch] = useStateValue();
+  const allUsers = useSelector((state) => state.customization.allUsers);
 
   useEffect(() => {
     if (!allUsers) {
       getAllUsers().then((data) => {
         dispatch({
-          type: actionType.SET_ALL_USERS,
+          type: SET_ALL_USERS,
           allUsers: data.data,
         });
       });

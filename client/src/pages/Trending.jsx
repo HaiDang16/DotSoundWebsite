@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAllSongs } from "../api";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
-import { SongCard } from "./DashboardSongs";
+import { SongCard } from "./AdminManageSongs";
 import Filter from "./Filter";
 import Header from "../components/Header";
 import { motion } from "framer-motion";

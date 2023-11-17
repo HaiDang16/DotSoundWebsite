@@ -27,7 +27,7 @@ export const getAllArtist = async () => {
 
 export const getAllUsers = async () => {
   try {
-    const res = await axios.get(`${baseURL}api/users/getUsers`);
+    const res = await axios.get(`${baseURL}api/users/GetAllUsers`);
     return res.data;
   } catch (error) {
     return null;
@@ -149,6 +149,14 @@ export const resetPassword = async (dataReq) => {
   try {
     const res = axios.post(`${baseURL}api/users/ResetPassword`, { ...dataReq });
     return res;
+  } catch (error) {
+    return null;
+  }
+};
+export const getAllCategories = async () => {
+  try {
+    const res = await axios.get(`${baseURL}api/categories/GetAllCategories`);
+    return res.data;
   } catch (error) {
     return null;
   }

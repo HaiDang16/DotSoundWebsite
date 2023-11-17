@@ -10,3 +10,6 @@ export { default as NewReleaseSongsCard } from "./Trending_NewReleaseSongsCard";
 export { default as DiscoverySongsCard } from "./Trending_DiscoverySongsCard";
 export { default as Top10SongsCard } from "./Trending_Top10SongsCard";
 export { default as CategorySongsCard } from "./Trending_CategorySongsCard";
+export { default as HeaderAdmin } from "./HeaderAdmin";
+export { default as FilterButtons } from "../components/FilterButtons";
+export { default as FilterButtonsCategory } from "./FilterButtonsCategory";

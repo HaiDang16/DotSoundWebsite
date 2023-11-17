@@ -374,6 +374,24 @@ const changePassword = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  let users;
+  try {
+    //Lấy ra những sản phẩm với size bán chạy nhất
+    users = await User.find();
+  } catch (err) {
+    console.log("Error get all user: ", err);
+    return res
+      .status(500)
+      .json({ message: "Lấy dữ liệu người dùng thất bại", success: false });
+  }
+  res.json({
+    users: users.map((user) => {
+      const obj = user.toObject({ getters: true });
+      return obj;
+    }),
+  });
+};
 exports.LoginGoogle = LoginGoogle;
 exports.Register = Register;
 exports.Login = Login;
@@ -383,3 +401,4 @@ exports.checkAccountForgotPassword = checkAccountForgotPassword;
 exports.resetPassword = resetPassword;
 exports.updateUserProfile = updateUserProfile;
 exports.changePassword = changePassword;
+exports.getAllUsers = getAllUsers;

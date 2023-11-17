@@ -74,7 +74,7 @@ const customizationReducer = (state = initialState, action) => {
         allSongs: action.allSongs,
       };
 
-    case actionTypes.SET_ALL_ALBUMNS:
+    case actionTypes.SET_ALL_ALBUMS:
       return {
         ...state,
         allAlbums: action.allAlbums,
@@ -102,6 +102,16 @@ const customizationReducer = (state = initialState, action) => {
       return {
         ...state,
         miniPlayer: action.miniPlayer,
+      };
+    case actionTypes.SET_ALL_CATEGORIES:
+      return {
+        ...state,
+        allCategories: action.allCategories,
+      };
+    case actionTypes.SET_CATEGORY_FILTER:
+      return {
+        ...state,
+        categoryFilter: action.categoryFilter,
       };
 
     default:

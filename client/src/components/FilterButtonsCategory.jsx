@@ -4,39 +4,34 @@ import { IoChevronDown } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ARTIST_FILTER,
+  SET_LANGUAGE_FILTER,
+  SET_ALBUM_FILTER,
+  SET_FILTER_TERM,
+  SET_CATEGORY_FILTER,
+} from "../store/actions";
 
-const FilterButtons = ({ filterData, flag }) => {
+const FilterButtonsCategory = ({ filterData, flag }) => {
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
-
-  const [{ artistFilter, albumFilter, filterTerm }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
 
   const updateFilterButton = (name) => {
     setFilterName(name);
     setFilterMenu(false);
-
-    if (flag === "Artist") {
-      dispatch({ type: actionType.SET_ARTIST_FILTER, artistFilter: name });
-    }
-    if (flag === "Language") {
-      dispatch({ type: actionType.SET_LANGUAGE_FILTER, languageFilter: name });
-    }
-
-    if (flag === "Albums") {
-      dispatch({ type: actionType.SET_ALBUM_FILTER, albumFilter: name });
-    }
-
-    if (flag === "Category") {
-      dispatch({ type: actionType.SET_FILTER_TERM, filterTerm: name });
-    }
+    dispatch({ type: SET_CATEGORY_FILTER, categoryFilter: name });
   };
 
   return (
-    <div className="border border-gray-300 rounded-md px-4 py-1 relative cursor-pointer hover:border-gray-400">
-      <p
-        className="text-base tracking-wide text-white flex items-center gap-2 "
-        onClick={() => setFilterMenu(!filterMenu)}
-      >
+    <div
+      className="border border-gray-300 rounded-md px-4 py-1 relative cursor-pointer hover:border-gray-400"
+      onClick={() => setFilterMenu(!filterMenu)}
+    >
+      <p className="text-base tracking-wide text-white flex items-center gap-2 ">
         {!filterName && flag}
         {filterName && (
           <>
@@ -60,21 +55,14 @@ const FilterButtons = ({ filterData, flag }) => {
         >
           {filterData?.map((data) => (
             <div
-              key={data.name}
+              key={data.catName}
               className="flex items-center gap-2 px-4 py-1 hover:bg-gray-200"
-              onClick={() => updateFilterButton(data.name)}
+              onClick={() => updateFilterButton(data.catName)}
             >
-              {(flag === "Artist" || flag === "Albums") && (
-                <img
-                  src={data.imageURL}
-                  className="w-8 min-w-[32px] h-8 rounded-full object-cover"
-                  alt=""
-                />
-              )}
               <p className="w-full">
-                {data.name.length > 15
-                  ? `${data.name.slice(0, 14)}...`
-                  : data.name}
+                {data.catName.length > 15
+                  ? `${data.catName.slice(0, 14)}...`
+                  : data.catName}
               </p>
             </div>
           ))}
@@ -84,4 +72,4 @@ const FilterButtons = ({ filterData, flag }) => {
   );
 };
 
-export default FilterButtons;
+export default FilterButtonsCategory;

@@ -9,11 +9,10 @@ export const SET_ARTIST_FILTER = "@customization/SET_ARTIST_FILTER";
 export const SET_LANGUAGE_FILTER = "@customization/SET_LANGUAGE_FILTER";
 export const SET_ALL_USERS = "@customization/SET_ALL_USERS";
 export const SET_ALL_SONGS = "@customization/SET_ALL_SONGS";
-export const SET_ALL_ALBUMNS = "@customization/SET_ALL_ALBUMNS";
+export const SET_ALL_ALBUMS = "@customization/SET_ALL_ALBUMS";
 export const SET_ALBUM_FILTER = "@customization/SET_ALBUM_FILTER";
 export const SET_SONG = "@customization/SET_SONG";
 export const SET_SONG_PLAYING = "@customization/SET_SONG_PLAYING";
 export const SET_MINI_PLAYER = "@customization/v";
-
-
-
+export const SET_ALL_CATEGORIES = "@customization/SET_ALL_CATEGORIES";
+export const SET_CATEGORY_FILTER = "@customization/SET_ALBUM_FILTER";

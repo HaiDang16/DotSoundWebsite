@@ -5,13 +5,20 @@ import { motion } from "framer-motion";
 import { MdDelete } from "react-icons/md";
 import { actionType } from "../context/reducer";
 import { getAllAlbums, deleteAlbumsById } from "../api";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ALL_ALBUMS,
+} from "../store/actions";
 
 const DashboardAlbum = () => {
-  const [{ allAlbums }, dispatch] = useStateValue();
+  const dispatch = useDispatch();
+  const allAlbums = useSelector((state) => state.customization.allAlbums);
   useEffect(() => {
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        dispatch({ type: actionType.SET_ALL_ALBUMNS, allAlbums: data.data });
+        dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.data });
       });
     }
   }, []);
@@ -34,7 +41,7 @@ export const AlbumCard = ({ data, index }) => {
   const [alert, setAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState(null);
 
-  const [dispatch] = useStateValue();
+  const dispatch = useDispatch();
   const deleteObject = (id) => {
     console.log(id);
     deleteAlbumsById(id).then((res) => {
@@ -44,7 +51,7 @@ export const AlbumCard = ({ data, index }) => {
         setAlertMsg(res.data.msg);
         getAllAlbums().then((data) => {
           dispatch({
-            type: actionType.SET_ALL_ALBUMS,
+            type: SET_ALL_ALBUMS,
             allAlbums: data.data,
           });
         });

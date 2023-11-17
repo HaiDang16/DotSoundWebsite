@@ -8,6 +8,8 @@ router.get("/Login", usersControllers.LoginGoogle);
 
 router.get("/GetUserDetails/:userID", usersControllers.getUserDetails);
 
+router.get("/GetAllUsers", usersControllers.getAllUsers);
+
 router.post("/Register", usersControllers.Register);
 
 router.post("/Login", usersControllers.Login);

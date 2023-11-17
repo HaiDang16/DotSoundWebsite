@@ -8,19 +8,20 @@ import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import AlertSuccess from "../components/AlertSuccess";
 import AlertError from "../components/AlertError";
-
+import { useSelector, useDispatch } from "react-redux";
+import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
 const DashboardSongs = () => {
+  const dispatch = useDispatch();
+  const allSongs = useSelector((state) => state.customization.allSongs);
   const [songFilter, setSongFilter] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   const [filteredSongs, setFilteredSongs] = useState(null);
-
-  const [{ allSongs }, dispatch] = useStateValue();
 
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
         dispatch({
-          type: actionType.SET_ALL_SONGS,
+          type: SET_ALL_SONGS,
           allSongs: data.data,
         });
       });
@@ -45,7 +46,7 @@ const DashboardSongs = () => {
     <div className="w-full p-4 flex items-center justify-center flex-col">
       <div className="w-full flex justify-center items-center gap-24">
         <NavLink
-          to={"/dashboard/newSong"}
+          to={"/Admin/ManageSongs/Add"}
           className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
         >
           <IoAdd />
@@ -105,22 +106,27 @@ export const SongContainer = ({ data }) => {
 };
 
 export const SongCard = ({ data, index }) => {
+  const dispatch = useDispatch();
   const [isDeleted, setIsDeleted] = useState(false);
   const [alert, setAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState(null);
 
-  const [{ allSongs, song, isSongPlaying }, dispatch] = useStateValue();
+  const song = useSelector((state) => state.customization.song);
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  const isSongPlaying = useSelector(
+    (state) => state.customization.isSongPlaying
+  );
 
   const addSongToContext = () => {
     if (!isSongPlaying) {
       dispatch({
-        type: actionType.SET_SONG_PLAYING,
+        type: SET_SONG_PLAYING,
         isSongPlaying: true,
       });
     }
     if (song !== index) {
       dispatch({
-        type: actionType.SET_SONG,
+        type: SET_SONG,
         song: index,
       });
     }

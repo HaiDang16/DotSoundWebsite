@@ -27,24 +27,21 @@ const createCategory = async (req, res) => {
   });
 };
 
-//Lấy toàn bộ Categories
-const getAllCategories = async (req, res, next) => {
+const getAllCategories = async (req, res) => {
   let categories;
 
   try {
-    //Lấy ra những sản phẩm với size bán chạy nhất
     categories = await Category.find().sort({ catName: -1 });
   } catch (err) {
-    const error = new HttpError(
-      "Lấy dữ liệu thể loại thất bại, vui lòng thử lại sau",
-      500
-    );
-    return next(error);
+    console.log("Error: ", err);
+    return res.status(500).json({
+      message: "Lấy dữ liệu thể loại thất bại, vui lòng thử lại sau",
+      success: false,
+    });
   }
   res.json({
     categories: categories.map((categories) => {
       const obj = categories.toObject({ getters: true });
-
       return obj;
     }),
   });

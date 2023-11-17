@@ -3,7 +3,7 @@ import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { getAllAlbums, getAllArtist } from "../api";
 import { filterByLanguage, filters } from "../utils/supportfunctions";
-import FilterButtons from "./FilterButtons";
+import FilterButtons from "../components/FilterButtons";
 import { MdClearAll } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
@@ -24,7 +24,7 @@ const Filter = ({ setFilteredSongs }) => {
 
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        dispatch({ type: actionType.SET_ALL_ALBUMNS, allAlbums: data.data });
+        dispatch({ type: actionType.SET_ALL_ALBUMS, allAlbums: data.data });
       });
     }
   }, []);

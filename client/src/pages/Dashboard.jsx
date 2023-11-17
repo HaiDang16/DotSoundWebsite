@@ -2,6 +2,7 @@ import React from "react";
 import { IoHome } from "react-icons/io5";
 import { NavLink, Route, Routes } from "react-router-dom";
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
+import { useSelector, useDispatch } from "react-redux";
 import {
   DashboardAlbum,
   DashboardArtist,
@@ -12,6 +13,8 @@ import {
 } from "../pages";
 
 const Dashboard = () => {
+
+
   return (
     <div className="w-full h-auto flex flex-col items-center justify-center bg_website">
       <div className="w-[60%] my-2 p-4 flex items-center justify-evenly mt-20">
