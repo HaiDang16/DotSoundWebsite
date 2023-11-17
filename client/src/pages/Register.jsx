@@ -1,33 +1,24 @@
-import AlertError from "../components/AlertError";
-import AlertSuccess from "../components/AlertSuccess";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import React, { useEffect, useSyncExternalStore } from "react";
 import { useState } from "react";
-import { BiSolidChevronDown } from "react-icons/bi";
 import { BsApp, BsCheckSquare } from "react-icons/bs";
 import { LogoDotSounds } from "../assets/img";
-import { Link, redirect, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { SET_USER, SET_AUTH } from "../store/actions";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { FcGoogle } from "react-icons/fc";
 import { validateUser, register } from "../api";
 import BackgroundLogin from "../assets/img/background_Login.jpg";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const firebaseAuth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const setAlertOut = () => {
-    setTimeout(() => {
-      setIsAlert(null);
-    }, 2000);
-  };
 
   const loginWithGoogle = async () => {
     await signInWithPopup(firebaseAuth, provider).then((userCred) => {
@@ -67,7 +58,7 @@ const Register = () => {
 
   // Email regular expression for validation
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
+  const phoneRegex = /^\d{9,10}$/;
   // Khúc này của đăng ký chay
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -75,80 +66,102 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [emailError, setEmailError] = useState(""); // Thông báo lỗi email
-  const [phoneError, setPhoneError] = useState(""); // Thông báo lỗi email
-  const [isBsApp, setIsBsApp] = useState(true);
+  const [isThoaThuan, setIsThoaThuan] = useState(false);
+  const [isChinhSach, setIsChinhSach] = useState(false);
   const [isAlert, setIsAlert] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
-  const [handleError, setHandleError] = useState({
-    errFirstNamw: null,
-    errLastName: null,
-    errPhoneNum: null,
-    errEmail: null,
-    errPassword: null,
-    errConfirmPassword: null,
-    errThoaThuan: null,
-    errChinhSach: null,
-  });
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
-  const handleIconClick = () => {
-    setIsBsApp(!isBsApp); // Khi biểu tượng được nhấp, thay đổi trạng thái để chuyển đổi giữa BsApp và BsCheckSquare.
-    setIsChecked(!isChecked); // Đảo ngược trạng thái của isChecked khi người dùng tích vào checkbox
-    setError({ ...error, isChecked: "" }); // Xóa thông báo lỗi khi người dùng tích vào checkbox
+  const handleThoaThuanChange = () => {
+    setIsThoaThuan(!isThoaThuan);
+    setIsAlert(null);
   };
-  const handleLastNameChane = (e) => {
+  const handleChinhSachChange = () => {
+    setIsChinhSach(!isChinhSach);
+    setIsAlert(null);
+  };
+  const handleLastNameChange = (e) => {
     setLastName(e.target.value);
-    setHandleError({ errLastName: null });
+    setIsAlert(null);
+  };
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
+    setIsAlert(null);
+  };
+  const handlePhoneNumChange = (e) => {
+    setPhone(e.target.value);
+    setIsAlert(null);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setIsAlert(null);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setIsAlert(null);
+  };
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
     setIsAlert(null);
   };
 
-  const [error, setError] = useState({
-    lastName: "",
-    firstName: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    isChecked: "",
-  });
-
+  const togglePasswordVisibility = () => {
+    setIsShowPassword(!isShowPassword);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setIsShowConfirmPassword(!isShowConfirmPassword);
+  };
   async function submit(e) {
     e.preventDefault();
-    const newError = { ...error }; // Tạo một bản sao mới của error để cập nhật thông báo lỗi
     if (!lastName) {
-      setHandleError({ errLastName: "Họ và tên đệm không được để trống" });
       setIsAlert("error");
       setAlertMessage("Họ và tên đệm không được để trống");
       return;
     } else if (!firstName) {
-      setHandleError({ errLastName: "Tên không được để trống" });
-    }
-    // Kiểm tra xem người dùng đã tích vào điều khoản chưa
-    else if (!isChecked) {
-      newError.isChecked =
-        "Vui lòng đồng ý với điều khoản và chính sách bảo mật để tiếp tục.";
+      setIsAlert("error");
+      setAlertMessage("Tên không được để trống");
+      return;
     } else if (!phone) {
-      newError.phone = "Số điện thoại không được để trống";
-    } else if (phone.length !== 10) {
-      newError.phone = "Số điện thoại phải có đúng 10 số";
+      setIsAlert("error");
+      setAlertMessage("Số điện thoại không được để trống");
+      return;
+    } else if (!phoneRegex.test(phone)) {
+      setIsAlert("error");
+      setAlertMessage("Số điện thoại không hợp lệ. Vui lòng kiểm tra lại");
+      return;
     } else if (!email) {
-      newError.email = "Email không được để trống";
+      setIsAlert("error");
+      setAlertMessage("Email không được để trống");
+      return;
     } else if (!emailRegex.test(email)) {
-      newError.email = "Email không hợp lệ. Vui lòng kiểm tra lại.";
+      setIsAlert("error");
+      setAlertMessage("Email không hợp lệ. Vui lòng kiểm tra lại");
+      return;
     } else if (!password) {
-      newError.password = "Mật khẩu không được để trống";
+      setIsAlert("error");
+      setAlertMessage("Mật khẩu không được để trống");
+      return;
+    } else if (!confirmPassword) {
+      setIsAlert("error");
+      setAlertMessage("Vui lòng nhập xác nhận lại mật khẩu");
+      return;
     } else if (password !== confirmPassword) {
-      newError.confirmPassword = "Mật khẩu và xác nhận mật khẩu không khớp";
+      setIsAlert("error");
+      setAlertMessage("Mật khẩu và xác nhận mật khẩu không khớp");
+      return;
+    } else if (!isThoaThuan) {
+      setIsAlert("error");
+      setAlertMessage(
+        "Vui lòng đồng ý với Thỏa thuận về điều khoản và điều kiện sử dụng để tiếp tục "
+      );
+      return;
+    } else if (!isChinhSach) {
+      setIsAlert("error");
+      setAlertMessage("Vui lòng đồng ý với chính sách bảo mật để tiếp tục ");
+      return;
     }
 
-    // Kiểm tra nếu có bất kỳ thông báo lỗi nào tồn tại
-    for (const key in newError) {
-      if (newError[key]) {
-        setError(newError);
-        return;
-      }
-    }
     const dataReq = {
       lastName,
       firstName,
@@ -163,21 +176,25 @@ const Register = () => {
         console.log("res.data.message: ", res.data.message);
         if (res.data.message === "Đăng ký thành công") {
           navigate("/Login");
-        } else if (res.data.message === "Email exist") {
-          console.log("Email exist");
-          setEmailError("Email đã được dùng để đăng ký. Vui lòng kiểm tra lại");
-        } else if (res.data.message === "PhoneNum exist") {
-          setPhoneError(
+        } else if (res.data.message === "Email đã tồn tại") {
+          setIsAlert("error");
+          setAlertMessage(
+            "Email đã được dùng để đăng ký. Vui lòng kiểm tra lại"
+          );
+          return;
+        } else if (res.data.message === "Số điện thoại đã tồn tại") {
+          setIsAlert("error");
+          setAlertMessage(
             "Số điện thoại đã được dùng để đăng ký. Vui lòng kiểm tra lại"
           );
+          return;
         }
       });
     } catch (error) {
-      setError({ ...error, registration: error.response.data.message });
+      console.log(error);
     }
   }
 
-  const [showPassword, setShowPassword] = useState(false);
   const inputStyle =
     "w-full px-4 py-3 border-b border-solid border-[#9BA4B5] focus:outline-none focus:border-blue-900 text[16px] leading-7 placeholder:text-zinc-600 rounded-md cursor-text bg-slate-200";
   return (
@@ -194,8 +211,6 @@ const Register = () => {
         <h1 className=" text-[30px] leading-9 font-bold mb-8 font-sans mx-auto text-white text-center">
           Đăng Ký
         </h1>
-
-        {/* Nhet backend vao day */}
         <form action="POST">
           <div className="flex mb-8 justify-between">
             <div>
@@ -205,11 +220,8 @@ const Register = () => {
                 placeholder="Họ và Tên Đệm"
                 name="lastName"
                 // value={formData.lastName}
-                onChange={handleLastNameChane}
+                onChange={handleLastNameChange}
               />
-              {/* {handleError.errLastName && (
-                <AlertError msg={handleError.errLastName} />
-              )} */}
             </div>
 
             <div>
@@ -219,31 +231,17 @@ const Register = () => {
                 placeholder="Tên"
                 name="firstName"
                 // value={formData.firstName}
-                onChange={(e) => {
-                  setFirstName(e.target.value);
-                  setError({ ...error, firstName: "" });
-                }}
+                onChange={handleFirstNameChange}
               />
-              {error.firstName && <AlertError msg={error.firstName} />}
-              {/* {error.firstName && (
-                <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                  {error.firstName}
-                </div>
-              )} */}
             </div>
           </div>
           <div className="mb-8">
             <div
-              className="flex space-x-0  rounded-md"
+              className="flex space-x-0 rounded-md"
               style={{ overflow: "hidden" }}
             >
-              <div className="bg-slate-200  border-l-10  border-b border-solid border-[#9BA4B5]  w-[140px] h-[60px] flex items-center justify-center relative">
-                {/* <img
-                  src={vietnam}
-                  alt="IconVN"
-                  className="w-[40px] h-[45px] inset-0"
-                /> */}
-                <p className="font-semibold ml-3 mr-2 text-center flex gap-1 items-center ">
+              <div className="bg-slate-200  border-l-10  border-b border-solid border-[#9BA4B5]  w-[90px] h-[60px] flex items-center justify-center relative">
+                <p className="font-semibold mr-2 text-center flex items-center ">
                   (+84)
                 </p>
               </div>
@@ -255,25 +253,9 @@ const Register = () => {
                 placeholder="Số điện thoại"
                 name="phone"
                 //   value={formData.phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  setError({ ...error, phone: "" });
-                  setPhoneError("");
-                }}
+                onChange={handlePhoneNumChange}
               />
             </div>
-            {error.phone && <AlertError msg={error.phone} />}
-            {phoneError && <AlertError msg={phoneError} />}
-            {/* {error.phone && (
-              <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                {error.phone}
-              </div>
-            )} */}
-            {/* {phoneError && (
-              <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                {phoneError}
-              </div>
-            )} */}
           </div>
 
           <div className="mb-8">
@@ -283,74 +265,53 @@ const Register = () => {
               placeholder="Email"
               name="email"
               //   value={formData.email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError({ ...error, email: "" });
-                setEmailError("");
-              }}
+              onChange={handleEmailChange}
             />
-            {error.email && <AlertError msg={error.email} />}
-            {emailError && <AlertError msg={emailError} />}
-            {/* {error.email && (
-              <div className="mt-2 text-red-500 italic text-sm font-semibold block">
-                {error.email}
-              </div>
-            )}
-
-            {emailError && (
-              <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                {emailError}
-              </div>
-            )} */}
           </div>
-          <div className="mt-8">
+          <div className="relative mt-8">
             <input
               className={inputStyle}
-              type="password"
+              type={`${isShowPassword ? "text" : "password"}`}
               placeholder="Mật khẩu"
               name="password"
-              //   value={formData.password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError({ ...error, password: "" });
-              }}
+              value={password}
+              onChange={handlePasswordChange}
             />
-            {error.password && <AlertError msg={error.password} />}
-
-            {/* {error.password && (
-              <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                {error.password}
-              </div>
-            )} */}
+            <button
+              type="button"
+              className="absolute top-1/2 transform -translate-y-1/2 right-4"
+              onClick={togglePasswordVisibility}
+            >
+              {isShowPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
-          <div className="mt-8">
+          <div className="relative mt-8">
             <input
               className={inputStyle}
-              type="password"
+              type={`${isShowConfirmPassword ? "text" : "password"}`}
               placeholder="Nhập lại mật khẩu"
               name="confirmPassword"
-              //   value={formData.confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                setError({ ...error, confirmPassword: "" });
-              }}
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
             />
-            {error.confirmPassword && (
-              <AlertError msg={error.confirmPassword} />
-            )}
-            {/* {error.confirmPassword && (
-              <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                {error.confirmPassword}
-              </div>
-            )} */}
+            <button
+              type="button"
+              className="absolute top-1/2 transform -translate-y-1/2 right-4"
+              onClick={toggleConfirmPasswordVisibility}
+            >
+              {isShowConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
           <div className="text-white mt-8 ml-4 flex items-center">
-            {isBsApp ? (
-              <BsApp onClick={handleIconClick} className="cursor-pointer" />
+            {!isThoaThuan ? (
+              <BsApp
+                onClick={handleThoaThuanChange}
+                className="cursor-pointer"
+              />
             ) : (
               <BsCheckSquare
                 className="cursor-pointer"
-                onClick={handleIconClick}
+                onClick={handleThoaThuanChange}
                 style={{ color: "white" }}
               />
             )}
@@ -359,23 +320,21 @@ const Register = () => {
             </p>
           </div>
           <div className="text-white mt-8 ml-4 flex items-center">
-            {isBsApp ? (
-              <BsApp onClick={handleIconClick} className="cursor-pointer" />
+            {!isChinhSach ? (
+              <BsApp
+                onClick={handleChinhSachChange}
+                className="cursor-pointer"
+              />
             ) : (
               <BsCheckSquare
                 className="cursor-pointer"
-                onClick={handleIconClick}
+                onClick={handleChinhSachChange}
                 style={{ color: "white" }}
               />
             )}
             <p className="ml-2">Tôi đồng ý với chính sách bảo mật</p>
           </div>
-          {error.isChecked && <AlertError msg={error.isChecked} />}
-          {/* {error.isChecked && (
-            <div className="mt-2 text-red-500 italic text-sm font-semibold w-full text-center">
-              {error.isChecked}
-            </div>
-          )} */}
+
           <p className="mt-8 text-center text-white">
             Bằng việc bấm vào "ĐĂNG KÝ", bạn đồng ý rằng bạn đã đọc, hiểu và
             đồng ý với các điều khoản và điều kiện được quy định tại
