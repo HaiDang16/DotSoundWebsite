@@ -1,27 +1,33 @@
-import AlertError from "../../components/shared/AlertError";
-import AlertSuccess from "../../components/shared/AlertSuccess";
+import AlertError from "../components/AlertError";
+import AlertSuccess from "../components/AlertSuccess";
+import AlertErrorBottom from "../components/AlertErrorBottom";
+import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import React, { useEffect, useSyncExternalStore } from "react";
 import { useState } from "react";
 import { BiSolidChevronDown } from "react-icons/bi";
 import { BsApp, BsCheckSquare } from "react-icons/bs";
-import logoGoogle from "../../assets/img/logoGoogle.png";
-import logoGu from "../../assets/img/logoGu.png";
-import vietnam from "../../assets/img/vietnam.png";
+import { LogoDotSounds } from "../assets/img";
 import { Link, redirect, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_USER, SET_AUTH } from "../../store/actions";
+import { SET_USER, SET_AUTH } from "../store/actions";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { app } from "../../config/firebase.config";
+import { app } from "../config/firebase.config";
 import { FcGoogle } from "react-icons/fc";
-import { validateUser } from "../../api";
-import BackgroundLogin from "../../assets/img/background_Login.jpg";
+import { validateUser, register } from "../api";
+import BackgroundLogin from "../assets/img/background_Login.jpg";
 
 const Register = () => {
   const firebaseAuth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const setAlertOut = () => {
+    setTimeout(() => {
+      setIsAlert(null);
+    }, 2000);
+  };
 
   const loginWithGoogle = async () => {
     await signInWithPopup(firebaseAuth, provider).then((userCred) => {
@@ -59,19 +65,6 @@ const Register = () => {
     });
   };
 
-  //   const [formData, setFormData] = useState({
-  //     lastName: "",
-  //     firstName: "",
-  //     phone: "",
-  //     email: "",
-  //     password: "",
-  //     confirmPassword: "",
-  //   });
-
-  //   const handleInputChange = (e) => {
-  //     setFormData({ ...formData, [e.target.name]: e.target.value });
-  //   };
-
   // Email regular expression for validation
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
@@ -85,12 +78,29 @@ const Register = () => {
   const [emailError, setEmailError] = useState(""); // Thông báo lỗi email
   const [phoneError, setPhoneError] = useState(""); // Thông báo lỗi email
   const [isBsApp, setIsBsApp] = useState(true);
+  const [isAlert, setIsAlert] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [handleError, setHandleError] = useState({
+    errFirstNamw: null,
+    errLastName: null,
+    errPhoneNum: null,
+    errEmail: null,
+    errPassword: null,
+    errConfirmPassword: null,
+    errThoaThuan: null,
+    errChinhSach: null,
+  });
 
   const handleIconClick = () => {
     setIsBsApp(!isBsApp); // Khi biểu tượng được nhấp, thay đổi trạng thái để chuyển đổi giữa BsApp và BsCheckSquare.
     setIsChecked(!isChecked); // Đảo ngược trạng thái của isChecked khi người dùng tích vào checkbox
     setError({ ...error, isChecked: "" }); // Xóa thông báo lỗi khi người dùng tích vào checkbox
+  };
+  const handleLastNameChane = (e) => {
+    setLastName(e.target.value);
+    setHandleError({ errLastName: null });
+    setIsAlert(null);
   };
 
   const [error, setError] = useState({
@@ -106,32 +116,27 @@ const Register = () => {
   async function submit(e) {
     e.preventDefault();
     const newError = { ...error }; // Tạo một bản sao mới của error để cập nhật thông báo lỗi
-
+    if (!lastName) {
+      setHandleError({ errLastName: "Họ và tên đệm không được để trống" });
+      setIsAlert("error");
+      setAlertMessage("Họ và tên đệm không được để trống");
+      return;
+    } else if (!firstName) {
+      setHandleError({ errLastName: "Tên không được để trống" });
+    }
     // Kiểm tra xem người dùng đã tích vào điều khoản chưa
-    if (!isChecked) {
+    else if (!isChecked) {
       newError.isChecked =
         "Vui lòng đồng ý với điều khoản và chính sách bảo mật để tiếp tục.";
-    }
-    if (!lastName) {
-      newError.lastName = "Họ và tên đệm không được để trống";
-    }
-
-    if (!firstName) {
-      newError.firstName = "Tên không được để trống";
-    }
-    if (!phone) {
+    } else if (!phone) {
       newError.phone = "Số điện thoại không được để trống";
     } else if (phone.length !== 10) {
       newError.phone = "Số điện thoại phải có đúng 10 số";
-    }
-
-    if (!email) {
+    } else if (!email) {
       newError.email = "Email không được để trống";
     } else if (!emailRegex.test(email)) {
       newError.email = "Email không hợp lệ. Vui lòng kiểm tra lại.";
-    }
-
-    if (!password) {
+    } else if (!password) {
       newError.password = "Mật khẩu không được để trống";
     } else if (password !== confirmPassword) {
       newError.confirmPassword = "Mật khẩu và xác nhận mật khẩu không khớp";
@@ -144,78 +149,48 @@ const Register = () => {
         return;
       }
     }
+    const dataReq = {
+      lastName,
+      firstName,
+      phone,
+      email,
+      password,
+    };
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/users/Register",
-        {
-          lastName,
-          firstName,
-          phone,
-          email,
-          password,
+      register(dataReq).then((res) => {
+        console.log("res: ", res);
+        console.log("res.data.message: ", res.data.message);
+        if (res.data.message === "Đăng ký thành công") {
+          navigate("/Login");
+        } else if (res.data.message === "Email exist") {
+          console.log("Email exist");
+          setEmailError("Email đã được dùng để đăng ký. Vui lòng kiểm tra lại");
+        } else if (res.data.message === "PhoneNum exist") {
+          setPhoneError(
+            "Số điện thoại đã được dùng để đăng ký. Vui lòng kiểm tra lại"
+          );
         }
-      );
-
-      if (response.data.message === "Đăng ký thành công") {
-        navigate("/Login");
-      } else if (response.data.message === "Email exist") {
-        setEmailError("Email đã được dùng để đăng ký. Vui lòng kiểm tra lại");
-      } else if (response.data.message === "PhoneNum exist") {
-        setPhoneError(
-          "Số điện thoại đã được dùng để đăng ký. Vui lòng kiểm tra lại"
-        );
-      }
+      });
     } catch (error) {
       setError({ ...error, registration: error.response.data.message });
     }
   }
 
-  //   try {
-  //     const response = await axios.post("http://localhost:4000/Register", {
-  //       lastName,
-  //       firstName,
-  //       phone,
-  //       email,
-  //       password,
-  //       confirmPassword,
-  //     });
-
-  //     if (response.data.message === "Đăng ký thành công") {
-  //       alert("Tạo tài khoản thành công");
-  //       navigate("/Login");
-  //     } else if (response.data.message === "Mật khẩu và mật khẩu xác nhận không khớp") {
-  //       alert("Mật khẩu không trùng khớp");
-  //     }
-  //   } catch (error) {
-  //     alert(error.response.data.message);
-  //   }
-  // }
   const [showPassword, setShowPassword] = useState(false);
   const inputStyle =
     "w-full px-4 py-3 border-b border-solid border-[#9BA4B5] focus:outline-none focus:border-blue-900 text[16px] leading-7 placeholder:text-zinc-600 rounded-md cursor-text bg-slate-200";
   return (
     <div
       style={{ backgroundImage: `url(${BackgroundLogin})` }}
-      className="w-full h-auto mt-20 flex flex-col justify-center items-center rounded-lg shadow-md md:p-10 bg-center bg-cover bg-size font-sans relative"
+      className="w-full h-auto flex flex-col justify-center items-center rounded-lg shadow-md md:p-10 bg-center bg-cover bg-size font-sans relative"
     >
       {" "}
       <section className="px-5 lg:px-0 max-w-[570px]">
         <div className="flex justify-center mb-8 h-auto">
-          <img className="h-40 w-50" src={logoGu} alt="" />
+          <img className="h-40 w-50" src={LogoDotSounds} alt="" />
         </div>
-        <div className="text-white text-center mt-5 mb-9 text-[15px]">
-          <p>
-            <span className="ml-2">
-              Nhận voucher giảm giá và quà tặng độc quyền từ các thương hiệu làm
-              đẹp, thời trang và phong cách sống
-            </span>
-            .
-          </p>
-          <p className="my-4">
-            Gợi ý bài viết và sản phẩm dựa trên sở thích của bạn
-          </p>
-        </div>
+
         <h1 className=" text-[30px] leading-9 font-bold mb-8 font-sans mx-auto text-white text-center">
           Đăng Ký
         </h1>
@@ -230,16 +205,10 @@ const Register = () => {
                 placeholder="Họ và Tên Đệm"
                 name="lastName"
                 // value={formData.lastName}
-                onChange={(e) => {
-                  setLastName(e.target.value);
-                  setError({ ...error, lastName: "" });
-                }}
+                onChange={handleLastNameChane}
               />
-              {error.lastName && <AlertError msg={error.lastName} />}
-              {/* {error.lastName && (
-                <div className="mt-2 text-red-500 italic text-sm font-semibold">
-                  {error.lastName}
-                </div>
+              {/* {handleError.errLastName && (
+                <AlertError msg={handleError.errLastName} />
               )} */}
             </div>
 
@@ -366,7 +335,9 @@ const Register = () => {
                 setError({ ...error, confirmPassword: "" });
               }}
             />
-            {error.confirmPassword && <AlertError msg={error.confirmPassword} />}
+            {error.confirmPassword && (
+              <AlertError msg={error.confirmPassword} />
+            )}
             {/* {error.confirmPassword && (
               <div className="mt-2 text-red-500 italic text-sm font-semibold">
                 {error.confirmPassword}
@@ -446,6 +417,15 @@ const Register = () => {
           </div>
         </form>
       </section>
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMessage} />
+          ) : (
+            <AlertErrorBottom msg={alertMessage} />
+          )}
+        </>
+      )}
     </div>
   );
 };

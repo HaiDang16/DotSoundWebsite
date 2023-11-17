@@ -6,6 +6,7 @@ import Loadable from "../components/Loadable";
 import HomeLayout from "../layouts/HomeLayout";
 
 const Login = Loadable(lazy(() => import("../pages/Login")));
+const Register = Loadable(lazy(() => import("../pages/Register")));
 const Trending = Loadable(lazy(() => import("../pages/Trending")));
 const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
@@ -37,6 +38,10 @@ const MainRoutes = [
   {
     path: "/Login",
     element: <Login />,
+  },
+  {
+    path: "/Register",
+    element: <Register />,
   },
 ];
 

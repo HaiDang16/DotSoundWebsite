@@ -68,7 +68,7 @@ const newUserData = async (decodeValue, req, res) => {
   }
 };
 const updateNewUserData = async (decodeValue, req, res) => {
-  const filter = { GoogleID: decodeValue.user_id };
+  const filter = { googleID: decodeValue.user_id };
   const option = {
     upsert: true,
     new: true,
@@ -76,11 +76,12 @@ const updateNewUserData = async (decodeValue, req, res) => {
   try {
     const result = await User.findOneAndUpdate(
       filter,
-      { AuthTime: decodeValue.auth_time },
+      { authTime: decodeValue.auth_time },
       option
     );
     res.status(200).send({ user: result });
   } catch (error) {
+    console.log("Error: ", error);
     res.status(400).send({ success: false, msg: error });
   }
 };
@@ -88,9 +89,11 @@ const updateNewUserData = async (decodeValue, req, res) => {
 const Register = async (req, res) => {
   console.log("Register");
   const { lastName, firstName, phone, email, password } = req.body;
+  const dataReq = { lastName, firstName, phone, email, password };
+  console.log("dataReq: ", dataReq);
 
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
-  const userEmail = await User.findOne({ CusEmail: email });
+  const userEmail = await User.findOne({ cusEmail: email });
 
   if (userEmail) {
     // Đã tồn tại email
@@ -98,7 +101,7 @@ const Register = async (req, res) => {
   }
 
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
-  const userPhone = await User.findOne({ CusPhoneNum: phone });
+  const userPhone = await User.findOne({ cusPhoneNum: phone });
 
   if (userPhone) {
     // Đã tồn tại email

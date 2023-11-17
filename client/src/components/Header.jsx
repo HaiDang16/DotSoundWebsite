@@ -41,7 +41,7 @@ const Header = () => {
       type: SET_USER,
       user: null,
     });
-    navigate("/Login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (
@@ -74,13 +74,20 @@ const Header = () => {
           />
           <div className="flex flex-col">
             <p className="text-white text-lg hover:text-headingColor font-semibold">
-              {user?.user.cusFirstName}
+              {`${user?.user.cusLastName} ${user?.user.cusFirstName}`}
             </p>
-            {user?.user.cusRole === "admin" && (
+            {user?.user.cusRole === "vip" ? (
               <>
-                <p className="flex items-center gap-2 text-xs text-gray-500 font-normal">
-                  Thành viên VIP{" "}
-                  <FaCrown className="text-xm -ml-1 text-yellow-500" />{" "}
+                <p className="flex items-center gap-2 text-xs text-black font-normal">
+                  <FaCrown className="text-xm -ml-1 text-yellow-500" /> Thành
+                  viên VIP{" "}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="flex items-center gap-2 text-xs text-black font-normal">
+                  <FaCrown className="text-xm -ml-1 text-black" /> Thành viên
+                  thường
                 </p>
               </>
             )}

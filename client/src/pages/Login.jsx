@@ -5,14 +5,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogoDotSounds } from "../assets/img";
-import { loginAccount } from "../api";
 
 // Đăng nhập bằng google
 import { app } from "../config/firebase.config";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { FcGoogle } from "react-icons/fc";
 import React, { useEffect } from "react";
-import { validateUser } from "../api";
+import { validateUser, loginAccount } from "../api";
 import { IoSearch, IoCartOutline } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_USER, SET_AUTH } from "../store/actions";
@@ -96,18 +95,18 @@ const Login = () => {
         email: "Email không được để trống",
         password: "Mật khẩu không được để trống",
       });
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:4000/api/users/Login",
-          {
-            email,
-            password,
-          }
-        );
-        if (response.data.message === "Account exist") {
+      return;
+    }
+    const data = { email, password };
+    try {
+      loginAccount(data).then((data) => {
+        dispatch({
+          type: SET_USER,
+          user: data,
+        });
+        if (data.message === "Account exist") {
           navigate("/");
-          console.log(response.data.user);
+          console.log(data.user);
           dispatch({
             type: SET_AUTH,
             auth: true,
@@ -115,19 +114,16 @@ const Login = () => {
           window.localStorage.setItem("auth", "true");
           dispatch({
             type: SET_USER,
-            user: response.data,
+            user: data,
           });
-          window.localStorage.setItem(
-            "userData",
-            JSON.stringify(response.data)
-          );
-        } else if (response.data.message === "Invalid account") {
+          window.localStorage.setItem("userData", JSON.stringify(data));
+        } else if (data.message === "Invalid account") {
           setAccoutValid("Email hoặc mật khẩu không đúng");
         }
-      } catch (error) {
-        console.error("Lỗi xảy ra: ", error);
-        alert("Có lỗi xảy ra khi thực hiện đăng nhập. Vui lòng thử lại sau.");
-      }
+      });
+    } catch (error) {
+      console.error("Lỗi xảy ra: ", error);
+      alert("Có lỗi xảy ra khi thực hiện đăng nhập. Vui lòng thử lại sau.");
     }
   }
   return (

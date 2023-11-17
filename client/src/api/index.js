@@ -125,3 +125,12 @@ export const loginAccount = async (data) => {
     return null;
   }
 };
+
+export const register = async (dataReq) => {
+  try {
+    const res = axios.post(`${baseURL}api/users/Register`, { ...dataReq });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
