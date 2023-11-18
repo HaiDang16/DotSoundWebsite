@@ -100,7 +100,7 @@ const DashboardArtist = () => {
 
 export const AritstContainer = ({ data }) => {
   return (
-    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly mt-5">
+    <div className="w-full flex flex-wrap gap-8 items-center justify-evenly mt-5">
       {data.map((data, index) => (
         <ArtistCard key={index} data={data} index={index} />
       ))}
