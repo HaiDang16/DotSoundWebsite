@@ -34,9 +34,11 @@ const getArtistDetails = async (req, res) => {
   const filter = { _id: req.params.getOne };
   const cursor = await Artist.findOne(filter);
   if (cursor) {
-    res.status(200).send({ success: true, data: cursor });
+    return res.status(200).send({ success: true, artist: cursor });
   } else {
-    res.status(200).send({ success: true, msg: "No Data Found" });
+    return res
+      .status(200)
+      .send({ success: true, message: "Đã xảy ra lỗi. Vui lòng thử lại" });
   }
 };
 
@@ -56,25 +58,26 @@ const createArtist = async (req, res) => {
 };
 
 const updateArtist = async (req, res) => {
-  const filter = { _id: req.params.updateId };
-  const options = {
-    upsert: true,
-    new: true,
-  };
+  let artist;
+  const { name, imageURL, twitter, instagram, artistID } = req.body;
+  const dataReq = { name, imageURL, twitter, instagram, artistID };
+  console.log("dataReq: ", dataReq);
   try {
-    const result = await Artist.findOneAndUpdate(
-      filter,
-      {
-        name: req.body.name,
-        imageURL: req.body.imageURL,
-        twitter: req.body.twitter,
-        instagram: req.body.instagram,
-      },
-      options
-    );
-    res.status(200).send({ artist: result });
+    artist = await Artist.findById(artistID);
+    artist.artistName = name;
+    artist.artistImageURL = imageURL;
+    artist.artistTwitter = twitter;
+    artist.artistInstagram = instagram;
+    await artist.save();
+
+    return res
+      .status(200)
+      .send({ artist: artist, message: "Cập nhật nghệ sĩ thành công" });
   } catch (error) {
-    res.status(400).send({ success: false, msg: error });
+    console.log("Error: ", error);
+    return res
+      .status(400)
+      .send({ success: false, message: "Cập nhật nghệ sĩ thất bai" });
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Logo } from "../assets/img";
 import { useStateValue } from "../context/StateProvider";
@@ -12,17 +12,36 @@ import { motion } from "framer-motion";
 
 import { FaCrown } from "react-icons/fa";
 import { SET_USER, SET_AUTH } from "../store/actions";
-
+import { SearchCard } from "../components";
+import { deleteSongById, getAllSongs } from "../api";
+import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
 const Header = () => {
   console.log("Header.jsx");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = JSON.parse(window.localStorage.getItem("userData"));
-
+  const allSongs = useSelector((state) => state.customization.allSongs);
   const [isMenu, setIsMenu] = useState(false);
-  const [isSearched, setIisSearched] = useState(false);
-
+  const [isSreach, setIsSearch] = useState(false);
+  const [filteredSongs, setFilteredSongs] = useState(null);
+  const [songFilter, setSongFilter] = useState("");
+  const fadeDownVariant = {
+    initial: {
+      opacity: 0,
+      y: -20,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
+  const handleClickSearch = () => {
+    setIsSearch(true);
+  };
   const logOut = () => {
     const firebaseAuth = getAuth(app);
     firebaseAuth
@@ -44,6 +63,50 @@ const Header = () => {
     navigate("/", { replace: true });
   };
 
+  useEffect(() => {
+    if (!allSongs) {
+      getAllSongs().then((data) => {
+        dispatch({
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
+        });
+      });
+    }
+  }, []);
+  useEffect(() => {
+    if (songFilter.length > 0) {
+      const filtered = allSongs.filter(
+        (data) =>
+          data.songName.toLowerCase().includes(songFilter.toLowerCase()) ||
+          data.songArtist.songArtistName
+            .toLowerCase()
+            .includes(songFilter.toLowerCase()) |
+            data.songAlbum.songAlbumName
+              .toLowerCase()
+              .includes(songFilter.toLowerCase())
+      );
+      setFilteredSongs(filtered.slice(0, 5));
+    } else {
+      setFilteredSongs(null);
+    }
+  }, [songFilter]);
+
+  const handleOutsideClick = (event) => {
+    if (filteredSongs !== 0 && songFilter) {
+      const searchContainer = document.getElementById("searchContainer");
+      if (searchContainer && !searchContainer.contains(event.target)) {
+        setFilteredSongs(null);
+        setSongFilter("");
+      }
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [songFilter, filteredSongs]);
+
   return (
     <header className="flex fixed top-0 items-center w-full  background  md:px-20 z-30">
       <NavLink to={"/Trending"}>
@@ -57,8 +120,51 @@ const Header = () => {
         <li className="mx-3 text-lg"><NavLink to={'/ForYou'} className={({ isActive }) => isActive ? isActiveStyles : isNotActiveStyles}>Dành Cho Bạn</NavLink></li>
       </ul>
       <div className="w-1/2">
-        {" "}
-        <SearchBar />
+        <div className="w-full  h-16 flex items-center justify-center">
+          <div className="w-full gap-4 p-2 md:w-2/3  shadow-xl rounded-md flex items-center">
+            <IoSearch className="text-3xl text-white" />
+            <input
+              type="text"
+              value={songFilter}
+              className="w-full h-full bg-transparent text-lg text-white  border-none outline-none "
+              placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
+              onChange={(e) => setSongFilter(e.target.value)}
+              onClick={handleClickSearch}
+            />
+          </div>
+          {isSreach && filteredSongs && filteredSongs.length !== 0 && (
+            <motion.div
+              variants={fadeDownVariant}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fade-down absolute z-10 top-16 flex flex-col gap-3 w-96 bg-slate-200 shadow-lg rounded-b-lg backdrop-blur-sm py-2"
+              id="searchContainer"
+            >
+              {filteredSongs && filteredSongs.length !== 0 ? (
+                filteredSongs?.map((search, index) => (
+                  <SearchCard
+                    key={search._id}
+                    songName={search.songName}
+                    songImageURL={search.songImageURL}
+                    index={index}
+                    songID={search._id}
+                    songAlbum={search.songAlbum.songAlbumName}
+                    songArtist={search.songArtist.songArtistName}
+                  />
+                ))
+              ) : (
+                <div className="flex-auto h-full w-full flex flex-col py-4">
+                  <div className="flex items-center">
+                    <p className="text-gray-700 font-medium tracking-widest text-center p-5">
+                      Không có kết quả tìm kiếm phù hợp
+                    </p>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </div>
       </div>
       {user?.user.cusRole ? (
         <div
@@ -91,7 +197,8 @@ const Header = () => {
             ) : user?.user.cusRole === "admin" ? (
               <>
                 <p className="flex items-center gap-2 text-xs text-black font-normal">
-                  <FaCrown className="text-xm -ml-1 text-red-500" /> Quản lý
+                  <FaCrown className="text-xm -ml-1 text-red-500" /> Quản trị
+                  viên
                 </p>
               </>
             ) : (

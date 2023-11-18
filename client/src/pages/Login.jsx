@@ -58,14 +58,19 @@ const Login = () => {
             userCred.getIdToken().then((token) => {
               window.localStorage.setItem("auth", "true");
               validateUser(token).then((data) => {
+                console.log("validateUser res login: ", data);
                 dispatch({
                   type: SET_USER,
                   user: data,
                 });
                 window.localStorage.setItem("userData", JSON.stringify(data));
+                if (data.user.cusRole === "admin") {
+                  navigate("/Admin/Dashboard");
+                } else {
+                  navigate("/", { replace: true });
+                }
               });
             });
-            navigate("/", { replace: true });
           } else {
             dispatch({
               type: SET_AUTH,
@@ -121,20 +126,20 @@ const Login = () => {
         if (res.data.message === "Account exist") {
           dispatch({
             type: SET_USER,
-            user: res,
+            user: res.data.user,
           });
-          navigate("/");
           console.log(res.data.user);
           dispatch({
             type: SET_AUTH,
             auth: true,
           });
           window.localStorage.setItem("auth", "true");
-          dispatch({
-            type: SET_USER,
-            user: res,
-          });
           window.localStorage.setItem("userData", JSON.stringify(res.data));
+          if (res.data.user.cusRole === "admin") {
+            navigate("/Admin/Dashboard");
+          } else {
+            navigate("/");
+          }
         } else if (res.data.message === "Invalid account") {
           setIsAlert("error");
           setAlertMessage("Email hoặc mật khẩu không đúng");

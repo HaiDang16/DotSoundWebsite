@@ -21,6 +21,15 @@ const albumSchema = mongoose.Schema(
         required: true,
       },
     },
+    albumItems: [
+      {
+        albumSongID: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "song",
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

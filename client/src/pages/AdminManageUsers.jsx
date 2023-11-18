@@ -6,7 +6,8 @@ import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import DashboardUserCard from "./DashboardUserCard";
 import { useSelector, useDispatch } from "react-redux";
-
+import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
+import { NavLink } from "react-router-dom";
 import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
@@ -24,9 +25,10 @@ const DashboardUser = () => {
   useEffect(() => {
     if (!allUsers) {
       getAllUsers().then((data) => {
+        console.log("getAllUsers res: ", data);
         dispatch({
           type: SET_ALL_USERS,
-          allUsers: data.data,
+          allUsers: data.users,
         });
       });
     }
@@ -35,8 +37,11 @@ const DashboardUser = () => {
   useEffect(() => {
     if (emailFilter) {
       const filtered = allUsers.filter(
-        // prettier-ignore
-        (data) => data.email.includes(emailFilter) || data.name.includes(emailFilter) || data.role.includes(emailFilter)
+        (data) =>
+          data.cusEmail.includes(emailFilter) ||
+          data.cusFirstName.includes(emailFilter) ||
+          data.cusLastName.includes(emailFilter) ||
+          (data.cusLastName + " " + data.cusFirstName).includes(emailFilter)
       );
       setFiltereUsers(filtered);
     }
@@ -45,6 +50,12 @@ const DashboardUser = () => {
   return (
     <div className="w-full p-4 flex items-center justify-center flex-col">
       <div className="w-full flex justify-center items-center gap-24">
+        <NavLink
+          to={"/Admin/ManageUsers/Add"}
+          className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
+        >
+          <IoAdd />
+        </NavLink>
         <input
           type="text"
           placeholder="Search here"
@@ -67,32 +78,34 @@ const DashboardUser = () => {
               setFiltereUsers(null);
             }}
           >
-            <AiOutlineClear className="text-3xl text-textColor cursor-pointer" />
+            <AiOutlineClear className="text-3xl text-white cursor-pointer" />
           </motion.i>
         )}
       </div>
 
       <div className="relative w-full py-12 min-h-[400px] overflow-x-scroll scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-slate-400 my-4 flex flex-col items-center justify-start p-4 border border-gray-300 rounded-md gap-3">
         <div className="absolute top-4 left-4">
-          <p className="text-xl font-bold">
-            <span className="text-sm font-semibold text-white">Count : </span>
+          <p className="text-lg font-bold text-white">
+            <span className="text-lg font-semibold text-white">
+              Tổng người dùng:{" "}
+            </span>
             {filtereUsers ? filtereUsers?.length : allUsers?.length}
           </p>
         </div>
 
-        <div className="w-full min-w-[750px] flex items-center justify-between">
+        <div className="w-full min-w-[750px] flex items-center justify-between mt-5">
           {/* prettier-ignore */}
-          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Image</p>
+          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Hình đại diện</p>
           {/* prettier-ignore */}
-          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Name</p>
+          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Họ và tên</p>
           {/* prettier-ignore */}
           <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Email</p>
           {/* prettier-ignore */}
-          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Verified</p>
+          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Xác thực email</p>
           {/* prettier-ignore */}
-          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Created</p>
+          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Ngày tạo</p>
           {/* prettier-ignore */}
-          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Role</p>{" "}
+          <p className="text-sm text-white font-semibold w-275 min-w-[160px] text-center">Phân quyền</p>{" "}
         </div>
         {allUsers && !filtereUsers
           ? allUsers?.map((data, i) => (

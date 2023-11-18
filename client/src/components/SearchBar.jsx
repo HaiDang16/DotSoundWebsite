@@ -15,7 +15,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full  h-16 flex items-center justify-center">
+    <div className="w-full h-16 flex items-center justify-center">
       <div className="w-full gap-4 p-2 md:w-2/3  shadow-xl rounded-md flex items-center">
         <IoSearch className="text-3xl text-white" />
         <input

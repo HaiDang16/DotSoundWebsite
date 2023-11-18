@@ -81,7 +81,7 @@ const Header = () => {
             {`${user?.user.cusLastName} ${user?.user.cusFirstName}`}
           </p>
           <p className="flex items-center gap-2 text-xs text-black font-normal">
-            <FaCrown className="text-xm -ml-1 text-red-500" /> Quản lý
+            <FaCrown className="text-xm -ml-1 text-red-500" /> Quản trị viên
           </p>
         </div>
         {isMenu && (

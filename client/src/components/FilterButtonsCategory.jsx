@@ -7,7 +7,7 @@ import { actionType } from "../context/reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_CATEGORY_FILTER } from "../store/actions";
 
-const FilterButtonsCategory = ({ filterData, flag }) => {
+const FilterButtonsCategory = ({ filterData, flag, filterInit }) => {
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
   const dispatch = useDispatch();
@@ -18,6 +18,15 @@ const FilterButtonsCategory = ({ filterData, flag }) => {
     console.log("catid: ", id);
     dispatch({ type: SET_CATEGORY_FILTER, categoryFilter: id });
   };
+
+  useEffect(() => {
+    if (filterInit && filterData) {
+      const initialArtist = filterData.find((data) => data._id === filterInit);
+      if (initialArtist) {
+        setFilterName(initialArtist.catName);
+      }
+    }
+  }, [filterInit, filterData]);
 
   return (
     <div

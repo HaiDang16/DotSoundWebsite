@@ -7,11 +7,20 @@ import { actionType } from "../context/reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_ALBUM_FILTER } from "../store/actions";
 
-const FilterButtonsAlbum = ({ filterData, flag }) => {
+const FilterButtonsAlbum = ({ filterData, flag, filterInit }) => {
   console.log("FilterButtonsAlbum");
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (filterInit && filterData) {
+      const initialArtist = filterData.find((data) => data._id === filterInit);
+      if (initialArtist) {
+        setFilterName(initialArtist.albumName);
+      }
+    }
+  }, [filterInit, filterData]);
 
   const updateFilterButton = (name, id) => {
     setFilterName(name);

@@ -88,7 +88,20 @@ const MusicPlayer = () => {
       });
     }
   }, [song]);
-
+  const handleOutsideClick = (event) => {
+    if (isPlayList) {
+      const searchContainer = document.getElementById("playlistContainer");
+      if (searchContainer && !searchContainer.contains(event.target)) {
+        setIsPlayList(!isPlayList);
+      }
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isPlayList]);
   return (
     <div className="w-full full flex items-center gap-3 overflow-hidden">
       <div
@@ -97,35 +110,37 @@ const MusicPlayer = () => {
         }`}
       >
         <img
-          src={allSongs[song]?.imageURL}
+          src={allSongs[song]?.songImageURL}
           className="w-40 h-20 object-cover rounded-md"
           alt=""
         />
         <div className="flex items-start flex-col">
-          <p className="text-xl text-headingColor font-semibold">
+          <p className="text-xl text-black font-semibold">
             {`${
-              allSongs[song]?.name.length > 20
-                ? allSongs[song]?.name.slice(0, 20)
-                : allSongs[song]?.name
+              allSongs[song]?.songName.length > 20
+                ? allSongs[song]?.songName.slice(0, 20)
+                : allSongs[song]?.songName
             }`}{" "}
-            <span className="text-base">({allSongs[song]?.album})</span>
+            <span className="text-base">
+              ({allSongs[song]?.songAlbum.songAlbumName})
+            </span>
           </p>
-          <p className="text-textColor">
-            {allSongs[song]?.artist}{" "}
-            <span className="text-sm text-textColor font-semibold">
-              ({allSongs[song]?.category})
+          <p className="text-blac">
+            {allSongs[song]?.songArtist.songArtistName}{" "}
+            <span className="text-sm text-gray-600 font-semibold">
+              ({allSongs[song]?.songCategory.songCategoryName})
             </span>
           </p>
           <motion.i
             whileTap={{ scale: 0.8 }}
             onClick={() => setIsPlayList(!isPlayList)}
           >
-            <RiPlayListFill className="text-textColor hover:text-headingColor text-3xl cursor-pointer" />
+            <RiPlayListFill className="text-black hover:text-headingColor text-3xl cursor-pointer" />
           </motion.i>
         </div>
         <div className="flex-1">
           <AudioPlayer
-            src={allSongs[song]?.songUrl}
+            src={allSongs[song]?.songURL}
             onPlay={() => console.log("is playing")}
             autoPlay={true}
             showSkipControls={true}
@@ -144,9 +159,9 @@ const MusicPlayer = () => {
       </div>
 
       {isPlayList && (
-        <>
+        <div id="playlistContainer" >
           <PlaylistCard />
-        </>
+        </div>
       )}
 
       {miniPlayer && (
@@ -159,7 +174,7 @@ const MusicPlayer = () => {
             <div className="absolute inset-0 rounded-full bg-red-600 blur-xl animate-pulse"></div>
             <img
               onClick={togglePlayer}
-              src={allSongs[song]?.imageURL}
+              src={allSongs[song]?.songImageURL}
               className="z-50 w-32 h-32 rounded-full object-cover cursor-pointer"
               alt=""
             />
