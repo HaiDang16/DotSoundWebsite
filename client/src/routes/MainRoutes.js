@@ -12,6 +12,9 @@ const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
 
 const UserPlaylist = Loadable(lazy(() => import("../pages/userPlaylist")));
+const UserPlaylist_Add = Loadable(
+  lazy(() => import("../pages/userPlaylist_Add"))
+);
 
 const ForgotPassword = Loadable(lazy(() => import("../pages/ForgotPass")));
 
@@ -64,6 +67,10 @@ const MainRoutes = [
       {
         path: "/UserPlaylist",
         element: <UserPlaylist />,
+      },
+      {
+        path: "/UserPlaylist/Add",
+        element: <UserPlaylist_Add />,
       },
     ],
   },

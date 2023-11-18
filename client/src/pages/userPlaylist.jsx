@@ -14,8 +14,8 @@ import {
   FilterButtonsArtist,
   FilterButtonsAlbum,
 } from "../components";
-
 import SideBar from "../layouts/UserLayout/SideBar";
+import { NavLink } from "react-router-dom";
 const moment = require("moment");
 
 function splitFullName(fullName) {
@@ -49,157 +49,157 @@ const UserPlaylist = () => {
   const [userSex, setUserSex] = useState(null);
   const [isUpdatedPopup, setIsUpdatedPopup] = useState(false);
   const [isChangePasswordPopup, setIsChangePasswordPopup] = useState(false);
+  const [playlistName, setPlaylistName] = useState("");
+  //   const [handleError, setHandleError] = useState({
+  //     errFullName: null,
+  //     errEmail: null,
+  //     errPhoneNum: null,
+  //     errDOB: null,
+  //     errSex: null,
+  //   });
+  //   const handleClose = () => {
+  //     setShowChangePassword(false);
+  //   };
+  //   const toggleChangePasswordSuccessPopup = () => {
+  //     setIsChangePasswordPopup(!isChangePasswordPopup);
+  //   };
+  //   const handleSexChange = (e) => {
+  //     setUserSex(e.target.value);
+  //     setHandleError({
+  //       errSex: "",
+  //     });
+  //   };
+  //   const handleDOBChange = (e) => {
+  //     setUserDOB(e.target.value);
+  //     setHandleError({
+  //       errDOB: "",
+  //     });
+  //   };
+  //   const handlePhoneNumChange = (e) => {
+  //     setUserPhoneNum(e.target.value);
+  //     setHandleError({
+  //       errPhoneNum: "",
+  //     });
+  //   };
+  //   const handleFullNameChange = (e) => {
+  //     setUserFullName(e.target.value);
+  //     setHandleError({
+  //       errFullName: "",
+  //     });
+  //   };
+  //   const handleEmailChange = (e) => {
+  //     setUserEmail(e.target.value);
+  //     setHandleError({
+  //       errEmail: "",
+  //     });
+  //   };
+  //   const clearError = () => {
+  //     setHandleError({
+  //       errFullName: null,
+  //       errEmail: null,
+  //       errPhoneNum: null,
+  //       errDOB: null,
+  //       errSex: null,
+  //     });
+  //   };
+  //   useEffect(() => {
+  //     const fetchData = async () => {
+  //       try {
+  //         const response = await axios.get(
+  //           `${baseURL}api/users/GetUserDetails/${userDataID}`
+  //         );
+  //         console.log("fetchData: ", response.data.user);
+  //         setLoadedDetails(response.data.user);
+  //         setUserFullName(
+  //           `${response.data.user.CusLastName} ${response.data.user.CusFirstName}`
+  //         );
+  //         setUserEmail(response.data.user.CusEmail);
+  //         setUserPhoneNum(response.data.user.CusPhoneNum);
+  //         setUserDOB(response.data.user.CusBirthday);
+  //         setUserSex(response.data.user.CusSex);
+  //       } catch (error) {
+  //         console.error("Error searching:", error);
+  //       }
+  //     };
 
-  const [handleError, setHandleError] = useState({
-    errFullName: null,
-    errEmail: null,
-    errPhoneNum: null,
-    errDOB: null,
-    errSex: null,
-  });
-  const handleClose = () => {
-    setShowChangePassword(false);
-  };
-  const toggleChangePasswordSuccessPopup = () => {
-    setIsChangePasswordPopup(!isChangePasswordPopup);
-  };
-  const handleSexChange = (e) => {
-    setUserSex(e.target.value);
-    setHandleError({
-      errSex: "",
-    });
-  };
-  const handleDOBChange = (e) => {
-    setUserDOB(e.target.value);
-    setHandleError({
-      errDOB: "",
-    });
-  };
-  const handlePhoneNumChange = (e) => {
-    setUserPhoneNum(e.target.value);
-    setHandleError({
-      errPhoneNum: "",
-    });
-  };
-  const handleFullNameChange = (e) => {
-    setUserFullName(e.target.value);
-    setHandleError({
-      errFullName: "",
-    });
-  };
-  const handleEmailChange = (e) => {
-    setUserEmail(e.target.value);
-    setHandleError({
-      errEmail: "",
-    });
-  };
-  const clearError = () => {
-    setHandleError({
-      errFullName: null,
-      errEmail: null,
-      errPhoneNum: null,
-      errDOB: null,
-      errSex: null,
-    });
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${baseURL}api/users/GetUserDetails/${userDataID}`
-        );
-        console.log("fetchData: ", response.data.user);
-        setLoadedDetails(response.data.user);
-        setUserFullName(
-          `${response.data.user.CusLastName} ${response.data.user.CusFirstName}`
-        );
-        setUserEmail(response.data.user.CusEmail);
-        setUserPhoneNum(response.data.user.CusPhoneNum);
-        setUserDOB(response.data.user.CusBirthday);
-        setUserSex(response.data.user.CusSex);
-      } catch (error) {
-        console.error("Error searching:", error);
-      }
-    };
+  //     fetchData();
+  //   }, []);
 
-    fetchData();
-  }, []);
+  //   const handleUpdateUserProfile = async (event) => {
+  //     event.preventDefault();
+  //     if (!userFullName) {
+  //       setHandleError({
+  //         errFullName: "Họ tên không được để trống",
+  //       });
+  //       return;
+  //     } else if (!userEmail) {
+  //       setHandleError({
+  //         errEmail: "Email không được để trống",
+  //       });
+  //       return;
+  //     } else if (!emailRegex.test(userEmail)) {
+  //       setHandleError({ errEmail: "Email không hợp lệ. Vui lòng kiểm tra lại" });
+  //       return;
+  //     } else if (
+  //       userPhoneNum &&
+  //       (userPhoneNum.length !== 10 || !phoneRegex.test(userPhoneNum))
+  //     ) {
+  //       setHandleError({
+  //         errPhoneNum: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại",
+  //       });
+  //       return;
+  //     }
 
-  const handleUpdateUserProfile = async (event) => {
-    event.preventDefault();
-    if (!userFullName) {
-      setHandleError({
-        errFullName: "Họ tên không được để trống",
-      });
-      return;
-    } else if (!userEmail) {
-      setHandleError({
-        errEmail: "Email không được để trống",
-      });
-      return;
-    } else if (!emailRegex.test(userEmail)) {
-      setHandleError({ errEmail: "Email không hợp lệ. Vui lòng kiểm tra lại" });
-      return;
-    } else if (
-      userPhoneNum &&
-      (userPhoneNum.length !== 10 || !phoneRegex.test(userPhoneNum))
-    ) {
-      setHandleError({
-        errPhoneNum: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại",
-      });
-      return;
-    }
+  //     const apiUrl = `${baseURL}api/users/UpdateUserProfile`;
+  //     const splitName = splitFullName(userFullName);
+  //     const jsonDate = moment(userDOB, "YYYY-MM-DD").toISOString();
+  //     const data = {
+  //       CusFirstName: splitName.firstName,
+  //       CusLastName: splitName.restOfName,
+  //       CusEmail: userEmail,
+  //       CusPhoneNum: userPhoneNum,
+  //       CusBirthday: jsonDate,
+  //       CusSex: userSex,
+  //       userID: userDataID,
+  //     };
 
-    const apiUrl = `${baseURL}api/users/UpdateUserProfile`;
-    const splitName = splitFullName(userFullName);
-    const jsonDate = moment(userDOB, "YYYY-MM-DD").toISOString();
-    const data = {
-      CusFirstName: splitName.firstName,
-      CusLastName: splitName.restOfName,
-      CusEmail: userEmail,
-      CusPhoneNum: userPhoneNum,
-      CusBirthday: jsonDate,
-      CusSex: userSex,
-      userID: userDataID,
-    };
+  //     try {
+  //       const response = await axios.put(apiUrl, data, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           // Include any authentication headers if required
+  //         },
+  //       });
+  //       if (response.status === 200) {
+  //         //setUserName(name);
+  //         setUpdated((p) => p + 1);
+  //         setIsUpdatedPopup(!isUpdatedPopup);
+  //         clearError();
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
 
-    try {
-      const response = await axios.put(apiUrl, data, {
-        headers: {
-          "Content-Type": "application/json",
-          // Include any authentication headers if required
-        },
-      });
-      if (response.status === 200) {
-        //setUserName(name);
-        setUpdated((p) => p + 1);
-        setIsUpdatedPopup(!isUpdatedPopup);
-        clearError();
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  //   useEffect(() => {
+  //     const timeoutId = setTimeout(() => {
+  //       setIsUpdatedPopup(false);
+  //     }, 1500);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIsUpdatedPopup(false);
-    }, 1500);
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //     };
+  //   }, [isUpdatedPopup]);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [isUpdatedPopup]);
+  //   useEffect(() => {
+  //     const timeoutId = setTimeout(() => {
+  //       setIsChangePasswordPopup(false);
+  //     }, 1500);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIsChangePasswordPopup(false);
-    }, 1500);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [isChangePasswordPopup]);
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //     };
+  //   }, [isChangePasswordPopup]);
   const samplePlaylists = [
     { id: 1, name: "Danh sách phát 1" },
     { id: 2, name: "Danh sách phát 2" },
@@ -210,38 +210,48 @@ const UserPlaylist = () => {
         <SideBar updated={updated} />
         <div className="md:w-4/6 md:pl-[50px]">
           <div className="flex justify-between">
-            <h1 className="text-2xl font-bold mb-4">Danh sách phát cá nhân</h1>
+            <h1 className="text-2xl font-bold mb-4">Các danh sách phát</h1>
             <AddNewPlaylistForm />
+          </div>{" "}
+          <div className="flex flex-wrap mt-6">
+            {samplePlaylists.map((playlist) => (
+              <PlaylistItem key={playlist.id} name={playlist.name} />
+            ))}
           </div>
-
-          {samplePlaylists.map((playlist) => (
-            <PlaylistItem key={playlist.id} name={playlist.name} />
-          ))}
         </div>
       </div>
     </div>
   );
 };
+
 const AddNewPlaylistForm = () => {
+  const [playlistName, setPlaylistName] = useState("");
+
+  const handleSubmit = () => {};
   return (
-    <form className="mb-4">
-      <div className="flex justify-between">
+    <form onSubmit={handleSubmit} className="mb-4">
+      <div className="flex justify-between w-460">
         <input
           type="text"
+          value={playlistName}
+          onChange={(e) => setPlaylistName(e.target.value)}
           className="border border-gray-300 p-2 w-full mx-5"
           placeholder="Nhập tên danh sách phát mới"
         />
-        <button className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 w-full">
+
+        <NavLink
+          to={"/UserPlaylist/Add"}
+          className="bg-indigo-500 text-white text-center px-4 py-2 rounded-md hover:bg-indigo-600 w-1/2"
+        >
           Thêm mới
-        </button>{" "}
+        </NavLink>
       </div>
     </form>
   );
 };
 const PlaylistItem = ({ name }) => {
-  const [isImageLoading, setIsImageLoading] = useState(false);
   return (
-    <div className="border border-gray-300 p-2 rounded mb-2">
+    <div className="border border-gray-300 p-2 rounded mb-2 h-150 w-150 mx-3">
       <div> {name}</div>
     </div>
   );
