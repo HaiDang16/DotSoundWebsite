@@ -9,7 +9,7 @@ import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { motion } from "framer-motion";
-
+import { getUserDetails, updateAvatar } from "../api";
 import { FaCrown } from "react-icons/fa";
 import { SET_USER, SET_AUTH } from "../store/actions";
 import { SearchCard } from "../components";
@@ -19,8 +19,20 @@ const Header = () => {
   console.log("Header.jsx");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userData = JSON.parse(window.localStorage.getItem("userData"));
+  const user = useSelector((state) => state.customization.user);
+  useEffect(() => {
+    getUserDetails(userData.user._id).then((res) => {
+      console.log("getUserDetails res: ", res);
+      dispatch({
+        type: SET_USER,
+        user: res,
+      });
 
-  const user = JSON.parse(window.localStorage.getItem("userData"));
+      console.log("user?.user.cusLastName: ", user?.user.cusLastName);
+    });
+  }, []);
+
   const allSongs = useSelector((state) => state.customization.allSongs);
   const [isMenu, setIsMenu] = useState(false);
   const [isSreach, setIsSearch] = useState(false);
@@ -175,7 +187,7 @@ const Header = () => {
           {user?.user.cusAvatar ? (
             <img
               className="w-12 min-w-[44px] object-cover rounded-full shadow-lg mr-2"
-              src={user?.user?.cusAvatar}
+              src={user?.user.cusAvatar}
               alt=""
               referrerpolicy="no-referrer"
             />

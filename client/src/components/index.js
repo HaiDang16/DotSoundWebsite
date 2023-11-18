@@ -21,3 +21,5 @@ export { default as FilterButtonsAlbum } from "./FilterButtonsAlbum";
 export { default as ImageUploaderUserAvatar } from "./ImageUploaderUserAvatar";
 export { default as ForYou_SongCard } from "./ForYou_SongCard";
 export { default as SearchCard } from "./Header_SearchCard";
+export { default as PlaylistSearchCard } from "./Playlist_SearchCard";
+export { default as ImageUploaderPlaylist } from "./ImageUploaderPlaylist";

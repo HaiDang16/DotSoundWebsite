@@ -53,6 +53,7 @@ const Login = () => {
           auth: true,
         });
         window.localStorage.setItem("auth", "true");
+        
         firebaseAuth.onAuthStateChanged((userCred) => {
           if (userCred) {
             userCred.getIdToken().then((token) => {

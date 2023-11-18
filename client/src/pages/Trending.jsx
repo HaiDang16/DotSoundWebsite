@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllSongs } from "../api";
+import BackgroundLogin from "../assets/img/background.jpg";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { SongCard } from "./AdminManageSongs";
@@ -106,7 +107,10 @@ const Home = () => {
   }, [languageFilter]);
 
   return (
-    <div className="relative w-full h-auto flex flex-col justify-center bg_website_02">
+    <div
+      style={{ backgroundImage: `url(${BackgroundLogin})` }}
+      className="relative w-full h-auto flex flex-col justify-center"
+    >
       {/* Banner */}
       <div className="w-full h-full absolute z-0">
         <img
@@ -154,9 +158,7 @@ const Home = () => {
           Mới phát hành
         </div>
 
-        <NewReleaseSongsCard
-          musics={allSongs}
-        />
+        <NewReleaseSongsCard musics={allSongs} />
 
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">

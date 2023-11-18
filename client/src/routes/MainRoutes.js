@@ -10,7 +10,14 @@ const Register = Loadable(lazy(() => import("../pages/Register")));
 const Trending = Loadable(lazy(() => import("../pages/Trending")));
 const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
+
+const UserPlaylist = Loadable(lazy(() => import("../pages/userPlaylist")));
+const UserPlaylist_Add = Loadable(
+  lazy(() => import("../pages/userPlaylist_Add"))
+);
+
 const ForgotPassword = Loadable(lazy(() => import("../pages/ForgotPass")));
+
 const ResetPassword = Loadable(lazy(() => import("../pages/ResetPassword")));
 const ForYou = Loadable(lazy(() => import("../pages/ForYou")));
 
@@ -77,6 +84,14 @@ const MainRoutes = [
       {
         path: "/ForYou",
         element: <ForYou />,
+      },
+      {
+        path: "/UserPlaylist",
+        element: <UserPlaylist />,
+      },
+      {
+        path: "/UserPlaylist/Add",
+        element: <UserPlaylist_Add />,
       },
     ],
   },
