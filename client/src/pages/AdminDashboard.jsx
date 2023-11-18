@@ -43,7 +43,7 @@ const DashboardHome = () => {
         console.log(data.data);
         dispatch({
           type: SET_ALL_USERS,
-          allUsers: data.data,
+          allUsers: data.users,
         });
         console.log("user: ", data);
       });

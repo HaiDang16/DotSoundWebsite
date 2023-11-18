@@ -25,13 +25,15 @@ const LoginGoogle = async (req, res) => {
   console.log("token: ", token);
   try {
     const decodeValue = await admin.auth().verifyIdToken(token);
+    console.log("decodeValue: ", decodeValue);
     if (!decodeValue) {
       return res.status(505).json({ message: "Un Authorized" });
     } else {
       // return res.status(200).json(decodeValue)
       //Checking user exists
-      const userExists = await User.findOne({ GoogleID: decodeValue.user_id });
+      const userExists = await User.findOne({ googleID: decodeValue.user_id });
       if (!userExists) {
+        console.log("newUserData start");
         newUserData(decodeValue, req, res);
       } else {
         updateNewUserData(decodeValue, req, res);
@@ -88,8 +90,8 @@ const updateNewUserData = async (decodeValue, req, res) => {
 // Register
 const Register = async (req, res) => {
   console.log("Register");
-  const { lastName, firstName, phone, email, password } = req.body;
-  const dataReq = { lastName, firstName, phone, email, password };
+  const { lastName, firstName, phone, email, password, avatarURL } = req.body;
+  const dataReq = { lastName, firstName, phone, email, password, avatarURL };
   console.log("dataReq: ", dataReq);
 
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
@@ -118,7 +120,7 @@ const Register = async (req, res) => {
       cusFirstName: firstName,
       cusLastName: lastName,
       cusEmail: email,
-      cusAvatar: null,
+      cusAvatar: avatarURL,
       googleID: null,
       emailVerified: null,
       cusRole: "member",
@@ -294,8 +296,7 @@ const updateUserProfile = async (req, res) => {
     CusLastName,
     CusEmail,
     CusPhoneNum,
-    CusBirthday,
-    CusSex,
+    CusPassword,
     userID,
   } = req.body;
   console.log("userID: ", userID);
@@ -305,12 +306,11 @@ const updateUserProfile = async (req, res) => {
     //Lấy ra danh sách sản phẩm có catKey = lstCatgoryIDs
     users = await User.findById(userID);
 
-    users.CusFirstName = CusFirstName;
-    users.CusLastName = CusLastName;
-    users.CusEmail = CusEmail;
-    users.CusPhoneNum = CusPhoneNum;
-    users.CusBirthday = CusBirthday;
-    users.CusSex = CusSex;
+    users.cusFirstName = CusFirstName;
+    users.cusLastName = CusLastName;
+    users.cusEmail = CusEmail;
+    users.cusPhoneNum = CusPhoneNum;
+    users.cusPassword = CusPassword;
 
     await users.save();
     return res.status(200).json({
@@ -392,6 +392,39 @@ const getAllUsers = async (req, res) => {
     }),
   });
 };
+
+const updateRole = async (req, res) => {
+  console.log("\n Start updateRole");
+  console.log(req.body.data.role, req.params.userId);
+  const filter = { _id: req.params.userId };
+  const role = req.body.data.role;
+  const options = {
+    upsert: true,
+    new: true,
+  };
+  try {
+    const result = await User.findOneAndUpdate(
+      filter,
+      { cusRole: role },
+      options
+    );
+    res.status(200).send({ user: result });
+  } catch (err) {
+    res.status(400).send({ success: false, msg: err });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  console.log("\n Start deleteUser");
+  const filter = { _id: req.params.userId };
+  const result = await User.deleteOne(filter);
+  if (result.deletedCount === 1) {
+    res.status(200).send({ success: true, msg: "Data Deleted" });
+  } else {
+    res.status(200).send({ success: false, msg: "Data Not Found" });
+  }
+};
+
 exports.LoginGoogle = LoginGoogle;
 exports.Register = Register;
 exports.Login = Login;
@@ -402,3 +435,5 @@ exports.resetPassword = resetPassword;
 exports.updateUserProfile = updateUserProfile;
 exports.changePassword = changePassword;
 exports.getAllUsers = getAllUsers;
+exports.updateRole = updateRole;
+exports.deleteUser = deleteUser;

@@ -168,6 +168,7 @@ const Register = () => {
       phone,
       email,
       password,
+      avatarURL: null,
     };
 
     try {
