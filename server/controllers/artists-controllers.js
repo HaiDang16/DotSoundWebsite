@@ -12,7 +12,7 @@ const getAllArtist = async (req, res) => {
     artists = await Artist.find().sort({ createAt: 1 });
   } catch (err) {
     return res.status(500).json({
-      message: "Lấy dữ liệu bài hát thất bại. Vui lòng thử lại sau",
+      message: "Lấy dữ liệu nghệ sĩ thất bại. Vui lòng thử lại sau",
       success: false,
     });
   }

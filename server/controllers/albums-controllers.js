@@ -7,11 +7,16 @@ const Artist = require("../models/artist");
 const Album = require("../models/album");
 
 const getAllAlbums = async (req, res) => {
-  const options = {
-    sort: { createdAt: 1 },
-  };
+  let albums;
 
-  const albums = await Album.find(options);
+  try {
+    albums = await Album.find().sort({ createAt: 1 });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Lấy dữ liệu albums thất bại. Vui lòng thử lại sau",
+      success: false,
+    });
+  }
   if (albums) {
     res.status(200).json({
       albums: albums.map((album) => {
