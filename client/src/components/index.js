@@ -19,3 +19,5 @@ export { default as DisabledButton } from "./DisabledButton";
 export { default as FilterButtonsArtist } from "./FilterButtonsArtist";
 export { default as FilterButtonsAlbum } from "./FilterButtonsAlbum";
 export { default as ImageUploaderUserAvatar } from "./ImageUploaderUserAvatar";
+export { default as ForYou_SongCard } from "./ForYou_SongCard";
+export { default as SearchCard } from "./Header_SearchCard";

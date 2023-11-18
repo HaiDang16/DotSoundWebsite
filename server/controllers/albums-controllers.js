@@ -43,6 +43,7 @@ const getAllDetails = async (req, res) => {
 };
 
 const createAlbum = async (req, res) => {
+  console.log("\n Start createAlbum");
   const { name, imageURL, artistID, artistName } = req.body;
   const dataReq = { name, imageURL, artistID, artistName };
   console.log("dataReq: ", dataReq);
@@ -63,6 +64,7 @@ const createAlbum = async (req, res) => {
     albumName: name,
     albumImageURL: imageURL,
     albumArtist: { albumArtistID: artistID, albumArtistName: artistName },
+    albumItems: [],
   });
 
   try {

@@ -63,10 +63,10 @@ const PlaylistCard = () => {
             }`}
             onClick={() => setCurrentPlaySong(index)}
           >
-            <IoMusicalNote className="text-white group-hover:text-white text-2xl cursor-pointer" />
+            <IoMusicalNote className=" text-blue-800 group-hover:text-white text-2xl cursor-pointer" />
 
             <div className="flex items-start flex-col">
-              <p className="text-lg text-gray-400 font-semibold">
+              <p className="text-lg text-black font-semibold">
                 {`${
                   music?.songName.length > 20
                     ? music?.songName.slice(0, 20)

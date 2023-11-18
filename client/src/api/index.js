@@ -173,7 +173,47 @@ export const getUserDetails = async (id) => {
 };
 export const updateUser = async (dataReq) => {
   try {
-    const res = axios.put(`${baseURL}api/users/UpdateUserProfile`, { ...dataReq });
+    const res = axios.put(`${baseURL}api/users/UpdateUserProfile`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getSongDetails = async (id) => {
+  try {
+    const res = await axios.get(`${baseURL}api/songs/GetSongDetails/${id}`);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
+export const updateSong = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/songs/UpdateSong`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getArtistDetails = async (id) => {
+  try {
+    const res = await axios.get(`${baseURL}api/artists/GetArtistDetails/${id}`);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
+export const updateArtist = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/artists/UpdateArtist`, {
+      ...dataReq,
+    });
     return res;
   } catch (error) {
     return null;

@@ -7,7 +7,7 @@ router.get("/GetAllSongs", songsControllers.getAllSongs);
 
 router.get("/GetSongDetails/:getOne", songsControllers.getSongDetails);
 
-router.put("/UpdateSong/:updateId", songsControllers.updateSong);
+router.put("/UpdateSong", songsControllers.updateSong);
 
 router.delete("/DeleteSong/:deleteId", songsControllers.deleteSong);
 

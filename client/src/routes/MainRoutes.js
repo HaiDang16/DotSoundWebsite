@@ -12,6 +12,8 @@ const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
 const ForgotPassword = Loadable(lazy(() => import("../pages/ForgotPass")));
 const ResetPassword = Loadable(lazy(() => import("../pages/ResetPassword")));
+const ForYou = Loadable(lazy(() => import("../pages/ForYou")));
+
 const AdminDashboard = Loadable(lazy(() => import("../pages/AdminDashboard")));
 const AdminManageSongs = Loadable(
   lazy(() => import("../pages/AdminManageSongs"))
@@ -40,6 +42,13 @@ const AdminManageUserAdd = Loadable(
 const AdminManageUserUpdate = Loadable(
   lazy(() => import("../pages/AdminManageUserUpdate"))
 );
+const AdminManageSongUpdate = Loadable(
+  lazy(() => import("../pages/AdminManageSongsUpdate"))
+);
+const AdminManageArtistUpdate = Loadable(
+  lazy(() => import("../pages/AdminManageArtistUpdate"))
+);
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = [
@@ -62,6 +71,10 @@ const MainRoutes = [
       {
         path: "/UserProfile",
         element: <UserProfile />,
+      },
+      {
+        path: "/ForYou",
+        element: <ForYou />,
       },
     ],
   },
@@ -124,6 +137,14 @@ const MainRoutes = [
       {
         path: "/Admin/ManageUsers/Update",
         element: <AdminManageUserUpdate />,
+      },
+      {
+        path: "/Admin/ManageSongs/Update",
+        element: <AdminManageSongUpdate />,
+      },
+      {
+        path: "/Admin/ManageArtists/Update",
+        element: <AdminManageArtistUpdate />,
       },
     ],
   },

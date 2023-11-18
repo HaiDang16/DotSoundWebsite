@@ -13,6 +13,7 @@ import {
   SET_ALL_USERS,
   SET_ARTISTS,
   SET_ALL_ALBUMS,
+  SET_ALL_ARTISTS,
 } from "../store/actions";
 export const DashboardCard = ({ icon, name, count }) => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const DashboardHome = () => {
   const dispatch = useDispatch();
   const allUsers = useSelector((state) => state.customization.allUsers);
   const allSongs = useSelector((state) => state.customization.allSongs);
-  const artists = useSelector((state) => state.customization.artists);
+  const allArtists = useSelector((state) => state.customization.allArtists);
   const allAlbums = useSelector((state) => state.customization.allAlbums);
   useEffect(() => {
     if (!allUsers) {
@@ -48,7 +49,6 @@ const DashboardHome = () => {
         console.log("user: ", data);
       });
     }
-
     if (!allSongs) {
       getAllSongs().then((data) => {
         dispatch({
@@ -57,13 +57,12 @@ const DashboardHome = () => {
         });
       });
     }
-
-    if (!artists) {
+    if (!allArtists) {
       getAllArtist().then((data) => {
-        dispatch({ type: SET_ARTISTS, artists: data.data });
+        console.log("getAllArtist res: ", data.artists);
+        dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artists });
       });
     }
-
     if (!allAlbums) {
       getAllAlbums().then((data) => {
         dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.data });
@@ -79,7 +78,7 @@ const DashboardHome = () => {
       <DashboardCard icon={<GiLoveSong className="text-3xl text-textColor" />} name={"Songs"} count={allSongs?.length > 0 ? allSongs?.length : 0} />
 
       {/* prettier-ignore */}
-      <DashboardCard icon={<RiUserStarFill className="text-3xl text-textColor" />} name={"Artist"} count={artists?.length > 0 ? artists?.length : 0} />
+      <DashboardCard icon={<RiUserStarFill className="text-3xl text-textColor" />} name={"Artist"} count={allArtists?.length > 0 ? allArtists?.length : 0} />
 
       {/* prettier-ignore */}
       <DashboardCard icon={<GiMusicalNotes className="text-3xl text-textColor" />} name={"Album"} count={allAlbums?.length > 0 ? allAlbums?.length : 0} />

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { MdDelete } from "react-icons/md";
 import { actionType } from "../context/reducer";
 import { getAllAlbums, deleteAlbumsById } from "../api";
+import { MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
   SET_ALL_SONGS,
@@ -82,8 +83,8 @@ const DashboardAlbum = () => {
       </div>
       <div className="relative w-full  my-4 p-4 py-12 border border-gray-300">
         <div className="absolute top-4 left-4">
-          <p className="text-xl font-bold text-white">
-            <span className="text-sm font-semibold text-white">
+          <p className="text-lg font-bold text-white">
+            <span className="text-lg font-semibold text-white">
               Tổng album:{" "}
             </span>
             {filteredAlbums ? filteredAlbums?.length : allAlbums?.length}
@@ -99,7 +100,7 @@ const DashboardAlbum = () => {
 };
 export const AlbumContainer = ({ data }) => {
   return (
-    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly">
+    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly mt-5">
       {data.map((data, index) => (
         <AlbumCard key={index} data={data} index={index} />
       ))}
@@ -151,14 +152,16 @@ export const AlbumCard = ({ data, index }) => {
         alt=""
       />
 
-      <p className="text-base text-textColor">{data.albumName}</p>
+      <p className="w-full overflow-hidden text-base text-textColor text-center whitespace-nowrap overflow-ellipsis mb-2">
+        {data.albumName}
+      </p>
 
       <motion.i
         className="absolute bottom-2 right-2"
         whileTap={{ scale: 0.75 }}
         onClick={() => setIsDelete(true)}
       >
-        <MdDelete className=" text-gray-400 hover:text-red-400 text-xl cursor-pointer" />
+        <MdEdit className=" text-gray-400 hover:text-green-400 text-xl cursor-pointer" />
       </motion.i>
 
       {isDelete && (
