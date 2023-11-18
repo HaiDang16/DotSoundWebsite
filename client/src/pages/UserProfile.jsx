@@ -1,4 +1,4 @@
-// import AlertError from "../../components/shared/AlertError";
+import AlertError from "../components/AlertError";
 // import AlertSuccess from "../../components/shared/AlertSuccess";
 import React, { useState, useEffect } from "react";
 // import Loading from "../../components/users/Loading";
