@@ -228,3 +228,21 @@ export const getNewReleaseSong = async () => {
     return null;
   }
 };
+export const createCategory = async (data) => {
+  try {
+    const res = axios.post(`${baseURL}api/categories/AddCategory`, { ...data });
+    return await res;
+  } catch (error) {
+    return null;
+  }
+};
+export const updateCategory = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/categories/UpdateCategory`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};

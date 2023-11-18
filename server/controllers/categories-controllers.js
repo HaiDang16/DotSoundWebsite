@@ -74,9 +74,7 @@ const getCategoryDetails = async (req, res) => {
 
 const updateCategory = async (req, res) => {
   console.log("\nStart updateCategory");
-  let { catKey, catName, catGentle, catID } = req.body;
-
-  console.log("catKey: ", catKey);
+  let { catID, catName } = req.body;
   let cateData;
 
   try {
@@ -94,14 +92,12 @@ const updateCategory = async (req, res) => {
   }
 
   try {
-    cateData.catKey = catKey;
     cateData.catName = catName;
-    cateData.catGentle = catGentle;
     await cateData.save();
   } catch (err) {
     console.error("Error updateCategory:", err);
     return res.status(500).json({
-      message: "Cập nhật thông tin thể loại thất bại. Vui lòng thử lại sau",
+      message: "Cập nhật thể loại thất bại. Vui lòng thử lại sau",
       success: false,
     });
   }

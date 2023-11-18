@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useStateValue } from "../context/StateProvider";
-
 import { motion } from "framer-motion";
-import { MdDelete } from "react-icons/md";
-import { actionType } from "../context/reducer";
-import { getAllAlbums, deleteAlbumsById, getAllCategories } from "../api";
+import { getAllCategories, createCategory, updateCategory } from "../api";
 import { MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ALL_ALBUMS,
-  SET_ALL_CATEGORIES,
-} from "../store/actions";
-import { NavLink } from "react-router-dom";
+import { SET_ALL_CATEGORIES } from "../store/actions";
 import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
 import { AiOutlineClear } from "react-icons/ai";
 import { LogoDotSounds } from "../assets/img";
+import AlertErrorBottom from "../components/AlertErrorBottom";
+import AlertSuccessBottom from "../components/AlertSuccessBottom";
 
 const DashboardAlbum = () => {
   const dispatch = useDispatch();
@@ -26,6 +18,10 @@ const DashboardAlbum = () => {
   const [isFocus, setIsFocus] = useState(false);
   const [albumFilter, setAlbumFilter] = useState("");
   const [filteredAlbums, setFilteredAlbums] = useState(null);
+  const [isAdd, setIsAdd] = useState(false);
+  const [catName, setCatName] = useState("");
+  const [isAlert, setIsAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState(null);
 
   useEffect(() => {
     if (!allCategories) {
@@ -39,7 +35,7 @@ const DashboardAlbum = () => {
   useEffect(() => {
     if (albumFilter.length > 0) {
       const filtered = allCategories.filter((data) =>
-        data.catName.toLowerCase().includes(albumFilter)
+        data.catName.toLowerCase().includes(albumFilter.toLowerCase())
       );
       console.log("filtered: ", filtered);
       setFilteredAlbums(filtered);
@@ -48,15 +44,50 @@ const DashboardAlbum = () => {
     }
   }, [albumFilter]);
 
+  const handleCreateCategory = async () => {
+    if (!catName) {
+      setIsAlert("error");
+      setAlertMsg("Required fields are missing");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
+    } else {
+      const data = { catName: catName };
+      createCategory(data).then((res) => {
+        console.log("saveNewArtist res: ", res);
+        if (res.status === 201) {
+          setIsAlert("success");
+          setAlertMsg(res.data.message);
+          setTimeout(() => {
+            setIsAlert(null);
+            getAllCategories().then((res) => {
+              dispatch({
+                type: SET_ALL_CATEGORIES,
+                allCategories: res.categories,
+              });
+            });
+            setIsAdd(!isAdd);
+          }, 1500);
+        } else {
+          setIsAlert("error");
+          setAlertMsg(res.data.message);
+          setTimeout(() => {
+            setIsAlert(null);
+          }, 2000);
+        }
+      });
+    }
+  };
+
   return (
     <div className="w-full p-4 flex items-center justify-center flex-col">
       <div className="w-full flex justify-center items-center gap-24">
-        <NavLink
-          to={"/Admin/ManageAlbums/Add"}
+        <div
           className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
+          onClick={() => setIsAdd(!isAdd)}
         >
           <IoAdd />
-        </NavLink>
+        </div>
         <input
           type="text"
           placeholder="Nhập từ khoá cần tìm kiếm"
@@ -87,7 +118,7 @@ const DashboardAlbum = () => {
         <div className="absolute top-4 left-4">
           <p className="text-lg font-bold text-white">
             <span className="text-lg font-semibold text-white">
-              Tổng album:{" "}
+              Tổng thể loại:{" "}
             </span>
             {filteredAlbums ? filteredAlbums?.length : allCategories?.length}
           </p>
@@ -99,12 +130,54 @@ const DashboardAlbum = () => {
           />
         )}
       </div>
+      {isAdd && (
+        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-1/3 p-6 rounded-lg flex flex-col items-center">
+            <h2 className="text-2xl mb-4 text-center">TẠO THỂ LOẠI</h2>
+            <div className="h-2/3 overflow-y-scroll scrollbar flex flex-wrap items-center">
+              <div className="w-full lg:w-300 p-3 flex items-center rounded-md shadow-sm border border-gray-300 mt-3">
+                <input
+                  type="text"
+                  placeholder="Tên thể loại"
+                  className="w-full text-base font-semibold text-black outline-none bg-transparent"
+                  value={catName}
+                  onChange={(e) => setCatName(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex mt-5">
+              <button
+                onClick={handleCreateCategory}
+                className="bg_website_02 text-white font-bold py-2 px-4 rounded mt-4 mr-10"
+              >
+                Tạo
+              </button>{" "}
+              <button
+                onClick={() => setIsAdd(!isAdd)}
+                className="bg-gray-500 text-white font-bold py-2 px-4 rounded mt-4"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMsg} />
+          ) : (
+            <AlertErrorBottom msg={alertMsg} />
+          )}
+        </>
+      )}
     </div>
   );
 };
 export const CategoryContainer = ({ data }) => {
   return (
-    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly mt-5">
+    <div className=" w-full flex flex-wrap gap-10 items-center justify-evenly mt-5">
       {data.map((data, index) => (
         <CategoryCard key={index} data={data} index={index} />
       ))}
@@ -113,36 +186,47 @@ export const CategoryContainer = ({ data }) => {
 };
 
 export const CategoryCard = ({ data, index }) => {
-  const [isDelete, setIsDelete] = useState(false);
-  const [alert, setAlert] = useState(false);
+  const [isAlert, setIsAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState(null);
-
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [catName, setCatName] = useState(data.catName);
   const dispatch = useDispatch();
-  const deleteObject = (id) => {
-    console.log(id);
-    deleteAlbumsById(id).then((res) => {
-      // console.log(res.data);
-      if (res.data.success) {
-        setAlert("success");
-        setAlertMsg(res.data.msg);
-        getAllAlbums().then((data) => {
-          dispatch({
-            type: SET_ALL_ALBUMS,
-            allAlbums: data.data,
-          });
-        });
-        setTimeout(() => {
-          setAlert(false);
-        }, 4000);
-      } else {
-        setAlert("error");
-        setAlertMsg(res.data.msg);
-        setTimeout(() => {
-          setAlert(false);
-        }, 4000);
-      }
-    });
+
+  const handleUpdateCategory = async () => {
+    if (!catName) {
+      setIsAlert("error");
+      setAlertMsg("Vui lòng nhập tên thể loại");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
+    } else {
+      const dataReq = { catName: catName, catID: data._id };
+      updateCategory(dataReq).then((res) => {
+        console.log("updateCategory res: ", res);
+        if (res.status === 200) {
+          setIsAlert("success");
+          setAlertMsg(res.data.message);
+          setTimeout(() => {
+            setIsAlert(null);
+            getAllCategories().then((res) => {
+              dispatch({
+                type: SET_ALL_CATEGORIES,
+                allCategories: res.categories,
+              });
+            });
+            setIsUpdate(!isUpdate);
+          }, 1500);
+        } else {
+          setIsAlert("error");
+          setAlertMsg(res.data.message);
+          setTimeout(() => {
+            setIsAlert(null);
+          }, 2000);
+        }
+      });
+    }
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, translateX: -50 }}
@@ -161,38 +245,50 @@ export const CategoryCard = ({ data, index }) => {
       <motion.i
         className="absolute bottom-2 right-2"
         whileTap={{ scale: 0.75 }}
-        onClick={() => setIsDelete(true)}
+        onClick={() => setIsUpdate(!isUpdate)}
       >
         <MdEdit className=" text-gray-400 hover:text-green-400 text-xl cursor-pointer" />
       </motion.i>
-
-      {isDelete && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          className="absolute inset-0 p-2 bg-darkOverlay  backdrop-blur-md flex flex-col items-center justify-center gap-4"
-        >
-          <p className="text-gray-100 text-base text-center">
-            Are you sure do you want to delete this?
-          </p>
-          <div className="flex items-center w-full justify-center gap-3">
-            <div className="bg-red-300 px-3 rounded-md">
-              <p
-                className="text-headingColor text-sm"
-                onClick={() => deleteObject(data._id)}
-              >
-                Yes
-              </p>
+      {isUpdate && (
+        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white w-1/3 p-6 rounded-lg flex flex-col items-center">
+            <h2 className="text-2xl mb-4 text-center">TẠO THỂ LOẠI</h2>
+            <div className="h-2/3 overflow-y-scroll scrollbar flex flex-wrap items-center">
+              <div className="w-full lg:w-300 p-3 flex items-center rounded-md shadow-sm border border-gray-300 mt-3">
+                <input
+                  type="text"
+                  placeholder="Tên thể loại"
+                  className="w-full text-base font-semibold text-black outline-none bg-transparent"
+                  value={catName}
+                  onChange={(e) => setCatName(e.target.value)}
+                />
+              </div>
             </div>
-            <div
-              className="bg-green-300 px-3 rounded-md"
-              onClick={() => setIsDelete(false)}
-            >
-              <p className="text-headingColor text-sm">No</p>
+            <div className="flex mt-5">
+              <button
+                onClick={handleUpdateCategory}
+                className="bg_website_02 text-white font-bold py-2 px-4 rounded mt-4 mr-10"
+              >
+                Cập nhật
+              </button>{" "}
+              <button
+                onClick={() => setIsUpdate(!isUpdate)}
+                className="bg-gray-500 text-white font-bold py-2 px-4 rounded mt-4"
+              >
+                Đóng
+              </button>
             </div>
           </div>
-        </motion.div>
+        </div>
+      )}
+      {isAlert && (
+        <div className="z-10">
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMsg} />
+          ) : (
+            <AlertErrorBottom msg={alertMsg} />
+          )}
+        </div>
       )}
     </motion.div>
   );
