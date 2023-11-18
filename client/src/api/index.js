@@ -173,7 +173,9 @@ export const getUserDetails = async (id) => {
 };
 export const updateUser = async (dataReq) => {
   try {
-    const res = axios.put(`${baseURL}api/users/UpdateUserProfile`, { ...dataReq });
+    const res = axios.put(`${baseURL}api/users/UpdateUserProfile`, {
+      ...dataReq,
+    });
     return res;
   } catch (error) {
     return null;

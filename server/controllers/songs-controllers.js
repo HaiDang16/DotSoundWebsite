@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const Album = require("../models/album");
 const Song = require("../models/music");
 
 const getAllSongs = async (req, res) => {
@@ -82,8 +83,21 @@ const createSong = async (req, res) => {
   console.log("Saving");
   try {
     const savedSong = await newSong.save();
-    res.status(200).send({ song: savedSong });
+    let updatedAlbum;
+    if (songAlbumID) {
+      // Update the corresponding album's albumItems array
+      updatedAlbum = await Album.findByIdAndUpdate(
+        songAlbumID,
+        {
+          $push: {
+            albumItems: { albumSongID: savedSong._id },
+          },
+        },
+        { new: true }
+      );
+    }
     console.log("Saved");
+    return res.status(200).send({ song: savedSong, alnum: updatedAlbum });
   } catch (error) {
     console.log("Error: ", error);
     res.status(400).send({ success: false, msg: error });
@@ -117,13 +131,16 @@ const updateSong = async (req, res) => {
 };
 
 const deleteSong = async (req, res) => {
+  console.log("\n Start ");
   const filter = { _id: req.params.deleteId };
 
-  const result = await song.deleteOne(filter);
+  const result = await Song.deleteOne(filter);
   if (result.deletedCount === 1) {
-    res.status(200).send({ success: true, msg: "Data Deleted" });
+    res.status(200).send({ success: true, message: "Xoá bài hát thành công" });
   } else {
-    res.status(200).send({ success: false, msg: "Data Not Found" });
+    res
+      .status(200)
+      .send({ success: false, message: "Xoá bài hát không thành công" });
   }
 };
 
