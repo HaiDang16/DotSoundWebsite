@@ -200,3 +200,22 @@ export const updateSong = async (dataReq) => {
     return null;
   }
 };
+
+export const getArtistDetails = async (id) => {
+  try {
+    const res = await axios.get(`${baseURL}api/artists/GetArtistDetails/${id}`);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
+export const updateArtist = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/artists/UpdateArtist`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};

@@ -383,7 +383,7 @@ const DashboardNewSong = () => {
           {setAlert === "success" ? (
             <AlertSuccessBottom msg={alertMsg} />
           ) : (
-            <AlertError msg={alertMsg} />
+            <AlertErrorBottom msg={alertMsg} />
           )}
         </>
       )}

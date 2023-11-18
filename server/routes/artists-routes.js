@@ -13,7 +13,7 @@ router.get("/GetArtistDetails/:getOne", artistsControllers.getArtistDetails);
 router.post("/CreateArtist", artistsControllers.createArtist);
 
 ///update/:updateId
-router.put("/UpdateArtist/:updateId", artistsControllers.updateArtist);
+router.put("/UpdateArtist", artistsControllers.updateArtist);
 
 ///delete/:deleteId
 router.delete("/DeleteArtist/:deleteId", artistsControllers.deleteArtist);

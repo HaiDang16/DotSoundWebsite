@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
-import { useStateValue } from "../context/StateProvider";
-import { Link } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { getAllArtist } from "../api";
 import { actionType } from "../context/reducer";
+import { MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
   SET_ALL_SONGS,
@@ -16,9 +15,7 @@ import {
 } from "../store/actions";
 import { AiOutlineClear } from "react-icons/ai";
 import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
-import { NavLink } from "react-router-dom";
-import AlertSuccess from "../components/AlertSuccess";
-import AlertError from "../components/AlertError";
+
 const DashboardArtist = () => {
   const dispatch = useDispatch();
   const allArtists = useSelector((state) => state.customization.allArtists);
@@ -83,8 +80,8 @@ const DashboardArtist = () => {
       </div>
       <div className="relative w-full  my-4 p-4 py-12 border border-gray-300">
         <div className="absolute top-4 left-4">
-          <p className="text-xl font-bold text-white">
-            <span className="text-sm font-semibold text-white">
+          <p className="text-lg font-bold text-white">
+            <span className="text-lg font-semibold text-white">
               Tổng nghệ sĩ:{" "}
             </span>
             {filteredArtists ? filteredArtists?.length : allArtists?.length}
@@ -103,7 +100,7 @@ const DashboardArtist = () => {
 
 export const AritstContainer = ({ data }) => {
   return (
-    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly">
+    <div className=" w-full  flex flex-wrap gap-3  items-center justify-evenly mt-5">
       {data.map((data, index) => (
         <ArtistCard key={index} data={data} index={index} />
       ))}
@@ -114,6 +111,10 @@ export const AritstContainer = ({ data }) => {
 export const ArtistCard = ({ data, index }) => {
   const [isDelete, setIsDelete] = useState(false);
   console.log("ArtistCard data: ", data);
+  const navigate = useNavigate();
+  const handleEditClick = () => {
+    navigate(`/Admin/ManageArtists/Update?id=${data._id}`);
+  };
   return (
     <motion.div
       initial={{ opacity: 0, translateX: -50 }}
@@ -127,8 +128,14 @@ export const ArtistCard = ({ data, index }) => {
         alt=""
       />
 
-      <p className="text-base text-textColor">{data.artistName}</p>
+      <p className="w-full overflow-hidden text-base text-textColor text-center whitespace-nowrap overflow-ellipsis">
+        {data.artistName}
+      </p>
       <div className="flex items-center gap-4">
+        <motion.i whileTap={{ scale: 0.75 }} onClick={handleEditClick}>
+          <MdEdit className="text-green-400 hover:text-green-600 text-xl" />
+        </motion.i>
+
         <a href={data.artistInstagram} target="_blank">
           <motion.i whileTap={{ scale: 0.75 }}>
             <IoLogoInstagram className="text-gray-500 hover:text-headingColor text-xl" />
@@ -140,13 +147,13 @@ export const ArtistCard = ({ data, index }) => {
           </motion.i>
         </a>
       </div>
-      <motion.i
+      {/* <motion.i
         className="absolute bottom-2 right-2"
         whileTap={{ scale: 0.75 }}
         onClick={() => setIsDelete(true)}
       >
         <MdDelete className=" text-gray-400 hover:text-red-400 text-xl cursor-pointer" />
-      </motion.i>
+      </motion.i> */}
 
       {isDelete && (
         <motion.div
