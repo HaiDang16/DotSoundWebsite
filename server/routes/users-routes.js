@@ -29,6 +29,11 @@ router.put("/ChangePassword", usersControllers.changePassword);
 
 router.put("/updateRole/:userId", usersControllers.updateRole);
 
+router.put(
+  "/UpdateUserProfileWithOutPassword",
+  usersControllers.updateUserProfileWithOutPassword
+);
+
 router.delete("/DeleteUser/:userId", usersControllers.deleteUser);
 
 module.exports = router;

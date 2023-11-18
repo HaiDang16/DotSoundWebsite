@@ -246,3 +246,27 @@ export const updateCategory = async (dataReq) => {
     return null;
   }
 };
+export const updateUserProfileWithOutPassword = async (dataReq) => {
+  try {
+    const res = axios.put(
+      `${baseURL}api/users/UpdateUserProfileWithOutPassword`,
+      {
+        ...dataReq,
+      }
+    );
+    return res;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const changePassword = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/users/ChangePassword`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};

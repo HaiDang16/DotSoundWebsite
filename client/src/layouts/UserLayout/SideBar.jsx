@@ -3,7 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { storage } from "../../config/firebase.config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
 import axios from "axios";
+import { getUserDetails } from "../../api";
 const SideBar = ({ updated }) => {
   console.log("Re-render sidebar");
   const baseURL = "http://localhost:4000/";
@@ -79,19 +81,12 @@ const SideBar = ({ updated }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${baseURL}api/users/GetUserDetails/${userDataID}`
-        );
-        console.log("fetchData: ", response.data.user);
-        setLoadedDetails(response.data.user);
-      } catch (error) {
-        console.error("Error searching:", error);
-      }
-    };
+    getUserDetails(userDataID).then((res) => {
+      console.log("getUserDetails res: ", res);
+      setLoadedDetails(res.user);
 
-    fetchData();
+      console.log(res.user);
+    });
   }, [avatarURL, updated]);
 
   const INFO_SIDE_BAR = [
@@ -100,20 +95,23 @@ const SideBar = ({ updated }) => {
   ];
 
   return (
-    <div className="md:w-2/6 w-full">
-      <div className="flex flex-row justify-start flex-nowrap pb-[64px] border-b-[1px] border-b-black border-b-solid">
-        <div className="lg:min-w-[120px] min-w-[80px] lg:max-w-[120px] max-w-[80px] h-[80px] lg:h-[120px]">
-          <img src={loadedDetails && loadedDetails.CusAvatar} alt="avatar" />
+    <div className="md:w-2/6 w-full pr-20">
+      <div className="flex flex-row justify-start flex-nowrap pb-[30px] border-b-[1px] border-b-black border-b-solid">
+        <div className="lg:min-w-[120px] min-w-[80px] lg:max-w-[120px] max-w-[80px] h-[80px] lg:h-[100px]">
+          {loadedDetails?.cusAvatar ? (
+            <img src={loadedDetails?.cusAvatar} alt="avatar" />
+          ) : (
+            <IoPersonSharp className="text-black w-full h-full min-w-[30px] object-cover mr-3" />
+          )}
         </div>
         <div className="lg:ml-[36px] ml-[20px]">
           <div className="text-sm mb-[10px] break-all">
-            {loadedDetails &&
-              `${loadedDetails.CusLastName} ${loadedDetails.CusFirstName}`}
+            {`${loadedDetails?.cusLastName} ${loadedDetails?.cusFirstName}`}
           </div>
           <div className="text-sm mb-[10px] break-all">
-            {loadedDetails && loadedDetails.CusEmail}
+            {loadedDetails && loadedDetails.cusEmail}
           </div>
-          {!userData.user.GoogleID && (
+          {!userData.user.googleID && (
             <>
               <button
                 onClick={handleClick}

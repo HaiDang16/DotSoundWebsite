@@ -4,7 +4,13 @@ import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
-import { getAllArtist, register, getUserDetails, updateUser } from "../api";
+import {
+  getAllArtist,
+  register,
+  getUserDetails,
+  updateUser,
+  getAllUsers,
+} from "../api";
 import { useSelector, useDispatch } from "react-redux";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
@@ -165,8 +171,8 @@ const AddNewArtist = () => {
       updateUser(dataReq).then((res) => {
         console.log("res: ", res);
         console.log("res.data.message: ", res.data.message);
-        if (res.data.message === "Cập nhật thông tin người dùng thành công") {
-          getAllArtist().then((data) => {
+        if (res.data.success) {
+          getAllUsers().then((data) => {
             dispatch({
               type: SET_ALL_USERS,
               allUsers: data.users,
@@ -180,22 +186,16 @@ const AddNewArtist = () => {
           setConfirmPassword("");
           setEmail("");
           setIsAlert("success");
-          setAlertMessage("Tạo tài khoản người dùng thành công");
+          setAlertMessage(res.data.message);
           setTimeout(() => {
             setIsAlert(null);
-          }, 4000);
-        } else if (res.data.message === "Email đã tồn tại") {
+          }, 2000);
+        } else {
           setIsAlert("error");
-          setAlertMessage(
-            "Email đã được dùng để đăng ký. Vui lòng kiểm tra lại"
-          );
-          return;
-        } else if (res.data.message === "Số điện thoại đã tồn tại") {
-          setIsAlert("error");
-          setAlertMessage(
-            "Số điện thoại đã được dùng để đăng ký. Vui lòng kiểm tra lại"
-          );
-          return;
+          setAlertMessage(res.data.message);
+          setTimeout(() => {
+            setIsAlert(null);
+          }, 2000);
         }
       });
     } catch (error) {

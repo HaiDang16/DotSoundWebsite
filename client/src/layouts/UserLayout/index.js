@@ -25,7 +25,6 @@ const UserLayout = () => {
       <div className="h-auto mt-[120px] mb-16 w-full flex justify-center items-center">
         <div className="w-10/12 flex justify-center">
           <SideBar />
-
           {isLoading ? <Loader /> : <Outlet />}
         </div>
       </div>

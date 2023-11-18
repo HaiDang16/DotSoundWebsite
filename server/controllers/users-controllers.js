@@ -303,8 +303,29 @@ const updateUserProfile = async (req, res) => {
   console.log("CusFirstName: ", CusFirstName);
 
   try {
-    //Lấy ra danh sách sản phẩm có catKey = lstCatgoryIDs
     users = await User.findById(userID);
+
+    if (users.cusEmail !== CusEmail) {
+      // Tìm tài khoản trong cơ sở dữ liệu bằng email
+      const userEmail = await User.findOne({ cusEmail: CusEmail });
+
+      if (userEmail) {
+        // Đã tồn tại email
+        return res
+          .status(200)
+          .json({ message: "Email đã tồn tại", success: false });
+      }
+    } else if (users.cusPhoneNum !== CusPhoneNum) {
+      // Tìm tài khoản trong cơ sở dữ liệu bằng email
+      const userPhone = await User.findOne({ cusPhoneNum: CusPhoneNum });
+
+      if (userPhone) {
+        // Đã tồn tại email
+        return res
+          .status(200)
+          .json({ message: "Số điện thoại đã tồn tại", success: false });
+      }
+    }
 
     users.cusFirstName = CusFirstName;
     users.cusLastName = CusLastName;
@@ -351,7 +372,7 @@ const changePassword = async (req, res) => {
 
   const isPasswordValid = await bcrypt.compare(
     oldPassword,
-    userData.CusPassword
+    userData.cusPassword
   );
 
   if (!isPasswordValid) {
@@ -425,6 +446,55 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const updateUserProfileWithOutPassword = async (req, res) => {
+  console.log("\nStart updateUserProfileWithOutPassword");
+  let users;
+  const { CusFirstName, CusLastName, CusEmail, CusPhoneNum, userID } = req.body;
+  console.log("userID: ", userID);
+  console.log("CusFirstName: ", CusFirstName);
+
+  try {
+    users = await User.findById(userID);
+
+    if (users.cusEmail !== CusEmail) {
+      // Tìm tài khoản trong cơ sở dữ liệu bằng email
+      const userEmail = await User.findOne({ cusEmail: CusEmail });
+
+      if (userEmail) {
+        // Đã tồn tại email
+        return res
+          .status(200)
+          .json({ message: "Email đã tồn tại", success: false });
+      }
+    } else if (users.cusPhoneNum !== CusPhoneNum) {
+      // Tìm tài khoản trong cơ sở dữ liệu bằng email
+      const userPhone = await User.findOne({ cusPhoneNum: CusPhoneNum });
+
+      if (userPhone) {
+        // Đã tồn tại email
+        return res
+          .status(200)
+          .json({ message: "Số điện thoại đã tồn tại", success: false });
+      }
+    }
+    users.cusFirstName = CusFirstName;
+    users.cusLastName = CusLastName;
+    users.cusEmail = CusEmail;
+    users.cusPhoneNum = CusPhoneNum;
+    await users.save();
+    return res.status(200).json({
+      message: "Cập nhật thông tin người dùng thành công",
+      success: true,
+      user: users,
+    });
+  } catch (err) {
+    console.log("Error: ", err);
+    return res
+      .status(500)
+      .json({ message: "Lỗi cập nhật thông tin người dùng", success: false });
+  }
+};
+
 exports.LoginGoogle = LoginGoogle;
 exports.Register = Register;
 exports.Login = Login;
@@ -437,3 +507,4 @@ exports.changePassword = changePassword;
 exports.getAllUsers = getAllUsers;
 exports.updateRole = updateRole;
 exports.deleteUser = deleteUser;
+exports.updateUserProfileWithOutPassword = updateUserProfileWithOutPassword;
