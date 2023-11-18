@@ -10,7 +10,11 @@ const Register = Loadable(lazy(() => import("../pages/Register")));
 const Trending = Loadable(lazy(() => import("../pages/Trending")));
 const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
+
+const UserPlaylist = Loadable(lazy(() => import("../pages/userPlaylist")));
+
 const ForgotPassword = Loadable(lazy(() => import("../pages/ForgotPass")));
+
 const ResetPassword = Loadable(lazy(() => import("../pages/ResetPassword")));
 const AdminDashboard = Loadable(lazy(() => import("../pages/AdminDashboard")));
 const AdminManageSongs = Loadable(
@@ -56,6 +60,10 @@ const MainRoutes = [
       {
         path: "/UserProfile",
         element: <UserProfile />,
+      },
+      {
+        path: "/UserPlaylist",
+        element: <UserPlaylist />,
       },
     ],
   },
