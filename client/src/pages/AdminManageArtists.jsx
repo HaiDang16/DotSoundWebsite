@@ -30,7 +30,7 @@ const DashboardArtist = () => {
     if (!allArtists) {
       getAllArtist().then((data) => {
         console.log("getAllArtist res: ", data.artists);
-        dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artist });
+        dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artists });
       });
     }
   }, []);

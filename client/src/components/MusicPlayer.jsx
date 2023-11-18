@@ -97,23 +97,25 @@ const MusicPlayer = () => {
         }`}
       >
         <img
-          src={allSongs[song]?.imageURL}
+          src={allSongs[song]?.songImageURL}
           className="w-40 h-20 object-cover rounded-md"
           alt=""
         />
         <div className="flex items-start flex-col">
           <p className="text-xl text-headingColor font-semibold">
             {`${
-              allSongs[song]?.name.length > 20
-                ? allSongs[song]?.name.slice(0, 20)
-                : allSongs[song]?.name
+              allSongs[song]?.songName.length > 20
+                ? allSongs[song]?.songName.slice(0, 20)
+                : allSongs[song]?.songName
             }`}{" "}
-            <span className="text-base">({allSongs[song]?.album})</span>
+            <span className="text-base">
+              ({allSongs[song]?.songAlbum.songAlbumName})
+            </span>
           </p>
           <p className="text-textColor">
-            {allSongs[song]?.artist}{" "}
+            {allSongs[song]?.songArtist.songArtistName}{" "}
             <span className="text-sm text-textColor font-semibold">
-              ({allSongs[song]?.category})
+              ({allSongs[song]?.songCategory.songCategoryName})
             </span>
           </p>
           <motion.i
@@ -125,7 +127,7 @@ const MusicPlayer = () => {
         </div>
         <div className="flex-1">
           <AudioPlayer
-            src={allSongs[song]?.songUrl}
+            src={allSongs[song]?.songURL}
             onPlay={() => console.log("is playing")}
             autoPlay={true}
             showSkipControls={true}
@@ -159,7 +161,7 @@ const MusicPlayer = () => {
             <div className="absolute inset-0 rounded-full bg-red-600 blur-xl animate-pulse"></div>
             <img
               onClick={togglePlayer}
-              src={allSongs[song]?.imageURL}
+              src={allSongs[song]?.songImageURL}
               className="z-50 w-32 h-32 rounded-full object-cover cursor-pointer"
               alt=""
             />

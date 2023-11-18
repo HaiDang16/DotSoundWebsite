@@ -68,16 +68,18 @@ const PlaylistCard = () => {
             <div className="flex items-start flex-col">
               <p className="text-lg text-gray-400 font-semibold">
                 {`${
-                  music?.name.length > 20
-                    ? music?.name.slice(0, 20)
-                    : music?.name
+                  music?.songName.length > 20
+                    ? music?.songName.slice(0, 20)
+                    : music?.songName
                 }`}{" "}
-                <span className="text-base">({music?.album})</span>
+                <span className="text-base">
+                  ({music?.songAlbum.songAlbumName})
+                </span>
               </p>
               <p className="text-textColor">
-                {music?.artist}{" "}
+                {music?.songArtist.songArtistName}{" "}
                 <span className="text-sm text-textColor font-semibold">
-                  ({music?.category})
+                  ({music?.songCategory.songCategoryName})
                 </span>
               </p>
             </div>

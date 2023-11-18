@@ -1,5 +1,6 @@
 import axios from "axios";
 
+//const baseURL = "https://dotsounds.onrender.com/";
 const baseURL = "http://localhost:4000/";
 
 export const validateUser = async (token) => {
@@ -36,7 +37,7 @@ export const getAllUsers = async () => {
 
 export const removeUser = async (userId) => {
   try {
-    const res = axios.delete(`${baseURL}api/users/delete/${userId}`);
+    const res = axios.delete(`${baseURL}api/users/DeleteUser/${userId}`);
     return res;
   } catch (error) {
     return null;
@@ -76,7 +77,7 @@ export const changingUserRole = async (userId, role) => {
 export const createArtist = async (data) => {
   try {
     const res = axios.post(`${baseURL}api/artists/CreateArtist`, { ...data });
-    return (await res);
+    return await res;
   } catch (error) {
     return null;
   }
@@ -85,7 +86,7 @@ export const createArtist = async (data) => {
 export const createAlbum = async (data) => {
   try {
     const res = axios.post(`${baseURL}api/albums/CreateAlbum`, { ...data });
-    return (await res);
+    return await res;
   } catch (error) {
     return null;
   }
@@ -94,7 +95,7 @@ export const createAlbum = async (data) => {
 export const createSong = async (data) => {
   try {
     const res = axios.post(`${baseURL}api/songs/CreateSong`, { ...data });
-    return (await res);
+    return await res;
   } catch (error) {
     return null;
   }
@@ -157,6 +158,23 @@ export const getAllCategories = async () => {
   try {
     const res = await axios.get(`${baseURL}api/categories/GetAllCategories`);
     return res.data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getUserDetails = async (id) => {
+  try {
+    const res = await axios.get(`${baseURL}api/users/GetUserDetails/${id}`);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
+export const updateUser = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/users/UpdateUserProfile`, { ...dataReq });
+    return res;
   } catch (error) {
     return null;
   }

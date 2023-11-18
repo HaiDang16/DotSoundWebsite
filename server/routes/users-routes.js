@@ -27,4 +27,8 @@ router.put("/UpdateUserProfile", usersControllers.updateUserProfile);
 
 router.put("/ChangePassword", usersControllers.changePassword);
 
+router.put("/updateRole/:userId", usersControllers.updateRole);
+
+router.delete("/DeleteUser/:userId", usersControllers.deleteUser);
+
 module.exports = router;
