@@ -2,6 +2,15 @@
 // import AlertSuccess from "../../components/shared/AlertSuccess";
 import React, { useState, useEffect } from "react";
 import SongtItemCard from "../components/SongItemCard";
+import { storage } from "../config/firebase.config";
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+  deleteObject,
+} from "firebase/storage";
+import { MdDelete } from "react-icons/md";
 // import Loading from "../../components/users/Loading";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
@@ -17,13 +26,14 @@ import {
   PlaylistSearchCard,
   ImageUploaderPlaylist,
 } from "../components";
-import { deleteSongById, getAllSongs } from "../api";
+import { getAllSongs, createPlaylist } from "../api";
 import SearchCard from "../pages/SearchCard";
 import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
 import SideBar from "../layouts/UserLayout/SideBar";
 import { FaTrash } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-
+import AlertErrorBottom from "../components/AlertErrorBottom";
+import AlertSuccessBottom from "../components/AlertSuccessBottom";
 const moment = require("moment");
 const baseURL = "http://localhost:4000/";
 const OrderCard = ({
@@ -79,11 +89,17 @@ const OrderCard = ({
 };
 
 const UserPlaylist_Add = () => {
-  const user = JSON.parse(window.localStorage.getItem("userData"));
+  const userData = JSON.parse(window.localStorage.getItem("userData"));
   const allSongs = useSelector((state) => state.customization.allSongs);
   const [isSreach, setIsSearch] = useState(false);
   const [filteredSongs, setFilteredSongs] = useState(null);
   const [songFilter, setSongFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isAlert, setIsAlert] = useState(null);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [playlistImage, setPlaylistImage] = useState(null);
+  const [playlistName, setPlaylistName] = useState("");
 
   //hàm lưu trữ sản phẩm đã chọn
   const [selectedPlaylist, setSelectedPlaylist] = useState([]);
@@ -135,10 +151,10 @@ const UserPlaylist_Add = () => {
 
   // Hàm xử lý xóa sản phẩm
   const handleDeletePlaylist = (id) => {
-    /// Xóa sản phẩm khỏi danh sách
-    const updatedPlaylist = selectedPlaylist.filter((p) => p.id !== id);
-    setSelectedPlaylist(updatedPlaylist);
+    const updatedPlaylist = selectedSongs.filter((p) => p.id !== id);
+    setSelectedSongs(updatedPlaylist);
   };
+
   function SearchBar() {
     const fadeDownVariant = {
       initial: {
@@ -157,11 +173,6 @@ const UserPlaylist_Add = () => {
     const handleClickSearch = () => {
       setIsSearch(true);
     };
-
-    const handleSearchCardSelect = (song) => {
-      setSearchResults([...searchResults, song]);
-    };
-
     return (
       <div
         onClick={handleClickSearch}
@@ -213,6 +224,39 @@ const UserPlaylist_Add = () => {
       </div>
     );
   }
+  const handleAddPlaylist = () => {
+    if (!playlistName) {
+      setIsAlert("error");
+      setAlertMessage("Vui lòng nhập tên cho danh sách phát");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
+    }
+
+    const dataReq = {
+      name: playlistName,
+      imageURL: playlistImage,
+      userID: userData.user._id,
+      lstSong: selectedSongs,
+    };
+
+    createPlaylist(dataReq).then((res) => {
+      console.log("createPlaylist res: ", res);
+      if (res.status === 200) {
+        setIsAlert("success");
+        setAlertMessage(res.data.message);
+        setTimeout(() => {
+          setIsAlert(null);
+        }, 1500);
+      } else {
+        setIsAlert("error");
+        setAlertMessage(res.data.message);
+        setTimeout(() => {
+          setIsAlert(null);
+        }, 1500);
+      }
+    });
+  };
   const [selectedSongs, setSelectedSongs] = useState([]);
   const handleSongSelect = (song) => {
     const isSongSelected = selectedSongs.some(
@@ -226,6 +270,20 @@ const UserPlaylist_Add = () => {
       //Nếu trùng bài hát
     }
   };
+  const deleteImageObject = (songURL) => {
+    setIsLoading(true);
+    setPlaylistImage(null);
+    const deleteRef = ref(storage, songURL);
+    deleteObject(deleteRef).then(() => {
+      setIsAlert("success");
+      setAlertMessage("Xoá hình ảnh thành công");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 4000);
+      setIsLoading(false);
+    });
+  };
+
   const [searchResults, setSearchResults] = useState([]); // Thêm state cho kết quả tìm kiếm
   const [updated, setUpdated] = useState(0);
   return (
@@ -238,14 +296,49 @@ const UserPlaylist_Add = () => {
             <label className="mr-4  p-2 font-medium  w-1/2">
               Tên danh sách phát:
             </label>
-            <input placeholder="Tên playlist" className=" p-2 w-1/2" />
+            <input
+              placeholder="Tên playlist"
+              className=" p-2 w-1/2"
+              value={playlistName}
+              onChange={(e) => setPlaylistName(e.target.value)}
+            />
           </div>
           <div className="flex my-10">
             <label className="mr-4  p-2 font-medium  w-1/2">
               Tải ảnh cho danh sách phát
             </label>
             <div className="w-150 h-150 border-2 rounded-lg ">
-              <ImageUploaderPlaylist />
+              {isLoading && <ImageLoader progress={progress} />}
+              {!isLoading && (
+                <>
+                  {!playlistImage ? (
+                    <ImageUploaderPlaylist
+                      setImageURL={setPlaylistImage}
+                      setAlert={setIsAlert}
+                      alertMsg={setAlertMessage}
+                      isLoading={setIsLoading}
+                      setProgress={setProgress}
+                    />
+                  ) : (
+                    <div className="relative w-full h-full overflow-hidden rounded-md">
+                      <img
+                        src={playlistImage}
+                        alt="uploaded image"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        className="absolute bottom-3 right-3 p-3 rounded-full bg-red-500 text-xl cursor-pointer outline-none hover:shadow-md  duration-500 transition-all ease-in-out"
+                        onClick={() => {
+                          deleteImageObject(playlistImage);
+                        }}
+                      >
+                        <MdDelete className="text-white" />
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
           <div className="flex w-full justify-between">
@@ -281,7 +374,10 @@ const UserPlaylist_Add = () => {
             </div>
           </div>
           <div className="my-4 mt-20">
-            <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white">
+            <button
+              className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white"
+              onClick={handleAddPlaylist}
+            >
               Lưu
             </button>
             <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white mx-4 ">
@@ -293,6 +389,15 @@ const UserPlaylist_Add = () => {
           </div>
         </div>
       </div>
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMessage} />
+          ) : (
+            <AlertErrorBottom msg={alertMessage} />
+          )}
+        </>
+      )}
     </div>
   );
 };

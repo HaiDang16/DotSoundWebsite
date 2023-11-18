@@ -281,3 +281,13 @@ export const updateAvatar = async (dataReq) => {
     return null;
   }
 };
+export const createPlaylist = async (data) => {
+  try {
+    const res = axios.post(`${baseURL}api/playlists/CreatePlaylist`, {
+      ...data,
+    });
+    return await res;
+  } catch (error) {
+    return null;
+  }
+};
