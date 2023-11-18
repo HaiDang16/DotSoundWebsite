@@ -38,24 +38,6 @@ const Footer = () => {
           <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
             <img src={doiTac2} alt="" className="m-auto h-4/5" />
           </div>
-          <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
-            <img src={doiTac1} alt="" className="m-auto h-4/5" />
-          </div>
-          <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
-            <img src={doiTac2} alt="" className="m-auto h-4/5" />
-          </div>
-          <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
-            <img src={doiTac1} alt="" className="m-auto h-4/5" />
-          </div>
-          <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
-            <img src={doiTac2} alt="" className="m-auto h-4/5" />
-          </div>
-          <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
-            <img src={doiTac1} alt="" className="m-auto h-4/5" />
-          </div>
-          <div className="h-16 w-190 bg-card rounded-xl  flex items-center justify-center mb-4">
-            <img src={doiTac2} alt="" className="m-auto h-4/5" />
-          </div>
         </div>
       </div>
       <div className="flex flex-row h-300">
@@ -72,42 +54,42 @@ const Footer = () => {
               className="socialContainer container border-solid border-2 border-slate-500"
               target="_blank"
             >
-              <i className="fa-brands fa-instagram socialIcon"></i>
+              <FontAwesomeIcon icon={faInstagram} className="socialIcon" />
             </a>
             <a
               href="https://facebook.com"
               className="socialContainer container border-solid border-2 border-slate-500"
               target="_blank"
             >
-              <i className="fa-brands fa-facebook socialIcon"></i>
+              <FontAwesomeIcon icon={faFacebook} className="socialIcon" />
             </a>
             <a
               href="https://discord.com"
               className="socialContainer container border-solid border-2 border-slate-500"
               target="_blank"
             >
-              <i className="fa-brands fa-discord socialIcon"></i>
+              <FontAwesomeIcon icon={faDiscord} className="socialIcon" />
             </a>
             <a
               href="https://tiktok.com"
               className="socialContainer container border-solid border-2 border-slate-500"
               target="_blank"
             >
-              <i className="fa-brands fa-tiktok socialIcon"></i>
+              <FontAwesomeIcon icon={faTiktok} className="socialIcon" />
             </a>
             <a
               href="https://google.com"
               className="socialContainer container border-solid border-2 border-slate-500"
               target="_blank"
             >
-              <i className="fa-brands fa-google socialIcon"></i>
+              <FontAwesomeIcon icon={faGoogle} className="socialIcon" />
             </a>
             <a
               href="https://youtube.com"
               className="socialContainer container border-solid border-2 border-slate-500"
               target="_blank"
             >
-              <i className="fa-brands fa-youtube socialIcon"></i>
+              <FontAwesomeIcon icon={faYoutube} className="socialIcon" />
             </a>
           </div>
           <div className=" flex-col text-2xl w-full">

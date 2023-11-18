@@ -90,6 +90,23 @@ const Header = () => {
       setFilteredSongs(null);
     }
   }, [songFilter]);
+
+  const handleOutsideClick = (event) => {
+    if (filteredSongs !== 0 && songFilter) {
+      const searchContainer = document.getElementById("searchContainer");
+      if (searchContainer && !searchContainer.contains(event.target)) {
+        setFilteredSongs(null);
+        setSongFilter("");
+      }
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [songFilter, filteredSongs]);
+
   return (
     <header className="flex fixed top-0 items-center w-full  background  md:px-20 z-30">
       <NavLink to={"/Trending"}>
@@ -122,9 +139,10 @@ const Header = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               className="fade-down absolute z-10 top-16 flex flex-col gap-3 w-96 bg-slate-200 shadow-lg rounded-b-lg backdrop-blur-sm py-2"
+              id="searchContainer"
             >
               {filteredSongs && filteredSongs.length !== 0 ? (
-                filteredSongs.map((search, index) => (
+                filteredSongs?.map((search, index) => (
                   <SearchCard
                     key={search._id}
                     songName={search.songName}

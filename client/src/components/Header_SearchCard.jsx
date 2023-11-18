@@ -1,5 +1,14 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  SET_ALL_SONGS,
+  SET_ARTISTS,
+  SET_ALL_ARTISTS,
+  SET_LANGUAGE_FILTER,
+  SET_SONG,
+  SET_SONG_PLAYING,
+} from "../store/actions";
 const SearchCard = ({
   key,
   index,
@@ -11,9 +20,29 @@ const SearchCard = ({
 }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/ProductDetail/`);
+    addSongToContext();
   };
   console.log(songArtist);
+  const dispatch = useDispatch();
+  const song = useSelector((state) => state.customization.song);
+  const isSongPlaying = useSelector(
+    (state) => state.customization.isSongPlaying
+  );
+
+  const addSongToContext = (index) => {
+    if (!isSongPlaying) {
+      dispatch({
+        type: SET_SONG_PLAYING,
+        isSongPlaying: true,
+      });
+    }
+    if (song !== index) {
+      dispatch({
+        type: SET_SONG,
+        song: index,
+      });
+    }
+  };
   return (
     <motion.div
       whileTap={{ scale: 0.8 }}
@@ -22,7 +51,7 @@ const SearchCard = ({
       transition={{ duration: 0.3, delay: index * 0.1 }}
       className="flex-auto h-full w-full flex flex-col py-1 px-5 cursor-pointer hover:bg-cardOverlay"
       key={key}
-      onClick={handleClick}
+      onClick={() => addSongToContext(index)}
     >
       <div className="flex items-center">
         <div className="w-14 h-14 ml-2 mr-4 rounded-full">

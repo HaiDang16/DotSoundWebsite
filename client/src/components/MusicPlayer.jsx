@@ -88,7 +88,20 @@ const MusicPlayer = () => {
       });
     }
   }, [song]);
-
+  const handleOutsideClick = (event) => {
+    if (isPlayList) {
+      const searchContainer = document.getElementById("playlistContainer");
+      if (searchContainer && !searchContainer.contains(event.target)) {
+        setIsPlayList(!isPlayList);
+      }
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isPlayList]);
   return (
     <div className="w-full full flex items-center gap-3 overflow-hidden">
       <div
@@ -102,7 +115,7 @@ const MusicPlayer = () => {
           alt=""
         />
         <div className="flex items-start flex-col">
-          <p className="text-xl text-headingColor font-semibold">
+          <p className="text-xl text-black font-semibold">
             {`${
               allSongs[song]?.songName.length > 20
                 ? allSongs[song]?.songName.slice(0, 20)
@@ -112,9 +125,9 @@ const MusicPlayer = () => {
               ({allSongs[song]?.songAlbum.songAlbumName})
             </span>
           </p>
-          <p className="text-textColor">
+          <p className="text-blac">
             {allSongs[song]?.songArtist.songArtistName}{" "}
-            <span className="text-sm text-textColor font-semibold">
+            <span className="text-sm text-gray-600 font-semibold">
               ({allSongs[song]?.songCategory.songCategoryName})
             </span>
           </p>
@@ -122,7 +135,7 @@ const MusicPlayer = () => {
             whileTap={{ scale: 0.8 }}
             onClick={() => setIsPlayList(!isPlayList)}
           >
-            <RiPlayListFill className="text-textColor hover:text-headingColor text-3xl cursor-pointer" />
+            <RiPlayListFill className="text-black hover:text-headingColor text-3xl cursor-pointer" />
           </motion.i>
         </div>
         <div className="flex-1">
@@ -146,9 +159,9 @@ const MusicPlayer = () => {
       </div>
 
       {isPlayList && (
-        <>
+        <div id="playlistContainer" >
           <PlaylistCard />
-        </>
+        </div>
       )}
 
       {miniPlayer && (
