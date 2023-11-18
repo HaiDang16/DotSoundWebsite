@@ -12,6 +12,8 @@ const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
 const ForgotPassword = Loadable(lazy(() => import("../pages/ForgotPass")));
 const ResetPassword = Loadable(lazy(() => import("../pages/ResetPassword")));
+const ForYou = Loadable(lazy(() => import("../pages/ForYou")));
+
 const AdminDashboard = Loadable(lazy(() => import("../pages/AdminDashboard")));
 const AdminManageSongs = Loadable(
   lazy(() => import("../pages/AdminManageSongs"))
@@ -69,6 +71,10 @@ const MainRoutes = [
       {
         path: "/UserProfile",
         element: <UserProfile />,
+      },
+      {
+        path: "/ForYou",
+        element: <ForYou />,
       },
     ],
   },

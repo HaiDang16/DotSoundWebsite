@@ -49,7 +49,6 @@ const DashboardHome = () => {
         console.log("user: ", data);
       });
     }
-
     if (!allSongs) {
       getAllSongs().then((data) => {
         dispatch({
@@ -58,14 +57,12 @@ const DashboardHome = () => {
         });
       });
     }
-
     if (!allArtists) {
       getAllArtist().then((data) => {
         console.log("getAllArtist res: ", data.artists);
         dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artists });
       });
     }
-
     if (!allAlbums) {
       getAllAlbums().then((data) => {
         dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.data });
