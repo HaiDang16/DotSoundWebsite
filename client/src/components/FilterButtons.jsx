@@ -15,7 +15,7 @@ import {
   SET_CATEGORY_FILTER,
 } from "../store/actions";
 
-const FilterButtons = ({ filterData, flag }) => {
+const FilterButtons = ({ filterData, flag, filterInit }) => {
   const [filterName, setFilterName] = useState(null);
   const [filterMenu, setFilterMenu] = useState(false);
   const dispatch = useDispatch();
@@ -42,6 +42,12 @@ const FilterButtons = ({ filterData, flag }) => {
       dispatch({ type: SET_CATEGORY_FILTER, categoryFilter: name });
     }
   };
+
+  useEffect(() => {
+    if (filterInit) {
+      setFilterName(filterInit);
+    }
+  }, [filterInit]);
 
   return (
     <div className="border border-gray-300 rounded-md px-4 py-1 relative cursor-pointer hover:border-gray-400">

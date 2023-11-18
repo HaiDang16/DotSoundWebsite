@@ -5,7 +5,7 @@ import { deleteSongById, getAllSongs } from "../api";
 import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import AlertSuccess from "../components/AlertSuccess";
 import AlertError from "../components/AlertError";
 import AlertErrorBottom from "../components/AlertErrorBottom";
@@ -37,7 +37,7 @@ const DashboardSongs = () => {
   useEffect(() => {
     if (songFilter.length > 0) {
       const filtered = allSongs.filter((data) =>
-        data.songName.toLowerCase().includes(songFilter)
+        data.songName.toLowerCase().includes(songFilter.toLowerCase())
       );
       setFilteredSongs(filtered);
     } else {
@@ -56,10 +56,10 @@ const DashboardSongs = () => {
         </NavLink>
         <input
           type="text"
-          placeholder="Search here"
+          placeholder="Nhập từ khoá"
           className={`w-52 px-4 py-2 border ${
             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
-          } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-textColor font-semibold`}
+          } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-white font-semibold`}
           value={songFilter}
           onChange={(e) => setSongFilter(e.target.value)}
           onBlur={() => setIsFocus(false)}
@@ -83,8 +83,8 @@ const DashboardSongs = () => {
 
       <div className="relative w-full  my-4 p-4 py-12 border border-gray-300">
         <div className="absolute top-4 left-4">
-          <p className="text-xl font-bold text-white">
-            <span className="text-sm font-semibold text-white">
+          <p className="text-lg font-bold text-white">
+            <span className="text-lg font-semibold text-white">
               Tổng bài hát :{" "}
             </span>
             {filteredSongs ? filteredSongs?.length : allSongs?.length}
@@ -99,7 +99,7 @@ const DashboardSongs = () => {
 
 export const SongContainer = ({ data }) => {
   return (
-    <div className=" w-full flex flex-wrap gap-3  items-center justify-evenly">
+    <div className=" w-full flex flex-wrap gap-3  items-center justify-evenly mt-5">
       {data &&
         data.map((song, i) => (
           <SongCard key={song._id} data={song} index={i} />
@@ -110,6 +110,7 @@ export const SongContainer = ({ data }) => {
 
 export const SongCard = ({ data, index }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isDeleted, setIsDeleted] = useState(false);
   console.log("isDeleted: ", isDeleted);
   const [alert, setAlert] = useState(false);
@@ -133,6 +134,10 @@ export const SongCard = ({ data, index }) => {
         song: index,
       });
     }
+  };
+
+  const handleEditClick = () => {
+    navigate(`/Admin/ManageSongs/Update?id=${data._id}`);
   };
 
   const deleteObject = (id) => {
@@ -230,7 +235,7 @@ export const SongCard = ({ data, index }) => {
             <MdEdit
               size={20}
               className="text-base text-green-400 drop-shadow-md hover:text-green-600 "
-              //onClick={() => setIsDeleted(true)}
+              onClick={handleEditClick}
             />
           </div>
         </motion.i>
