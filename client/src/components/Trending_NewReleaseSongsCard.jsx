@@ -11,6 +11,7 @@ import {
   SET_LANGUAGE_FILTER,
   SET_SONG,
   SET_SONG_PLAYING,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 const NewReleaseSongContainer = ({ musics }) => {
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ export const SongContainer = ({ data }) => {
   const isSongPlaying = useSelector(
     (state) => state.customization.isSongPlaying
   );
-
+  const playlist = useSelector((state) => state.customization.playlist);
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -102,6 +103,17 @@ export const SongContainer = ({ data }) => {
       dispatch({
         type: SET_SONG,
         song: index,
+      });
+    }
+
+    let songExists;
+    if (playlist.length > 0) {
+      songExists = playlist.some((song) => song.id === data[index].id);
+    }
+    if (!songExists) {
+      dispatch({
+        type: SET_CURRENT_PLAYLIST,
+        playlist: data[index],
       });
     }
   };

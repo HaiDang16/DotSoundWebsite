@@ -20,6 +20,8 @@ import {
 const PlaylistCard = () => {
   const dispatch = useDispatch();
   const allSongs = useSelector((state) => state.customization.allSongs);
+  const playlist = useSelector((state) => state.customization.playlist);
+  console.log("playlist: ", playlist);
   const song = useSelector((state) => state.customization.song);
   const isSongPlaying = useSelector(
     (state) => state.customization.isSongPlaying
@@ -51,9 +53,9 @@ const PlaylistCard = () => {
   };
 
   return (
-    <div className="absolute left-4 bottom-24 gap-2 py-2 w-350 max-w-[350px] h-510 max-h-[510px] flex flex-col overflow-y-scroll scrollbar-thin rounded-md shadow-md bg-primary">
-      {allSongs.length > 0 ? (
-        allSongs.map((music, index) => (
+    <div className="absolute left-4 bottom-24 gap-2 py-2 w-350 max-w-[350px] h-510 max-h-[380px] flex flex-col overflow-y-scroll scrollbar-thin rounded-md shadow-md bg-primary">
+      {playlist && playlist.length > 0 ? (
+        playlist.map((music, index) => (
           <motion.div
             initial={{ opacity: 0, translateX: -50 }}
             animate={{ opacity: 1, translateX: 0 }}
@@ -68,7 +70,7 @@ const PlaylistCard = () => {
             <div className="flex items-start flex-col">
               <p className="text-lg text-black font-semibold">
                 {`${
-                  music?.songName.length > 20
+                  music && music?.songName.length > 20
                     ? music?.songName.slice(0, 20)
                     : music?.songName
                 }`}{" "}

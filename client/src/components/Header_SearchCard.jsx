@@ -1,6 +1,13 @@
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  getAllAlbums,
+  deleteAlbumsById,
+  getAllCategories,
+  getAllSongs,
+} from "../api";
 import {
   SET_ALL_SONGS,
   SET_ARTISTS,
@@ -8,6 +15,7 @@ import {
   SET_LANGUAGE_FILTER,
   SET_SONG,
   SET_SONG_PLAYING,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 const SearchCard = ({
   key,
@@ -18,16 +26,34 @@ const SearchCard = ({
   songArtist,
   songAlbum,
 }) => {
+  let songIndex;
   const navigate = useNavigate();
-  const handleClick = () => {
-    addSongToContext();
-  };
+
   console.log(songArtist);
   const dispatch = useDispatch();
   const song = useSelector((state) => state.customization.song);
   const isSongPlaying = useSelector(
     (state) => state.customization.isSongPlaying
   );
+  const playlist = useSelector((state) => state.customization.playlist);
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  useEffect(() => {
+    if (!allSongs) {
+      getAllSongs().then((data) => {
+        dispatch({
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
+        });
+      });
+    }
+  }, []);
+
+  const handleClick = () => {
+    songIndex = allSongs.findIndex(
+      (song) => song.songImageURL === songImageURL
+    );
+    addSongToContext(songIndex);
+  };
 
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
@@ -42,6 +68,17 @@ const SearchCard = ({
         song: index,
       });
     }
+
+    let songExists;
+    if (playlist.length > 0) {
+      songExists = playlist.some((song) => song.id === allSongs[index].id);
+    }
+    if (!songExists) {
+      dispatch({
+        type: SET_CURRENT_PLAYLIST,
+        playlist: allSongs[index],
+      });
+    }
   };
   return (
     <motion.div
@@ -51,7 +88,7 @@ const SearchCard = ({
       transition={{ duration: 0.3, delay: index * 0.1 }}
       className="flex-auto h-full w-full flex flex-col py-1 px-5 cursor-pointer hover:bg-cardOverlay"
       key={key}
-      onClick={() => addSongToContext(index)}
+      onClick={handleClick}
     >
       <div className="flex items-center">
         <div className="w-14 h-14 ml-2 mr-4 rounded-full">

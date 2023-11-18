@@ -17,3 +17,5 @@ export const SET_MINI_PLAYER = "@customization/v";
 export const SET_ALL_CATEGORIES = "@customization/SET_ALL_CATEGORIES";
 export const SET_CATEGORY_FILTER = "@customization/SET_CATEGORY_FILTER";
 export const SET_ALL_ARTISTS = "@customization/SET_ALL_ARTISTS";
+export const SET_CURRENT_PLAYLIST = "@customization/SET_CURRENT_PLAYLIST";
+export const RESET_PLAYLIST = "@customization/RESET_PLAYLIST";

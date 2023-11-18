@@ -14,7 +14,7 @@ export const HomeSongContainer = ({ musics }) => {
     (state) => state.customization.isSongPlaying
   );
   const song = useSelector((state) => state.customization.song);
-
+  const playlist = useSelector((state) => state.customization.playlist);
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -26,6 +26,17 @@ export const HomeSongContainer = ({ musics }) => {
       dispatch({
         type: SET_SONG,
         song: index,
+      });
+    }
+
+    let songExists;
+    if (playlist.length > 0) {
+      songExists = playlist.some((song) => song.id === musics[index].id);
+    }
+    if (!songExists) {
+      dispatch({
+        type: SET_CURRENT_PLAYLIST,
+        playlist: musics[index],
       });
     }
   };

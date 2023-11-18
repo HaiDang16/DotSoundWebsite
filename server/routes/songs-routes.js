@@ -7,6 +7,8 @@ router.get("/GetAllSongs", songsControllers.getAllSongs);
 
 router.get("/GetSongDetails/:getOne", songsControllers.getSongDetails);
 
+router.get("/GetNewReleaseSong", songsControllers.getNewReleaseSong);
+
 router.put("/UpdateSong", songsControllers.updateSong);
 
 router.delete("/DeleteSong/:deleteId", songsControllers.deleteSong);

@@ -7,6 +7,7 @@ import {
   SET_SONG_PLAYING,
   SET_SONG,
   SET_MINI_PLAYER,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 
 const DiscoverySongsContainer = ({ musics }) => {
@@ -15,7 +16,10 @@ const DiscoverySongsContainer = ({ musics }) => {
     (state) => state.customization.isSongPlaying
   );
   const song = useSelector((state) => state.customization.song);
-
+  let playlist = useSelector((state) => state.customization.playlist);
+  useEffect(() => {
+    console.log("Updated playlist:", playlist);
+  }, [playlist]);
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -29,6 +33,21 @@ const DiscoverySongsContainer = ({ musics }) => {
         song: index,
       });
     }
+    let songExists;
+    if (playlist.length > 0) {
+      songExists = playlist.some((song) => song.id === musics[index].id);
+    }
+
+    console.log("musics[index]: ", musics[index]);
+    console.log("songExists: ", songExists);
+    if (!songExists) {
+      dispatch({
+        type: SET_CURRENT_PLAYLIST,
+        playlist: musics[index],
+      });
+    }
+
+    console.log("playlist: ", playlist);
   };
   return (
     <>

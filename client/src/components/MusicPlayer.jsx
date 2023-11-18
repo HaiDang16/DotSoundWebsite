@@ -4,7 +4,7 @@ import { useStateValue } from "../context/StateProvider";
 import { IoMdClose } from "react-icons/io";
 import { IoArrowRedo, IoArrowUndo, IoMusicalNote } from "react-icons/io5";
 import { motion } from "framer-motion";
-
+import { AiOutlineClear } from "react-icons/ai";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { actionType } from "../context/reducer";
@@ -16,6 +16,8 @@ import {
   SET_SONG_PLAYING,
   SET_SONG,
   SET_MINI_PLAYER,
+  SET_CURRENT_PLAYLIST,
+  RESET_PLAYLIST,
 } from "../store/actions";
 import { PlaylistCard } from "../components";
 
@@ -88,6 +90,12 @@ const MusicPlayer = () => {
       });
     }
   }, [song]);
+
+  const handleClearPlaylist = () => {
+    dispatch({
+      type: RESET_PLAYLIST,
+    });
+  };
   const handleOutsideClick = (event) => {
     if (isPlayList) {
       const searchContainer = document.getElementById("playlistContainer");
@@ -131,12 +139,17 @@ const MusicPlayer = () => {
               ({allSongs[song]?.songCategory.songCategoryName})
             </span>
           </p>
-          <motion.i
-            whileTap={{ scale: 0.8 }}
-            onClick={() => setIsPlayList(!isPlayList)}
-          >
-            <RiPlayListFill className="text-black hover:text-headingColor text-3xl cursor-pointer" />
-          </motion.i>
+          <div className="flex">
+            <motion.i
+              whileTap={{ scale: 0.8 }}
+              onClick={() => setIsPlayList(!isPlayList)}
+            >
+              <RiPlayListFill className="text-black hover:text-headingColor text-3xl cursor-pointer" />
+            </motion.i>
+            <motion.i whileTap={{ scale: 0.8 }} onClick={handleClearPlaylist}>
+              <AiOutlineClear className="text-3xl ml-5 text-gray-600 cursor-pointer" />
+            </motion.i>
+          </div>
         </div>
         <div className="flex-1">
           <AudioPlayer
@@ -159,7 +172,7 @@ const MusicPlayer = () => {
       </div>
 
       {isPlayList && (
-        <div id="playlistContainer" >
+        <div id="playlistContainer">
           <PlaylistCard />
         </div>
       )}
