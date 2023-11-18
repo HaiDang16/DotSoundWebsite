@@ -58,6 +58,15 @@ const Header = () => {
 
         {/* prettier-ignore */}
         <NavLink to={"/Admin/ManageAlbums"} className={({ isActive }) => isActive ? isActiveStylesAdmin : isNotActiveStylesAdmin}> Albums </NavLink>
+
+        <NavLink
+          to={"/Admin/ManageCategories"}
+          className={({ isActive }) =>
+            isActive ? isActiveStylesAdmin : isNotActiveStylesAdmin
+          }
+        >
+          Thể loại
+        </NavLink>
       </ul>
 
       <div

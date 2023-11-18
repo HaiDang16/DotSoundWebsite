@@ -219,3 +219,12 @@ export const updateArtist = async (dataReq) => {
     return null;
   }
 };
+
+export const getNewReleaseSong = async () => {
+  try {
+    const res = await axios.get(`${baseURL}api/songs/GetNewReleaseSong`);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};

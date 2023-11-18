@@ -7,6 +7,7 @@ import {
   SET_SONG_PLAYING,
   SET_SONG,
   SET_MINI_PLAYER,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 
 const CategorySongsCard = ({ musics }) => {
@@ -15,6 +16,7 @@ const CategorySongsCard = ({ musics }) => {
     (state) => state.customization.isSongPlaying
   );
   const song = useSelector((state) => state.customization.song);
+  const playlist = useSelector((state) => state.customization.playlist);
 
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
@@ -27,6 +29,17 @@ const CategorySongsCard = ({ musics }) => {
       dispatch({
         type: SET_SONG,
         song: index,
+      });
+    }
+
+    let songExists;
+    if (playlist.length > 0) {
+      songExists = playlist.some((song) => song.id === musics[index].id);
+    }
+    if (!songExists) {
+      dispatch({
+        type: SET_CURRENT_PLAYLIST,
+        playlist: musics[index],
       });
     }
   };

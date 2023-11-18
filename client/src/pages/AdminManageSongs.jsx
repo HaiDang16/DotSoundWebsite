@@ -13,7 +13,12 @@ import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import { useSelector, useDispatch } from "react-redux";
 import { FaPlay } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_SONG,
+  SET_CURRENT_PLAYLIST,
+} from "../store/actions";
 const DashboardSongs = () => {
   const dispatch = useDispatch();
 
@@ -120,7 +125,7 @@ export const SongCard = ({ data, index }) => {
   const isSongPlaying = useSelector(
     (state) => state.customization.isSongPlaying
   );
-
+  const playlist = useSelector((state) => state.customization.playlist);
   const addSongToContext = () => {
     if (!isSongPlaying) {
       dispatch({
@@ -132,6 +137,17 @@ export const SongCard = ({ data, index }) => {
       dispatch({
         type: SET_SONG,
         song: index,
+      });
+    }
+
+    let songExists;
+    if (playlist.length > 0) {
+      songExists = playlist.some((song) => song.id === data[index].id);
+    }
+    if (!songExists) {
+      dispatch({
+        type: SET_CURRENT_PLAYLIST,
+        playlist: data[index],
       });
     }
   };
@@ -252,13 +268,13 @@ export const SongCard = ({ data, index }) => {
       </div>
 
       {alert && (
-        <>
+        <div className="z-10">
           {alert === "success" ? (
             <AlertSuccessBottom msg={alertMsg} />
           ) : (
             <AlertErrorBottom msg={alertMsg} />
           )}
-        </>
+        </div>
       )}
     </motion.div>
   );
