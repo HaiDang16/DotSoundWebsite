@@ -320,7 +320,7 @@ const Home = () => {
                     >
                       Đổi mật khẩu
                     </button>
-                    {showChangePassword && (
+                    {/* {showChangePassword && (
                       <User_ChangePass
                         setShowChangePassword={setShowChangePassword}
                         showChangePassword={showChangePassword}
@@ -330,13 +330,13 @@ const Home = () => {
                           toggleChangePasswordSuccessPopup
                         }
                       />
-                    )}
+                    )} */}
                   </div>
                 )}
               </div>
             </div>
           </div>
-        </div>
+        </div>D
       </div>
       {/* {isUpdatedPopup && <AlertSuccess msg={isUpdatedPopup} />} */}
       {isUpdatedPopup && (

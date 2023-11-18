@@ -86,7 +86,8 @@ const MainRoutes = [
       {
         path: "/UserPlaylist/Add",
         element: <UserPlaylist_Add />,
-
+      },
+      {
         path: "/ForYou",
         element: <ForYou />,
       },
