@@ -59,13 +59,11 @@ const createPlaylist = async (req, res) => {
     // Save the playlist to the database
     const savedPlaylist = await newPlaylist.save();
     // Respond with the saved playlist
-    return res
-      .status(200)
-      .send({
-        success: true,
-        playlist: savedPlaylist,
-        message: "Tạo danh sách phát thành công",
-      });
+    return res.status(200).send({
+      success: true,
+      playlist: savedPlaylist,
+      message: "Tạo danh sách phát thành công",
+    });
   } catch (error) {
     console.log(error);
     return res
@@ -106,4 +104,46 @@ const deleteAlbum = async (req, res) => {
   }
 };
 
+const getPlaylistByUserID = async (req, res) => {
+  const userID = { _id: req.params.userID };
+
+  let playlists;
+
+  try {
+    playlists = await Playlist.find({ playlistUserID: userID });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Lấy dữ liệu playlist thất bại. Vui lòng thử lại sau",
+      success: false,
+    });
+  }
+  if (playlists) {
+    res.status(200).json({
+      playlists: playlists.map((album) => {
+        const obj = album.toObject({ getters: true });
+        return obj;
+      }),
+      success: true,
+    });
+  } else {
+    res.status(200).send({ success: true, msg: "Lỗi dữ liệu" });
+  }
+};
+
+const getPlaylistDetails = async (req, res) => {
+  const playlistID = { _id: req.params.playlistID };
+  const playlist = await Playlist.findById(playlistID).populate({
+    path: "playlistItems.playlistSongID",
+    model: "music",
+  });
+
+  if (playlist) {
+    res.status(200).send({ success: true, playlist: playlist });
+  } else {
+    res.status(200).send({ success: true, message: "Không tìm thấy dữ liệu" });
+  }
+};
+
 exports.createPlaylist = createPlaylist;
+exports.getPlaylistByUserID = getPlaylistByUserID;
+exports.getPlaylistDetails = getPlaylistDetails;

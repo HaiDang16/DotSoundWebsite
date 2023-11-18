@@ -291,3 +291,23 @@ export const createPlaylist = async (data) => {
     return null;
   }
 };
+export const getPlaylistByUserID = async (id) => {
+  try {
+    const res = await axios.get(
+      `${baseURL}api/playlists/GetPlaylistByUserID/${id}`
+    );
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
+export const getPlaylistDetails = async (id) => {
+  try {
+    const res = await axios.get(
+      `${baseURL}api/playlists/GetPlaylistDetails/${id}`
+    );
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};

@@ -18,7 +18,7 @@ const playlistSchema = mongoose.Schema(
       {
         playlistSongID: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "song",
+          ref: "music",
           required: true,
         },
       },

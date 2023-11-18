@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 // import Loading from "../../components/users/Loading";
 // import User_ChangePass from "../../components/users/User_ChangePass";
 import { FaCheckCircle } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import {
   FilterButtonsCategory,
@@ -16,6 +17,23 @@ import {
 } from "../components";
 import SideBar from "../layouts/UserLayout/SideBar";
 import { NavLink } from "react-router-dom";
+import {
+  getAllSongs,
+  createPlaylist,
+  getPlaylistByUserID,
+  getPlaylistDetails,
+} from "../api";
+import {
+  SET_ALL_SONGS,
+  SET_SONG_PLAYING,
+  SET_ALL_USERS,
+  SET_ARTISTS,
+  SET_ALL_ALBUMS,
+  SET_ALL_ARTISTS,
+  RESET_PLAYLIST,
+  SET_SONG,
+  SET_CURRENT_PLAYLIST,
+} from "../store/actions";
 const moment = require("moment");
 
 function splitFullName(fullName) {
@@ -50,156 +68,15 @@ const UserPlaylist = () => {
   const [isUpdatedPopup, setIsUpdatedPopup] = useState(false);
   const [isChangePasswordPopup, setIsChangePasswordPopup] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
-  //   const [handleError, setHandleError] = useState({
-  //     errFullName: null,
-  //     errEmail: null,
-  //     errPhoneNum: null,
-  //     errDOB: null,
-  //     errSex: null,
-  //   });
-  //   const handleClose = () => {
-  //     setShowChangePassword(false);
-  //   };
-  //   const toggleChangePasswordSuccessPopup = () => {
-  //     setIsChangePasswordPopup(!isChangePasswordPopup);
-  //   };
-  //   const handleSexChange = (e) => {
-  //     setUserSex(e.target.value);
-  //     setHandleError({
-  //       errSex: "",
-  //     });
-  //   };
-  //   const handleDOBChange = (e) => {
-  //     setUserDOB(e.target.value);
-  //     setHandleError({
-  //       errDOB: "",
-  //     });
-  //   };
-  //   const handlePhoneNumChange = (e) => {
-  //     setUserPhoneNum(e.target.value);
-  //     setHandleError({
-  //       errPhoneNum: "",
-  //     });
-  //   };
-  //   const handleFullNameChange = (e) => {
-  //     setUserFullName(e.target.value);
-  //     setHandleError({
-  //       errFullName: "",
-  //     });
-  //   };
-  //   const handleEmailChange = (e) => {
-  //     setUserEmail(e.target.value);
-  //     setHandleError({
-  //       errEmail: "",
-  //     });
-  //   };
-  //   const clearError = () => {
-  //     setHandleError({
-  //       errFullName: null,
-  //       errEmail: null,
-  //       errPhoneNum: null,
-  //       errDOB: null,
-  //       errSex: null,
-  //     });
-  //   };
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const response = await axios.get(
-  //           `${baseURL}api/users/GetUserDetails/${userDataID}`
-  //         );
-  //         console.log("fetchData: ", response.data.user);
-  //         setLoadedDetails(response.data.user);
-  //         setUserFullName(
-  //           `${response.data.user.CusLastName} ${response.data.user.CusFirstName}`
-  //         );
-  //         setUserEmail(response.data.user.CusEmail);
-  //         setUserPhoneNum(response.data.user.CusPhoneNum);
-  //         setUserDOB(response.data.user.CusBirthday);
-  //         setUserSex(response.data.user.CusSex);
-  //       } catch (error) {
-  //         console.error("Error searching:", error);
-  //       }
-  //     };
 
-  //     fetchData();
-  //   }, []);
+  useEffect(() => {
+    getPlaylistByUserID(userDataID).then((res) => {
+      console.log("getPlaylistByUserID res: ", res);
+      setLoadedDetails(res.playlists);
+      console.log(res.playlists);
+    });
+  }, []);
 
-  //   const handleUpdateUserProfile = async (event) => {
-  //     event.preventDefault();
-  //     if (!userFullName) {
-  //       setHandleError({
-  //         errFullName: "Họ tên không được để trống",
-  //       });
-  //       return;
-  //     } else if (!userEmail) {
-  //       setHandleError({
-  //         errEmail: "Email không được để trống",
-  //       });
-  //       return;
-  //     } else if (!emailRegex.test(userEmail)) {
-  //       setHandleError({ errEmail: "Email không hợp lệ. Vui lòng kiểm tra lại" });
-  //       return;
-  //     } else if (
-  //       userPhoneNum &&
-  //       (userPhoneNum.length !== 10 || !phoneRegex.test(userPhoneNum))
-  //     ) {
-  //       setHandleError({
-  //         errPhoneNum: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại",
-  //       });
-  //       return;
-  //     }
-
-  //     const apiUrl = `${baseURL}api/users/UpdateUserProfile`;
-  //     const splitName = splitFullName(userFullName);
-  //     const jsonDate = moment(userDOB, "YYYY-MM-DD").toISOString();
-  //     const data = {
-  //       CusFirstName: splitName.firstName,
-  //       CusLastName: splitName.restOfName,
-  //       CusEmail: userEmail,
-  //       CusPhoneNum: userPhoneNum,
-  //       CusBirthday: jsonDate,
-  //       CusSex: userSex,
-  //       userID: userDataID,
-  //     };
-
-  //     try {
-  //       const response = await axios.put(apiUrl, data, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           // Include any authentication headers if required
-  //         },
-  //       });
-  //       if (response.status === 200) {
-  //         //setUserName(name);
-  //         setUpdated((p) => p + 1);
-  //         setIsUpdatedPopup(!isUpdatedPopup);
-  //         clearError();
-  //       }
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     const timeoutId = setTimeout(() => {
-  //       setIsUpdatedPopup(false);
-  //     }, 1500);
-
-  //     return () => {
-  //       clearTimeout(timeoutId);
-  //     };
-  //   }, [isUpdatedPopup]);
-
-  //   useEffect(() => {
-  //     const timeoutId = setTimeout(() => {
-  //       setIsChangePasswordPopup(false);
-  //     }, 1500);
-
-  //     return () => {
-  //       clearTimeout(timeoutId);
-  //     };
-  //   }, [isChangePasswordPopup]);
   const samplePlaylists = [
     { id: 1, name: "Danh sách phát 1" },
     { id: 2, name: "Danh sách phát 2" },
@@ -214,8 +91,13 @@ const UserPlaylist = () => {
             <AddNewPlaylistForm />
           </div>{" "}
           <div className="flex flex-wrap mt-6">
-            {samplePlaylists.map((playlist) => (
-              <PlaylistItem key={playlist.id} name={playlist.name} />
+            {loadedDetails?.map((playlist) => (
+              <PlaylistItem
+                key={playlist.id}
+                playlistName={playlist.playlistName}
+                playlistImageURL={playlist.playlistImageURL}
+                playlistID={playlist.id}
+              />
             ))}
           </div>
         </div>
@@ -249,10 +131,77 @@ const AddNewPlaylistForm = () => {
     </form>
   );
 };
-const PlaylistItem = ({ name }) => {
+const PlaylistItem = ({ playlistName, playlistImageURL, playlistID }) => {
+  const dispatch = useDispatch();
+  console.log(playlistID);
+  const isSongPlaying = useSelector(
+    (state) => state.customization.isSongPlaying
+  );
+  const song = useSelector((state) => state.customization.song);
+  const playlist = useSelector((state) => state.customization.playlist) || [];
+  const handlePlayPlaylist = async () => {
+    let response;
+    await getPlaylistDetails(playlistID).then((res) => {
+      console.log("getPlaylistDetails res: ", res);
+      response = res.playlist.playlistItems;
+      console.log("response: ", response);
+    });
+
+    try {
+      dispatch({
+        type: RESET_PLAYLIST,
+      });
+
+      const playlistItems = response;
+      playlistItems.forEach((playlistItem) => {
+        const songNew = playlistItem.playlistSongID;
+        console.log(songNew);
+        dispatch({
+          type: SET_CURRENT_PLAYLIST,
+          playlist: songNew,
+        });
+      });
+      console.log("playlist: ", playlist);
+      if (!isSongPlaying) {
+        dispatch({
+          type: SET_SONG_PLAYING,
+          isSongPlaying: true,
+        });
+      }
+
+      const songIndex = allSongs.findIndex(
+        (song) =>
+          song.songImageURL === playlistItems[0].playlistSongID.songImageURL
+      );
+      if (song !== songIndex) {
+        dispatch({
+          type: SET_SONG,
+          song: songIndex,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching playlist details:", error);
+    }
+  };
+
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  if (!allSongs) {
+    getAllSongs().then((data) => {
+      dispatch({
+        type: SET_ALL_SONGS,
+        allSongs: data.songs,
+      });
+    });
+  }
+
   return (
-    <div className="border border-gray-300 p-2 rounded mb-2 h-150 w-150 mx-3">
-      <div> {name}</div>
+    <div
+      key={playlistID}
+      className="border border-gray-300 p-2 rounded mb-2 h-150 w-150 mx-3 flex flex-col cursor-pointer"
+      onClick={handlePlayPlaylist}
+    >
+      <img src={playlistImageURL} />
+      <div> {playlistName}</div>
     </div>
   );
 };

@@ -9,6 +9,15 @@ const router = express.Router();
 // ///getOne/:getOne
 // router.get("/GetAllDetails/:getOne", albumsControllers.getAllDetails);
 
+router.get(
+  "/GetPlaylistByUserID/:userID",
+  playlistsControllers.getPlaylistByUserID
+);
+
+router.get(
+  "/GetPlaylistDetails/:playlistID",
+  playlistsControllers.getPlaylistDetails
+);
 ///save
 router.post("/CreatePlaylist", playlistsControllers.createPlaylist);
 
