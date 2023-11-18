@@ -33,8 +33,6 @@ const OrderCard = ({
   id,
   songName,
   songImageURl,
-  songCate,
-  songAlbum,
   songArtist,
   songLanguage,
   onDelete,
@@ -72,20 +70,14 @@ const OrderCard = ({
 const UserPlaylist_Add = () => {
   const user = JSON.parse(window.localStorage.getItem("userData"));
   const allSongs = useSelector((state) => state.customization.allSongs);
-  const [isMenu, setIsMenu] = useState(false);
   const [isSreach, setIsSearch] = useState(false);
   const [filteredSongs, setFilteredSongs] = useState(null);
   const [songFilter, setSongFilter] = useState("");
-  const [newestPlaylists, setNewestPlaylists] = useState([]);
+
   //hàm lưu trữ sản phẩm đã chọn
   const [selectedPlaylist, setSelectedPlaylist] = useState([]);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Selected Product:", selectedPlaylist);
-    const handleClickSearch = () => {
-      setIsSearch(true);
-    };
-  };
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
@@ -139,13 +131,6 @@ const UserPlaylist_Add = () => {
   function SearchBar() {
     const [searchTerm, setSearchTerm] = useState("");
 
-    //tìm kiems sản phẩm
-    const searchPlaylist = (term) => {
-      const results = newestPlaylists.filter((song) =>
-        song.songName.toLowerCase().includes(term.toLowerCase())
-      );
-      setSearchResults(results);
-    };
     const fadeDownVariant = {
       initial: {
         opacity: 0,
@@ -163,13 +148,11 @@ const UserPlaylist_Add = () => {
     const handleClickSearch = () => {
       setIsSearch(true);
     };
-    const handleSearch = () => {
-      if (searchTerm.trim() !== "") {
-        searchPlaylist(searchTerm);
-      } else {
-        setSearchResults([]);
-      }
+
+    const handleSearchCardSelect = (song) => {
+      setSearchResults([...searchResults, song]);
     };
+
     const [isSreach, setIsSreach] = useState(false);
     return (
       <div
@@ -206,6 +189,7 @@ const UserPlaylist_Add = () => {
                     songID={search._id}
                     songAlbum={search.songAlbum.songAlbumName}
                     songArtist={search.songArtist.songArtistName}
+                    onSelect={(song) => handleSongSelect(song)}
                   />
                 ))
               ) : (
@@ -223,7 +207,10 @@ const UserPlaylist_Add = () => {
       </div>
     );
   }
-
+  const [selectedSongs, setSelectedSongs] = useState([]);
+  const handleSongSelect = (song) => {
+    setSelectedSongs([...selectedSongs, song]);
+  };
   const [searchResults, setSearchResults] = useState([]); // Thêm state cho kết quả tìm kiếm
   const [updated, setUpdated] = useState(0);
   return (
@@ -255,9 +242,9 @@ const UserPlaylist_Add = () => {
               <label className="w-full block font-bold p-2 pr-3">
                 Danh sách bài hát:
               </label>
-              {searchResults && searchResults.length > 0 ? (
+              {selectedSongs && selectedSongs.length > 0 ? (
                 // Nếu có sản phẩm được chọn, hiển thị danh sách sản phẩm
-                searchResults.map((song) => (
+                selectedSongs.map((song) => (
                   <div
                     key={song.id}
                     className="w-full border bg-gray-100 rounded-lg p-2 flex flex-col mb-1"
@@ -266,7 +253,6 @@ const UserPlaylist_Add = () => {
                       songName={song.songName}
                       songArtist={song.songArtist}
                       songAlbum={song.songAlbum}
-                      onSelect={(song) => handleSongSelect(song)}
                       onDelete={() => handleDeletePlaylist(song.id)}
                     />
                   </div>
@@ -279,7 +265,7 @@ const UserPlaylist_Add = () => {
               )}
             </div>
           </div>
-          <div className="my-4">
+          <div className="my-4 mt-20">
             <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white">
               Lưu
             </button>
