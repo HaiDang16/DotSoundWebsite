@@ -14,9 +14,8 @@ import {
   FilterButtons,
   ImageLoader,
   ImageUploader,
-  DisabledButton,
-  FilterButtonsArtist,
-  FilterButtonsAlbum,
+  PlaylistSearchCard,
+  ImageUploaderPlaylist,
 } from "../components";
 import { deleteSongById, getAllSongs } from "../api";
 import SearchCard from "../pages/SearchCard";
@@ -39,23 +38,35 @@ const OrderCard = ({
   songID,
   setQuantity,
 }) => {
+  const dispatch = useDispatch();
+  const [songData, setSongData] = useState();
+
+  const allSongs = useSelector((state) => state.customization.allSongs);
   const handleDelete = () => {
-    // Gọi hàm xóa với id của sản phẩm
     onDelete(id);
   };
-
+  if (!allSongs) {
+    getAllSongs().then((data) => {
+      dispatch({
+        type: SET_ALL_SONGS,
+        allSongs: data.songs,
+      });
+    });
+  }
+  const foundSong = allSongs.find((song) => song._id === songID);
+  console.log("foundSong: ", foundSong);
   return (
     <div className="flex center">
       <div className="flex items-center gap-2 w-3/12 flex-auto">
         <div className="rounded-full w-full">
-          <img src={songImageURl} alt="Rectangle4329" />
+          <img src={foundSong.songImageURL} alt="Rectangle4329" />
         </div>
         <div className=" w-2/4">
-          <p>{songName}</p>
+          <p>{foundSong.songName}</p>
         </div>
       </div>
       <div className="flex items-center justify-center w-1/12 flex-auto pr-7">
-        <p>{songArtist}</p>
+        <p>{foundSong.songArtist.songArtistName}</p>
       </div>
 
       <div className="flex items-center justify-center w-1/12 pr-5 flex-auto">
@@ -129,8 +140,6 @@ const UserPlaylist_Add = () => {
     setSelectedPlaylist(updatedPlaylist);
   };
   function SearchBar() {
-    const [searchTerm, setSearchTerm] = useState("");
-
     const fadeDownVariant = {
       initial: {
         opacity: 0,
@@ -153,11 +162,9 @@ const UserPlaylist_Add = () => {
       setSearchResults([...searchResults, song]);
     };
 
-    const [isSreach, setIsSreach] = useState(false);
     return (
       <div
-        onMouseEnter={() => setIsSreach(true)}
-        onMouseLeave={() => setIsSreach(false)}
+        onClick={handleClickSearch}
         className=" w-full my-3 flex justify-end"
       >
         <div className=" w-full gap-4 px-3 py-2 rounded-xl focus:outline-none flex items-center shadow-lg border-solid border-2 border-slate-300">
@@ -168,7 +175,6 @@ const UserPlaylist_Add = () => {
             className="w-full h-full bg-transparent text-lg text-black  border-none outline-none "
             placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
             onChange={(e) => setSongFilter(e.target.value)}
-            onClick={handleClickSearch}
           />
           {isSreach && filteredSongs && filteredSongs.length !== 0 && (
             <motion.div
@@ -181,7 +187,7 @@ const UserPlaylist_Add = () => {
             >
               {filteredSongs && filteredSongs.length !== 0 ? (
                 filteredSongs?.map((search, index) => (
-                  <SearchCard
+                  <PlaylistSearchCard
                     key={search._id}
                     songName={search.songName}
                     songImageURL={search.songImageURL}
@@ -209,7 +215,16 @@ const UserPlaylist_Add = () => {
   }
   const [selectedSongs, setSelectedSongs] = useState([]);
   const handleSongSelect = (song) => {
-    setSelectedSongs([...selectedSongs, song]);
+    const isSongSelected = selectedSongs.some(
+      (selectedSong) => selectedSong.songID === song.songID
+    );
+
+    if (!isSongSelected) {
+      setSelectedSongs([...selectedSongs, song]);
+      console.log(selectedSongs);
+    } else {
+      //Nếu trùng bài hát
+    }
   };
   const [searchResults, setSearchResults] = useState([]); // Thêm state cho kết quả tìm kiếm
   const [updated, setUpdated] = useState(0);
@@ -227,10 +242,10 @@ const UserPlaylist_Add = () => {
           </div>
           <div className="flex my-10">
             <label className="mr-4  p-2 font-medium  w-1/2">
-              Chọn hình ảnh đại diện
+              Tải ảnh cho danh sách phát
             </label>
             <div className="w-150 h-150 border-2 rounded-lg ">
-              <ImageUploader />
+              <ImageUploaderPlaylist />
             </div>
           </div>
           <div className="flex w-full justify-between">
@@ -246,13 +261,13 @@ const UserPlaylist_Add = () => {
                 // Nếu có sản phẩm được chọn, hiển thị danh sách sản phẩm
                 selectedSongs.map((song) => (
                   <div
-                    key={song.id}
+                    key={song.songID}
                     className="w-full border bg-gray-100 rounded-lg p-2 flex flex-col mb-1"
                   >
+                    {console.log("song: ", song)}
                     <OrderCard
-                      songName={song.songName}
-                      songArtist={song.songArtist}
-                      songAlbum={song.songAlbum}
+                      key={song.songID}
+                      songID={song.songID}
                       onDelete={() => handleDeletePlaylist(song.id)}
                     />
                   </div>
