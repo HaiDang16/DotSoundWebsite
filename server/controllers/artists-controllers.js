@@ -6,10 +6,17 @@ const admin = require("../config/firebase.config");
 const Artist = require("../models/artist");
 
 const getAllArtist = async (req, res) => {
-  const options = {
-    sort: { createdAt: 1 },
-  };
-  const artists = await Artist.find(options);
+  let artists;
+
+  try {
+    artists = await Artist.find().sort({ createAt: 1 });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Lấy dữ liệu bài hát thất bại. Vui lòng thử lại sau",
+      success: false,
+    });
+  }
+  console.log("artists: ", artists);
   if (artists) {
     res.status(200).json({
       artists: artists.map((art) => {
