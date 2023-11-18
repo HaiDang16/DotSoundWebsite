@@ -165,6 +165,7 @@ const updateAvatar = async (req, res) => {
   console.log("Start updateAvatar");
   const userID = req.body.userID;
   const imgURL = req.body.imgURL;
+  
   console.log("imgURL: ", imgURL);
   console.log("userID: ", userID);
   let userData;
@@ -182,7 +183,7 @@ const updateAvatar = async (req, res) => {
   }
 
   try {
-    userData.CusAvatar = imgURL;
+    userData.cusAvatar = imgURL;
     await userData.save();
     res
       .status(200)

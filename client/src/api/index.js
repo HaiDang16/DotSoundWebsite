@@ -270,3 +270,14 @@ export const changePassword = async (dataReq) => {
     return null;
   }
 };
+
+export const updateAvatar = async (dataReq) => {
+  try {
+    const res = axios.put(`${baseURL}api/users/UpdateAvatar`, {
+      ...dataReq,
+    });
+    return res;
+  } catch (error) {
+    return null;
+  }
+};

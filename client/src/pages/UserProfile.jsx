@@ -1,4 +1,6 @@
 import AlertError from "../components/AlertError";
+
+import { useSelector, useDispatch } from "react-redux";
 // import AlertSuccess from "../../components/shared/AlertSuccess";
 import React, { useState, useEffect } from "react";
 // import Loading from "../../components/users/Loading";
@@ -9,6 +11,7 @@ import SideBar from "../layouts/UserLayout/SideBar";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import { getUserDetails, updateUserProfileWithOutPassword } from "../api";
+import { SET_USER } from "../store/actions";
 const moment = require("moment");
 function splitFullName(fullName) {
   const parts = fullName.split(" ");
@@ -24,6 +27,7 @@ function splitFullName(fullName) {
 }
 
 const Home = () => {
+  const dispatch = useDispatch();
   const userData = JSON.parse(window.localStorage.getItem("userData"));
   const userDataID = userData.user._id;
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -140,6 +144,10 @@ const Home = () => {
             setUserFullName(`${res.user.cusLastName} ${res.user.cusFirstName}`);
             setUserEmail(res.user.cusEmail);
             setUserPhoneNum(res.user.cusPhoneNum);
+            dispatch({
+              type: SET_USER,
+              user: res,
+            });
           });
           setUpdated((p) => p + 1);
         }, 2000);

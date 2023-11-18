@@ -1,15 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-
 import { Link, useLocation } from "react-router-dom";
 import { storage } from "../../config/firebase.config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
-import axios from "axios";
-import { getUserDetails } from "../../api";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getUserDetails, updateAvatar } from "../../api";
+import AlertErrorBottom from "../../components/AlertErrorBottom";
+import AlertSuccessBottom from "../../components/AlertSuccessBottom";
+import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_USER } from "../../store/actions";
 const SideBar = ({ updated }) => {
   console.log("Re-render sidebar");
-  const baseURL = "http://localhost:4000/";
-  const [avatarURL, setAvatarURL] = useState("");
+
+  const dispatch = useDispatch();
+  const [avatarURL, setAvatarURL] = useState();
+  const [isAlert, setIsAlert] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const [loadedDetails, setLoadedDetails] = useState();
   const userData = JSON.parse(window.localStorage.getItem("userData"));
   const userDataID = userData.user._id;
@@ -21,19 +27,15 @@ const SideBar = ({ updated }) => {
     fileInputRef.current.click();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    // Handle the file as needed
     console.log("Selected file:", file);
-    // You can now upload the file or perform any other actions
-    // Firebase Storage setup (replace with your actual setup)
     const storageRef = ref(
       storage,
       `UserAvatars/${Date.now()}-id:${userDataID}-${file.name}`
     );
 
     const uploadTask = uploadBytesResumable(storageRef, file);
-
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -47,10 +49,8 @@ const SideBar = ({ updated }) => {
         // On upload completion, get the download URL
         getDownloadURL(uploadTask.snapshot.ref)
           .then((downloadUrl) => {
-            // Handle the download URL as needed (e.g., save it to state)
             console.log("Download URL:", downloadUrl);
-            setAvatarURL(downloadUrl);
-            handleUploadImage();
+            handleUploadImage(downloadUrl);
           })
           .catch((error) => {
             // Handle any errors in getting the download URL
@@ -59,35 +59,43 @@ const SideBar = ({ updated }) => {
       }
     );
   };
-  const handleUploadImage = async () => {
-    try {
-      const data = {
-        userID: userData.user._id,
-        imgURL: avatarURL,
-      };
-      const response = await axios.put(
-        `${baseURL}api/users/UpdateAvatar`,
-        data
-      );
-
-      if (response.data.success) {
-        console.log("Cập nhật avatar thành công");
+  const handleUploadImage = async (downloadUrl) => {
+    const dataReq = {
+      userID: userData.user._id,
+      imgURL: downloadUrl,
+    };
+    updateAvatar(dataReq).then((res) => {
+      if (res.data.success) {
+        setIsAlert("success");
+        setAlertMessage(res.data.message);
+        setTimeout(() => {
+          setIsAlert(null);
+          getUserDetails(userDataID).then((res) => {
+            setLoadedDetails(res.user);
+            dispatch({
+              type: SET_USER,
+              user: res,
+            });
+          });
+        
+        }, 2000);
       } else {
-        console.error("Cập nhật avatar không thành công");
+        setIsAlert("error");
+        setAlertMessage(res.data.message);
+        setTimeout(() => {
+          setIsAlert(null);
+        }, 2000);
       }
-    } catch (error) {
-      console.error("Cập nhật avatar không thành công");
-    }
+    });
   };
 
   useEffect(() => {
     getUserDetails(userDataID).then((res) => {
       console.log("getUserDetails res: ", res);
       setLoadedDetails(res.user);
-
       console.log(res.user);
     });
-  }, [avatarURL, updated]);
+  }, [updated]);
 
   const INFO_SIDE_BAR = [
     { label: "Thông tin cá nhân", link: "/UserProfile" },
@@ -147,6 +155,15 @@ const SideBar = ({ updated }) => {
           </Link>
         ))}
       </div>
+      {isAlert && (
+        <>
+          {isAlert === "success" ? (
+            <AlertSuccessBottom msg={alertMessage} />
+          ) : (
+            <AlertErrorBottom msg={alertMessage} />
+          )}
+        </>
+      )}
     </div>
   );
 };
