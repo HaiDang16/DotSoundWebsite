@@ -83,15 +83,16 @@ const DashboardAlbum = () => {
     <div className="w-full p-4 flex items-center justify-center flex-col">
       <div className="w-full flex justify-center items-center gap-24">
         <div
-          className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
           onClick={() => setIsAdd(!isAdd)}
+          className="flex items-center text-white px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
         >
           <IoAdd />
+          <div className="px-2">Thêm thể loại</div>
         </div>
         <input
           type="text"
           placeholder="Nhập từ khoá cần tìm kiếm"
-          className={` w-64 px-4 py-2 border ${
+          className={` w-64 px-4 py-3 border ${
             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
           } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-white font-semibold`}
           value={albumFilter}
@@ -235,10 +236,10 @@ export const CategoryCard = ({ data, index }) => {
       className="relative  overflow-hidden w-44 min-w-180 px-2 py-4 gap-3 cursor-pointer hover:shadow-xl hover:bg-card bg-gray-100 shadow-md rounded-lg flex flex-col items-center"
     >
       <div className="w-full h-40 bg_website_02 opacity-90">
-        <img src={LogoDotSounds} className="w-full h-full rounded-lg " alt="" />
+        <img src={LogoDotSounds} className="w-full h-full rounded-xl " alt="" />
       </div>
 
-      <p className="w-full overflow-hidden text-base text-textColor text-center whitespace-nowrap overflow-ellipsis mb-2">
+      <p className="w-full overflow-hidden font-semibold text-base text-textColor text-center whitespace-nowrap overflow-ellipsis mb-2">
         {data.catName}
       </p>
 

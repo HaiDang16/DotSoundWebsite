@@ -51,14 +51,15 @@ const DashboardAlbum = () => {
       <div className="w-full flex justify-center items-center gap-24">
         <NavLink
           to={"/Admin/ManageAlbums/Add"}
-          className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
+          className="flex items-center text-white px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
         >
           <IoAdd />
+          <div className="px-2">Thêm Album</div>
         </NavLink>
         <input
           type="text"
           placeholder="Nhập từ khoá cần tìm kiếm"
-          className={` w-64 px-4 py-2 border ${
+          className={` w-64 px-4 py-3 border ${
             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
           } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-white font-semibold`}
           value={albumFilter}
@@ -152,7 +153,7 @@ export const AlbumCard = ({ data, index }) => {
         alt=""
       />
 
-      <p className="w-full overflow-hidden text-base text-textColor text-center whitespace-nowrap overflow-ellipsis mb-2">
+      <p className="w-full overflow-hidden font-semibold text-base text-textColor text-center whitespace-nowrap overflow-ellipsis mb-2">
         {data.albumName}
       </p>
 

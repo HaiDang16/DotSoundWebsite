@@ -55,14 +55,15 @@ const DashboardSongs = () => {
       <div className="w-full flex justify-center items-center gap-24">
         <NavLink
           to={"/Admin/ManageSongs/Add"}
-          className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
+          className="flex items-center text-white px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
         >
           <IoAdd />
+          <div className="px-2">Thêm bài hát</div>
         </NavLink>
         <input
           type="text"
           placeholder="Nhập từ khoá"
-          className={`w-52 px-4 py-2 border ${
+          className={`w-52 px-4 py-3 border ${
             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
           } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-white font-semibold`}
           value={songFilter}
@@ -186,7 +187,7 @@ export const SongCard = ({ data, index }) => {
       initial={{ opacity: 0, translateX: -50 }}
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
-      className="relative w-40 min-w-210 px-2 py-4 cursor-pointer hover:shadow-xl  bg_website_02 shadow-md rounded-lg flex flex-col items-center"
+      className="relative w-40 min-w-210 px-2 py-4 cursor-pointer hover:shadow-xl  border  shadow-md rounded-lg flex flex-col items-center"
       //onClick={addSongToContext}
     >
       {isDeleted && (
