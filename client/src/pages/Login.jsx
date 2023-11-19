@@ -53,7 +53,7 @@ const Login = () => {
           auth: true,
         });
         window.localStorage.setItem("auth", "true");
-        
+
         firebaseAuth.onAuthStateChanged((userCred) => {
           if (userCred) {
             userCred.getIdToken().then((token) => {
@@ -62,8 +62,9 @@ const Login = () => {
                 console.log("validateUser res login: ", data);
                 dispatch({
                   type: SET_USER,
-                  user: data,
+                  user: data.user,
                 });
+                console.log(data);
                 window.localStorage.setItem("userData", JSON.stringify(data));
                 if (data.user.cusRole === "admin") {
                   navigate("/Admin/Dashboard");

@@ -91,6 +91,7 @@ const UserPlaylist_Add = () => {
   //hàm lưu trữ sản phẩm đã chọn
   const [selectedPlaylist, setSelectedPlaylist] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!allSongs) {
@@ -142,75 +143,22 @@ const UserPlaylist_Add = () => {
     setSelectedSongs(updatedPlaylist);
   };
 
-  function SearchBar() {
-    const fadeDownVariant = {
-      initial: {
-        opacity: 0,
-        y: -20,
+  const fadeDownVariant = {
+    initial: {
+      opacity: 0,
+      y: -20,
+    },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
       },
-      animate: {
-        opacity: 1,
-        y: 0,
-        transition: {
-          duration: 0.2,
-        },
-      },
-    };
-
-    const handleClickSearch = () => {
-      setIsSearch(true);
-    };
-    return (
-      <div
-        onClick={handleClickSearch}
-        className=" w-full my-3 flex justify-end"
-      >
-        <div className=" w-full gap-4 px-3 py-2 rounded-xl focus:outline-none flex items-center shadow-lg border-solid border-2 border-slate-300">
-          <IoSearch className="text-2xl " />
-          <input
-            type="text"
-            value={songFilter}
-            className="w-full h-full bg-transparent text-lg text-black  border-none outline-none "
-            placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
-            onChange={(e) => setSongFilter(e.target.value)}
-          />
-          {isSreach && filteredSongs && filteredSongs.length !== 0 && (
-            <motion.div
-              variants={fadeDownVariant}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              className="fade-down absolute z-10 top-16 flex flex-col gap-3 w-96 bg-slate-200 shadow-lg rounded-b-lg backdrop-blur-sm py-2"
-              id="searchContainer"
-            >
-              {filteredSongs && filteredSongs.length !== 0 ? (
-                filteredSongs?.map((search, index) => (
-                  <PlaylistSearchCard
-                    key={search._id}
-                    songName={search.songName}
-                    songImageURL={search.songImageURL}
-                    index={index}
-                    songID={search._id}
-                    songAlbum={search.songAlbum.songAlbumName}
-                    songArtist={search.songArtist.songArtistName}
-                    onSelect={(song) => handleSongSelect(song)}
-                  />
-                ))
-              ) : (
-                <div className="flex-auto h-full w-full flex flex-col py-4">
-                  <div className="flex items-center">
-                    <p className="text-gray-700 font-medium tracking-widest text-center p-5">
-                      Không có kết quả tìm kiếm phù hợp
-                    </p>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </div>
-      </div>
-    );
-  }
+    },
+  };
+  const handleClickSearch = () => {
+    setIsSearch(true);
+  };
   const handleAddPlaylist = () => {
     if (!playlistName) {
       setIsAlert("error");
@@ -234,6 +182,7 @@ const UserPlaylist_Add = () => {
         setAlertMessage(res.data.message);
         setTimeout(() => {
           setIsAlert(null);
+          navigate("/UserPlaylist");
         }, 1500);
       } else {
         setIsAlert("error");
@@ -243,6 +192,15 @@ const UserPlaylist_Add = () => {
         }, 1500);
       }
     });
+  };
+  const handleBack = () => {
+    navigate("/UserPlaylist");
+  };
+
+  const handleClear = () => {
+    setPlaylistName("");
+    setPlaylistImage(null);
+    setSelectedSongs([]);
   };
   const [selectedSongs, setSelectedSongs] = useState([]);
   const handleSongSelect = (song) => {
@@ -330,7 +288,52 @@ const UserPlaylist_Add = () => {
           </div>
           <div className="flex w-full justify-between h-auto">
             <div className=" flex-col items-end justify-end w-1/2">
-              <SearchBar setSearchResults={setSearchResults} />
+              <div className=" w-full my-3 flex justify-end">
+                <div className=" w-full gap-4 px-3 py-2 rounded-xl focus:outline-none flex items-center shadow-lg border-solid border-2 border-slate-300">
+                  <IoSearch className="text-2xl " />
+                  <input
+                    type="text"
+                    className="w-full h-full bg-transparent text-lg text-black border-none outline-none "
+                    placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
+                    value={songFilter}
+                    onChange={(e) => setSongFilter(e.target.value)}
+                    onClick={handleClickSearch}
+                  />
+                  {isSreach && filteredSongs && filteredSongs.length !== 0 && (
+                    <motion.div
+                      variants={fadeDownVariant}
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 50 }}
+                      className="fade-down absolute z-10 top-16 flex flex-col gap-3 w-96 bg-slate-200 shadow-lg rounded-b-lg backdrop-blur-sm py-2"
+                      id="searchContainer"
+                    >
+                      {filteredSongs && filteredSongs.length !== 0 ? (
+                        filteredSongs?.map((search, index) => (
+                          <PlaylistSearchCard
+                            key={search._id}
+                            songName={search.songName}
+                            songImageURL={search.songImageURL}
+                            index={index}
+                            songID={search._id}
+                            songAlbum={search.songAlbum.songAlbumName}
+                            songArtist={search.songArtist.songArtistName}
+                            onSelect={(song) => handleSongSelect(song)}
+                          />
+                        ))
+                      ) : (
+                        <div className="flex-auto h-full w-full flex flex-col py-4">
+                          <div className="flex items-center">
+                            <p className="text-gray-700 font-medium tracking-widest text-center p-5">
+                              Không có kết quả tìm kiếm phù hợp
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="mb-9 flex flex-col h-full w-3/4 mx-4">
@@ -367,10 +370,16 @@ const UserPlaylist_Add = () => {
             >
               Lưu
             </button>
-            <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white mx-4 ">
+            <button
+              className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white mx-4 "
+              onClick={handleClear}
+            >
               Xóa
             </button>
-            <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white">
+            <button
+              className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white"
+              onClick={handleBack}
+            >
               Quay lại
             </button>
           </div>

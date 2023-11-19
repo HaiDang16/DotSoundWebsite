@@ -149,7 +149,11 @@ const Home = () => {
           </div>
           <div className="h-56 w-full grid grid-rows-1 scroll-hidden gap-10 items-center overscroll-behavior-x-contain overflow-x-scroll">
             <div className="flex flex-nowrap">
-              <DiscoverySongsCard musics={allSongs} />
+              <DiscoverySongsCard
+                musics={allSongs
+                  .slice(0, 20)
+                  .sort((a, b) => b.songName.localeCompare(a.songName))}
+              />
             </div>
           </div>
         </div>
@@ -158,7 +162,11 @@ const Home = () => {
           Mới phát hành
         </div>
 
-        <NewReleaseSongsCard musics={allSongs} />
+        <NewReleaseSongsCard
+          musics={allSongs
+            .slice(0, 20)
+            .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))}
+        />
 
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">
@@ -167,19 +175,35 @@ const Home = () => {
           </div>
           <div className="h-72 w-full grid grid-rows-1 scroll-hidden gap-10 items-center overscroll-behavior-x-contain overflow-x-scroll">
             <div className="flex flex-nowrap">
-              <Top10SongsCard musics={allSongs} />
+              <Top10SongsCard
+                musics={allSongs
+                  .slice(0, 20)
+                  .sort((a, b) =>
+                    b.songArtist.songArtistName.localeCompare(
+                      a.songArtist.songArtistName
+                    )
+                  )}
+              />
             </div>
           </div>
         </div>
 
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">
-            <div className="my-2 text-2xl">Thể loại</div>
+            <div className="my-2 text-2xl">Đề xuất</div>
             <div className="px-4 my-2 text-lg">Tất cả</div>
           </div>
           <div className="h-40 w-full grid grid-rows-1 scroll-hidden gap-10 items-center overscroll-behavior-x-contain overflow-x-scroll">
             <div className="flex flex-nowrap">
-              <CategorySongsCard musics={allSongs} />
+              <CategorySongsCard
+                musics={allSongs
+                  .slice(0, 20)
+                  .sort((a, b) =>
+                    a.songName
+                      .toLowerCase()
+                      .localeCompare(b.songName.toLowerCase())
+                  )}
+              />
             </div>
           </div>
         </div>

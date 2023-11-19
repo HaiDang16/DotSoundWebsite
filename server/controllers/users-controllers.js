@@ -284,7 +284,7 @@ const resetPassword = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    userData.CusPassword = hashedPassword;
+    userData.cusPassword = hashedPassword;
     await userData.save();
     return res
       .status(200)
@@ -392,7 +392,7 @@ const changePassword = async (req, res) => {
   }
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    userData.CusPassword = hashedPassword;
+    userData.cusPassword = hashedPassword;
     await userData.save();
     return res
       .status(200)

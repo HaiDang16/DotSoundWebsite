@@ -61,30 +61,30 @@ const SideBar = ({ updated }) => {
   };
   const handleUploadImage = async (downloadUrl) => {
     const dataReq = {
-      userID: userData.user._id,
+      userID: userData?.user._id,
       imgURL: downloadUrl,
     };
     updateAvatar(dataReq).then((res) => {
-      // if (res.data.success) {
-      //   setIsAlert("success");
-      //   setAlertMessage(res.data.message);
-      //   setTimeout(() => {
-      //     setIsAlert(null);
-      //     getUserDetails(userDataID).then((res) => {
-      //       setLoadedDetails(res.user);
-      //       dispatch({
-      //         type: SET_USER,
-      //         user: res,
-      //       });
-      //     });
-      //   }, 2000);
-      // } else {
-      //   setIsAlert("error");
-      //   setAlertMessage(res.data.message);
-      //   setTimeout(() => {
-      //     setIsAlert(null);
-      //   }, 2000);
-      // }
+      if (res.data.success) {
+        setIsAlert("success");
+        setAlertMessage(res.data.message);
+        setTimeout(() => {
+          setIsAlert(null);
+          getUserDetails(userDataID).then((res) => {
+            setLoadedDetails(res.user);
+            dispatch({
+              type: SET_USER,
+              user: res,
+            });
+          });
+        }, 2000);
+      } else {
+        setIsAlert("error");
+        setAlertMessage(res.data.message);
+        setTimeout(() => {
+          setIsAlert(null);
+        }, 2000);
+      }
     });
   };
 
@@ -104,7 +104,7 @@ const SideBar = ({ updated }) => {
   return (
     <div className="md:w-2/6 w-full pr-20">
       <div className="flex flex-row justify-start flex-nowrap pb-[30px] border-b-[1px] border-b-black border-b-solid">
-        <div className="lg:min-w-[120px] min-w-[80px] lg:max-w-[120px] max-w-[80px] h-[80px] lg:h-[100px]">
+        <div className="lg:min-w-[120px] min-w-[80px] lg:max-w-[120px] max-w-[80px] h-[80px] lg:h-[100px] mr-10">
           {loadedDetails?.cusAvatar ? (
             <img src={loadedDetails?.cusAvatar} alt="avatar" />
           ) : (

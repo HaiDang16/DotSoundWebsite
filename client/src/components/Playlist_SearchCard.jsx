@@ -37,7 +37,7 @@ const PlaylistSearchCard = ({
       initial={{ opacity: 0, translateX: -50 }}
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
-      className="flex-auto h-full w-full flex flex-col py-1 px-5 cursor-pointer hover:bg-cardOverlay"
+      className="flex-auto h-full w-full flex flex-col py-1 px-5 hover:bg-cardOverlay"
       key={key}
       onClick={handleSongClick}
     >

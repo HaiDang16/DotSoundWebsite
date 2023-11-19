@@ -146,6 +146,7 @@ const ForYou = () => {
               {allAlbums &&
                 allAlbums
                   .slice(0, 5)
+                  .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
                   .map((data, index) => (
                     <AlbumCard key={index} data={data} index={index} />
                   ))}
@@ -163,6 +164,7 @@ const ForYou = () => {
               {allArtists &&
                 allArtists
                   .slice(0, 5)
+                  .sort((a, b) => b.artistName.localeCompare(a.artistName))
                   .map((data, index) => (
                     <ArtistCard key={index} data={data} index={index} />
                   ))}
@@ -175,21 +177,27 @@ const ForYou = () => {
             <div className="px-4 my-2 text-lg">Tất cả</div>
           </div>
           <div className="flex flex-wrap mt-6">
-            {loadedDetails?.map((playlist) => (
-              <PlaylistItem
-                key={playlist.id}
-                playlistName={playlist.playlistName}
-                playlistImageURL={playlist.playlistImageURL}
-                playlistID={playlist.id}
-              />
-            ))}
+            {loadedDetails
+              ?.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+              .map((playlist) => (
+                <PlaylistItem
+                  key={playlist.id}
+                  playlistName={playlist.playlistName}
+                  playlistImageURL={playlist.playlistImageURL}
+                  playlistID={playlist.id}
+                />
+              ))}
           </div>
         </div>
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">
             <div className="my-2b  text-2xl">Bài hát</div>
           </div>
-          <ForYou_SongCard musics={allSongs} />
+          <ForYou_SongCard
+            musics={allSongs.sort((a, b) =>
+              a.songName.localeCompare(b.songName)
+            )}
+          />
         </div>
       </div>
     </div>

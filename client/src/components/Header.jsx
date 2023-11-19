@@ -22,14 +22,12 @@ const Header = () => {
   const userData = JSON.parse(window.localStorage.getItem("userData"));
   const user = useSelector((state) => state.customization.user);
   useEffect(() => {
-    getUserDetails(userData.user._id).then((res) => {
+    getUserDetails(userData?.user?._id).then((res) => {
       console.log("getUserDetails res: ", res);
       dispatch({
         type: SET_USER,
         user: res,
       });
-
-      console.log("user?.user.cusLastName: ", user?.user.cusLastName);
     });
   }, []);
 
@@ -178,16 +176,16 @@ const Header = () => {
           )}
         </div>
       </div>
-      {user?.user.cusRole ? (
+      {user?.user?.cusRole ? (
         <div
           className="flex items-center ml-auto cursor-pointer gap-2 relative "
           onMouseEnter={() => setIsMenu(true)}
           onMouseLeave={() => setIsMenu(false)}
         >
-          {user?.user.cusAvatar ? (
+          {user?.user?.cusAvatar ? (
             <img
               className="w-12 min-w-[44px] object-cover rounded-full shadow-lg mr-2"
-              src={user?.user.cusAvatar}
+              src={user?.user?.cusAvatar}
               alt=""
               referrerpolicy="no-referrer"
             />
@@ -197,16 +195,16 @@ const Header = () => {
 
           <div className="flex flex-col">
             <p className="text-white text-lg hover:text-headingColor font-semibold">
-              {`${user?.user.cusLastName} ${user?.user.cusFirstName}`}
+              {`${user?.user?.cusLastName} ${user?.user?.cusFirstName}`}
             </p>
-            {user?.user.cusRole === "vip" ? (
+            {user?.user?.cusRole === "vip" ? (
               <>
                 <p className="flex items-center gap-2 text-xs text-black font-normal">
                   <FaCrown className="text-xm -ml-1 text-yellow-500" /> Thành
                   viên VIP{" "}
                 </p>
               </>
-            ) : user?.user.cusRole === "admin" ? (
+            ) : user?.user?.cusRole === "admin" ? (
               <>
                 <p className="flex items-center gap-2 text-xs text-black font-normal">
                   <FaCrown className="text-xm -ml-1 text-red-500" /> Quản trị
@@ -229,7 +227,7 @@ const Header = () => {
               exit={{ opacity: 0, y: 50 }}
               className="absolute z-20 top-10 right-0 w-275 p-4 gap-4 bg-card shadow-lg rounded-lg backdrop-blur-sm flex flex-col"
             >
-              {user?.user.cusRole === "admin" ? (
+              {user?.user?.cusRole === "admin" ? (
                 <>
                   <NavLink to={"/Admin/Dashboard"}>
                     <p className="text-base text-textColor hover:font-semibold duration-150 transition-all ease-in-out">
