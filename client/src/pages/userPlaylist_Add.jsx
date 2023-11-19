@@ -270,7 +270,11 @@ const UserPlaylist_Add = () => {
       setIsLoading(false);
     });
   };
-
+  const resetForm = () => {
+    setPlaylistName("");
+    setPlaylistImage(null);
+    setSelectedSongs([]);
+  };
   const [searchResults, setSearchResults] = useState([]); // Thêm state cho kết quả tìm kiếm
   const [updated, setUpdated] = useState(0);
   return (
@@ -367,12 +371,17 @@ const UserPlaylist_Add = () => {
             >
               Lưu
             </button>
-            <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white mx-4 ">
-              Xóa
+            <button
+              onClick={resetForm}
+              className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white mx-4 "
+            >
+              Làm mới
             </button>
-            <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white">
-              Quay lại
-            </button>
+            <NavLink to={"/UserPlaylist"}>
+              <button className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white">
+                Quay lại
+              </button>
+            </NavLink>
           </div>
         </div>
       </div>
