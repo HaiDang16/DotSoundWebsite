@@ -104,7 +104,7 @@ const SideBar = ({ updated }) => {
   return (
     <div className="md:w-2/6 w-full pr-20">
       <div className="flex flex-row justify-start flex-nowrap pb-[30px] border-b-[1px] border-b-black border-b-solid">
-        <div className="lg:min-w-[120px] min-w-[80px] lg:max-w-[120px] max-w-[80px] h-[80px] lg:h-[100px] mr-10">
+        <div className=" lg:max-w-[120px] max-w-[80px] h-[80px] lg:h-[100px] mr-4">
           {loadedDetails?.cusAvatar ? (
             <img src={loadedDetails?.cusAvatar} alt="avatar" />
           ) : (
