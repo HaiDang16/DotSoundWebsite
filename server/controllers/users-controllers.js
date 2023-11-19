@@ -99,7 +99,9 @@ const Register = async (req, res) => {
 
   if (userEmail) {
     // Đã tồn tại email
-    return res.status(200).json({ message: "Email đã tồn tại" });
+    return res
+      .status(200)
+      .json({ message: "Email đã tồn tại", success: false });
   }
 
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
@@ -107,7 +109,9 @@ const Register = async (req, res) => {
 
   if (userPhone) {
     // Đã tồn tại email
-    return res.status(200).json({ message: "Số điện thoại đã tồn tại" });
+    return res
+      .status(200)
+      .json({ message: "Số điện thoại đã tồn tại", success: false });
   }
 
   try {
@@ -132,13 +136,15 @@ const Register = async (req, res) => {
     });
     const user_account = await newAccount.save();
     if (user_account) {
-      res
-        .status(201)
-        .json({ message: "Đăng ký thành công", user: user_account });
+      res.status(201).json({
+        message: "Đăng ký tài khoản thành công",
+        user: user_account,
+        success: true,
+      });
     }
   } catch (error) {
     // console.error("Lỗi khi lưu tài khoản: " + error);
-    res.status(500).json({ message: "Không được để trống" });
+    res.status(500).json({ message: "Lỗi tạo tài khoản", success: false });
   }
 };
 
@@ -165,7 +171,7 @@ const updateAvatar = async (req, res) => {
   console.log("Start updateAvatar");
   const userID = req.body.userID;
   const imgURL = req.body.imgURL;
-  
+
   console.log("imgURL: ", imgURL);
   console.log("userID: ", userID);
   let userData;
