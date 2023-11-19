@@ -111,7 +111,7 @@ const SideBar = ({ updated }) => {
             <IoPersonSharp className="text-black w-full h-full min-w-[30px] object-cover mr-3" />
           )}
         </div>
-        <div className="lg:ml-[36px] ml-[20px]">
+        <div>
           <div className="text-sm mb-[10px] break-all">
             {`${loadedDetails?.cusLastName} ${loadedDetails?.cusFirstName}`}
           </div>

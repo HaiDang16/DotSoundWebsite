@@ -10,7 +10,12 @@ import { filterByLanguage } from "../utils/supportfunctions";
 import { getAllArtist } from "../api";
 import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
-import { getAllAlbums, deleteAlbumsById } from "../api";
+import {
+  getAllAlbums,
+  deleteAlbumsById,
+  getPlaylistByUserID,
+  getPlaylistDetails,
+} from "../api";
 import { useSelector, useDispatch } from "react-redux";
 import {
   SET_ALL_SONGS,
@@ -19,6 +24,8 @@ import {
   SET_ALL_ARTISTS,
   SET_ALL_ALBUMS,
   SET_SONG,
+  RESET_PLAYLIST,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 import {
   NewReleaseSongsCard,
@@ -38,7 +45,8 @@ const ForYou = () => {
   const allSongs = useSelector((state) => state.customization.allSongs);
   const allArtists = useSelector((state) => state.customization.allArtists);
   const [filteredSongs, setFilteredSongs] = useState(null);
-
+  const userData = JSON.parse(window.localStorage.getItem("userData"));
+  const userDataID = userData.user._id;
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
@@ -116,6 +124,14 @@ const ForYou = () => {
       setFilteredSongs(null);
     }
   }, [languageFilter]);
+  const [loadedDetails, setLoadedDetails] = useState();
+  useEffect(() => {
+    getPlaylistByUserID(userDataID).then((res) => {
+      console.log("getPlaylistByUserID res: ", res);
+      setLoadedDetails(res.playlists);
+      console.log(res.playlists);
+    });
+  }, []);
 
   return (
     <div className="relative w-full h-auto flex flex-col justify-center bg_website_02">
@@ -153,7 +169,22 @@ const ForYou = () => {
             </div>
           </div>
         </div>
-
+        <div className="my-10">
+          <div className=" text-white font-medium flex justify-between">
+            <div className="my-2 text-2xl">Danh sách phát của bạn</div>
+            <div className="px-4 my-2 text-lg">Tất cả</div>
+          </div>
+          <div className="flex flex-wrap mt-6">
+            {loadedDetails?.map((playlist) => (
+              <PlaylistItem
+                key={playlist.id}
+                playlistName={playlist.playlistName}
+                playlistImageURL={playlist.playlistImageURL}
+                playlistID={playlist.id}
+              />
+            ))}
+          </div>
+        </div>
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">
             <div className="my-2b  text-2xl">Bài hát</div>
@@ -219,5 +250,86 @@ export const AlbumCard = ({ data, index }) => {
     </motion.div>
   );
 };
+const PlaylistItem = ({ playlistName, playlistImageURL, playlistID }) => {
+  const dispatch = useDispatch();
+  console.log(playlistID);
+  const isSongPlaying = useSelector(
+    (state) => state.customization.isSongPlaying
+  );
+  const song = useSelector((state) => state.customization.song);
+  const playlist = useSelector((state) => state.customization.playlist) || [];
+  const handlePlayPlaylist = async () => {
+    let response;
+    await getPlaylistDetails(playlistID).then((res) => {
+      console.log("getPlaylistDetails res: ", res);
+      response = res.playlist.playlistItems;
+      console.log("response: ", response);
+    });
 
+    try {
+      dispatch({
+        type: RESET_PLAYLIST,
+      });
+
+      const playlistItems = response;
+      playlistItems.forEach((playlistItem) => {
+        const songNew = playlistItem.playlistSongID;
+        console.log(songNew);
+        dispatch({
+          type: SET_CURRENT_PLAYLIST,
+          playlist: songNew,
+        });
+      });
+      console.log("playlist: ", playlist);
+      if (!isSongPlaying) {
+        dispatch({
+          type: SET_SONG_PLAYING,
+          isSongPlaying: true,
+        });
+      }
+
+      const songIndex = allSongs.findIndex(
+        (song) =>
+          song.songImageURL === playlistItems[0].playlistSongID.songImageURL
+      );
+      if (song !== songIndex) {
+        dispatch({
+          type: SET_SONG,
+          song: songIndex,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching playlist details:", error);
+    }
+  };
+
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  if (!allSongs) {
+    getAllSongs().then((data) => {
+      dispatch({
+        type: SET_ALL_SONGS,
+        allSongs: data.songs,
+      });
+    });
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, translateX: -50 }}
+      animate={{ opacity: 1, translateX: 0 }}
+      transition={{ duration: 0.3 }}
+      key={playlistID}
+      className="relative overflow-hidden max-w-[260px] py-3 px-3 hover:bg-cardOverlay bg-primary h-full min-w-180 gap-3 cursor-pointer hover:shadow-xl mr-4  rounded-xl flex flex-col items-center"
+      onClick={handlePlayPlaylist}
+    >
+      <img
+        className="w-full h-36  object-cover rounded-md"
+        src={playlistImageURL}
+      />
+      <div className="flex items-center justify-center font-normal text-lg text-website">
+        {playlistName}
+      </div>
+    </motion.div>
+  );
+};
 export default ForYou;
