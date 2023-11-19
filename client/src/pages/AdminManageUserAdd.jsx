@@ -298,7 +298,7 @@ const AddNewArtist = () => {
           ) : (
             <motion.button
               whileTap={{ scale: 0.75 }}
-              className="px-8 py-2 rounded-md text-white bg-red-600 hover:shadow-lg"
+              className="px-8 py-2 rounded-md text-white bg-blue-700 hover:shadow-lg"
               onClick={submit}
             >
               Tải lên

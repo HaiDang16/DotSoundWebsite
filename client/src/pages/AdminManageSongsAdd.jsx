@@ -226,8 +226,8 @@ const DashboardNewSong = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-4 border border-gray-300 rounded-md">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+    <div className="flex items-center justify-center p-4  ">
+      <div className="grid grid-cols-1 gap-4 w-2/3">
         <div className="flex flex-col items-center justify-center gap-4">
           <input
             type="text"
@@ -320,7 +320,7 @@ const DashboardNewSong = () => {
               ) : (
                 <motion.button
                   whileTap={{ scale: 0.75 }}
-                  className="px-8 py-2 rounded-md text-white bg-red-600 hover:shadow-lg"
+                  className="px-8 py-2 rounded-md text-white bg-blue-700 hover:shadow-lg"
                   onClick={saveSong}
                 >
                   Tải lên
