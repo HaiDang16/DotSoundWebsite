@@ -94,7 +94,7 @@ const AddNewArtist = () => {
   };
 
   return (
-    <div className="flex items-center justify-evenly w-full flex-wrap">
+    <div className="flex items-center justify-evenly w-full flex-wrap mt-10">
       <div className="bg-card  backdrop-blur-md w-full lg:w-225 h-225 rounded-md border-2 border-dotted border-gray-300 cursor-pointer">
         {isArtist && <ImageLoader progress={artistProgress} />}
         {!isArtist && (
@@ -171,7 +171,7 @@ const AddNewArtist = () => {
           ) : (
             <motion.button
               whileTap={{ scale: 0.75 }}
-              className="px-8 py-2 rounded-md text-white bg-red-600 hover:shadow-lg"
+              className="px-8 py-2 rounded-md text-white bg-blue-700 hover:shadow-lg"
               onClick={saveArtist}
             >
               Tải lên

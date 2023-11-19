@@ -4,6 +4,7 @@ import { NavLink, Outlet, Route, Routes } from "react-router-dom";
 import { isActiveStyles, isNotActiveStyles } from "../../utils/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderAdmin } from "../../components";
+import BackgroundLogin from "../../assets/img/background_Login.jpg";
 // import {
 //   DashboardAlbum,
 //   DashboardArtist,
@@ -15,7 +16,10 @@ import { HeaderAdmin } from "../../components";
 
 const AdminLayout = () => {
   return (
-    <div className="w-full h-auto flex flex-col items-center justify-center bg_website">
+    <div
+      style={{ backgroundImage: `url(${BackgroundLogin})` }}
+      className="w-full h-auto flex flex-col items-center justify-center bg-cover"
+    >
       <HeaderAdmin />
       <div className="my-4 w-full p-4 mt-20 min-h-screen">
         <Outlet />

@@ -1,5 +1,6 @@
 // import AlertError from "../../components/shared/AlertError";
 // import AlertSuccess from "../../components/shared/AlertSuccess";
+import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 // import Loading from "../../components/users/Loading";
 // import User_ChangePass from "../../components/users/User_ChangePass";
@@ -113,14 +114,6 @@ const AddNewPlaylistForm = () => {
   return (
     <form onSubmit={handleSubmit} className="mb-4">
       <div className="flex justify-between w-460">
-        <input
-          type="text"
-          value={playlistName}
-          onChange={(e) => setPlaylistName(e.target.value)}
-          className="border border-gray-300 p-2 w-full mx-5"
-          placeholder="Nhập tên danh sách phát mới"
-        />
-
         <NavLink
           to={"/UserPlaylist/Add"}
           className="bg-indigo-500 text-white text-center px-4 py-2 rounded-md hover:bg-indigo-600 w-1/2"
@@ -195,14 +188,22 @@ const PlaylistItem = ({ playlistName, playlistImageURL, playlistID }) => {
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, translateX: -50 }}
+      animate={{ opacity: 1, translateX: 0 }}
+      transition={{ duration: 0.3 }}
       key={playlistID}
-      className="border border-gray-300 p-2 rounded mb-2 h-150 w-150 mx-3 flex flex-col cursor-pointer"
+      className="relative overflow-hidden max-w-[260px] py-3 px-3 hover:bg-cardOverlay bg-primary h-full min-w-180 gap-3 cursor-pointer hover:shadow-xl mr-4  rounded-xl flex flex-col items-center"
       onClick={handlePlayPlaylist}
     >
-      <img src={playlistImageURL} />
-      <div> {playlistName}</div>
-    </div>
+      <img
+        className="w-full h-36  object-cover rounded-md"
+        src={playlistImageURL}
+      />
+      <div className="flex items-center justify-center font-normal text-lg text-website">
+        {playlistName}
+      </div>
+    </motion.div>
   );
 };
 export default UserPlaylist;

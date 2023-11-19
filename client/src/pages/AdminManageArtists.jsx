@@ -48,14 +48,15 @@ const DashboardArtist = () => {
       <div className="w-full flex justify-center items-center gap-24">
         <NavLink
           to={"/Admin/ManageArtists/Add"}
-          className="flex items-center px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
+          className="flex items-center text-white px-4 py-3 border rounded-md border-gray-300 hover:border-gray-400 hover:shadow-md cursor-pointer"
         >
           <IoAdd />
+          <div className="px-2">Thêm nghệ sĩ</div>
         </NavLink>
         <input
           type="text"
           placeholder="Tìm kiếm theo tên nghệ sĩ"
-          className={` w-64 px-4 py-2 border ${
+          className={` w-64 px-4 py-3 border ${
             isFocus ? "border-gray-500 shadow-md" : "border-gray-300"
           } rounded-md bg-transparent outline-none duration-150 transition-all ease-in-out text-base text-white font-semibold`}
           value={artistFilter}
@@ -120,7 +121,7 @@ export const ArtistCard = ({ data, index }) => {
       initial={{ opacity: 0, translateX: -50 }}
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
-      className="relative w-44 min-w-180 px-2 py-4 gap-3 cursor-pointer hover:shadow-xl hover:bg-card bg-gray-100 shadow-md rounded-lg flex flex-col items-center"
+      className="relative w-44 min-w-180 px-2 py-4 gap-3 cursor-pointer hover:shadow-xl hover:bg-card bg-white shadow-md rounded-lg flex flex-col items-center"
     >
       <img
         src={data?.artistImageURL}
@@ -128,7 +129,7 @@ export const ArtistCard = ({ data, index }) => {
         alt=""
       />
 
-      <p className="w-full overflow-hidden text-base text-textColor text-center whitespace-nowrap overflow-ellipsis">
+      <p className="w-full overflow-hidden text-base font-semibold text-textColor text-center whitespace-nowrap overflow-ellipsis">
         {data.artistName}
       </p>
       <div className="flex items-center gap-4">
