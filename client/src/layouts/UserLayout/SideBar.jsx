@@ -65,27 +65,26 @@ const SideBar = ({ updated }) => {
       imgURL: downloadUrl,
     };
     updateAvatar(dataReq).then((res) => {
-      if (res.data.success) {
-        setIsAlert("success");
-        setAlertMessage(res.data.message);
-        setTimeout(() => {
-          setIsAlert(null);
-          getUserDetails(userDataID).then((res) => {
-            setLoadedDetails(res.user);
-            dispatch({
-              type: SET_USER,
-              user: res,
-            });
-          });
-        
-        }, 2000);
-      } else {
-        setIsAlert("error");
-        setAlertMessage(res.data.message);
-        setTimeout(() => {
-          setIsAlert(null);
-        }, 2000);
-      }
+      // if (res.data.success) {
+      //   setIsAlert("success");
+      //   setAlertMessage(res.data.message);
+      //   setTimeout(() => {
+      //     setIsAlert(null);
+      //     getUserDetails(userDataID).then((res) => {
+      //       setLoadedDetails(res.user);
+      //       dispatch({
+      //         type: SET_USER,
+      //         user: res,
+      //       });
+      //     });
+      //   }, 2000);
+      // } else {
+      //   setIsAlert("error");
+      //   setAlertMessage(res.data.message);
+      //   setTimeout(() => {
+      //     setIsAlert(null);
+      //   }, 2000);
+      // }
     });
   };
 

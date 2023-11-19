@@ -30,24 +30,13 @@ import { getAllSongs, createPlaylist } from "../api";
 import SearchCard from "../pages/SearchCard";
 import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
 import SideBar from "../layouts/UserLayout/SideBar";
-import { FaTrash } from "react-icons/fa";
+import { FaWindowClose } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
 const moment = require("moment");
 const baseURL = "http://localhost:4000/";
-const OrderCard = ({
-  data,
-  index,
-  id,
-  songName,
-  songImageURl,
-  songArtist,
-  songLanguage,
-  onDelete,
-  songID,
-  setQuantity,
-}) => {
+const OrderCard = ({ data, index, id, onDelete, songID, setQuantity }) => {
   const dispatch = useDispatch();
   const [songData, setSongData] = useState();
 
@@ -66,22 +55,20 @@ const OrderCard = ({
   const foundSong = allSongs.find((song) => song._id === songID);
   console.log("foundSong: ", foundSong);
   return (
-    <div className="flex center">
-      <div className="flex items-center gap-2 w-3/12 flex-auto">
-        <div className="rounded-full w-full">
-          <img src={foundSong.songImageURL} alt="Rectangle4329" />
-        </div>
-        <div className=" w-2/4">
-          <p>{foundSong.songName}</p>
-        </div>
+    <div className="relative flex center h-auto w-full px-4">
+      <div className="rounded-full  flex items-center justify-center px-3 max-h-9">
+        <img src={foundSong.songImageURL} className="w-10 h-10" />
       </div>
-      <div className="flex items-center justify-center w-1/12 flex-auto pr-7">
+      <div className="flex items-center justify-center  text-gray-900">
+        <p>{foundSong.songName}</p>
+      </div>
+      <div className="flex items-center justify-center flex-auto text-gray-500">
         <p>{foundSong.songArtist.songArtistName}</p>
       </div>
 
-      <div className="flex items-center justify-center w-1/12 pr-5 flex-auto">
+      <div className="flex items-center justify-center px-3">
         <button onClick={handleDelete}>
-          <FaTrash />
+          <FaWindowClose className=" hover:text-red-800" />
         </button>
       </div>
     </div>
@@ -341,13 +328,13 @@ const UserPlaylist_Add = () => {
               )}
             </div>
           </div>
-          <div className="flex w-full justify-between">
+          <div className="flex w-full justify-between h-auto">
             <div className=" flex-col items-end justify-end w-1/2">
               <SearchBar setSearchResults={setSearchResults} />
             </div>
 
-            <div className="mb-9 flex max-h-9 flex-col">
-              <label className="w-full block font-bold p-2 pr-3">
+            <div className="mb-9 flex flex-col h-full w-3/4 mx-4">
+              <label className="w-full  max-h-9 block font-bold p-2 pr-3">
                 Danh sách bài hát:
               </label>
               {selectedSongs && selectedSongs.length > 0 ? (
@@ -355,7 +342,7 @@ const UserPlaylist_Add = () => {
                 selectedSongs.map((song) => (
                   <div
                     key={song.songID}
-                    className="w-full border bg-gray-100 rounded-lg p-2 flex flex-col mb-1"
+                    className="w-full border bg-gray-100 rounded-lg p-2 flex flex-col mb-1 flex-wrap"
                   >
                     {console.log("song: ", song)}
                     <OrderCard
@@ -373,7 +360,7 @@ const UserPlaylist_Add = () => {
               )}
             </div>
           </div>
-          <div className="my-4 mt-20">
+          <div className="my-4">
             <button
               className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white"
               onClick={handleAddPlaylist}
