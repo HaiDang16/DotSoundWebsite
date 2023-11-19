@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { blue_200, blue_600, banner } from "../assets/img";
 import Release from "./Release";
 import { filterByLanguage } from "../utils/supportfunctions";
-import { getAllArtist } from "../api";
+import { getAllArtist, getAllPlaylists } from "../api";
 import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { getAllAlbums, deleteAlbumsById } from "../api";
@@ -19,6 +19,7 @@ import {
   SET_ALL_ARTISTS,
   SET_ALL_ALBUMS,
   SET_SONG,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 import {
   NewReleaseSongsCard,
@@ -27,16 +28,48 @@ import {
   CategorySongsCard,
   ForYou_SongCard,
 } from "../components";
+const optionsPlaylist = [
+  {
+    playlistUserID: "1",
+    playlistName: "Abc",
+    playlistImageURL: "AbcURL",
+    playlistItems: [
+      { playlistSongID: "3", title: "Bài hát 3" },
+      { playlistSongID: "4", title: "Bài hát 4" },
+    ],
+  },
+  {
+    playlistUserID: "2",
+    playlistName: "Abc",
+    playlistImageURL: "AbcURL",
+    playlistItems: [
+      { playlistSongID: "3", title: "Bài hát 3" },
+      { playlistSongID: "4", title: "Bài hát 4" },
+    ],
+  },
+  {
+    playlistUserID: "3",
+    playlistName: "Abc",
+    playlistImageURL: "AbcURL",
+    playlistItems: [
+      { playlistSongID: "3", title: "Bài hát 3" },
+      { playlistSongID: "4", title: "Bài hát 4" },
+    ],
+  },
+];
+console.log(optionsPlaylist);
 const ForYou = () => {
   const dispatch = useDispatch();
   const allAlbums = useSelector((state) => state.customization.allAlbums);
   const artists = useSelector((state) => state.customization.artists);
+  const playlists = useSelector((state) => state.customization.playlists);
   const languageFilter = useSelector(
     (state) => state.customization.languageFilter
   );
   const filterTerm = useSelector((state) => state.customization.filterTerm);
   const allSongs = useSelector((state) => state.customization.allSongs);
   const allArtists = useSelector((state) => state.customization.allArtists);
+  const allPlaylists = useSelector((state) => state.customization.allPlaylists);
   const [filteredSongs, setFilteredSongs] = useState(null);
 
   useEffect(() => {
@@ -60,6 +93,12 @@ const ForYou = () => {
         dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.albums });
       });
     }
+    // if (!allPlaylists) {
+    //   getAllPlaylists().then((data) => {
+    //     console.log(data);
+    //     dispatch({ type: SET_CURRENT_PLAYLIST, allPlaylists: data.playlists });
+    //   });
+    // }
   }, []);
 
   // useEffect(() => {
@@ -86,16 +125,16 @@ const ForYou = () => {
   //   }
   // }, [artistFilter]);
 
-  //   useEffect(() => {
-  //     const filterByLanguage = allSongs?.filter(
-  //       (data) => data.songCategory.songCategoryName.toLowerCase() === filterTerm
-  //     );
-  //     if (filterByLanguage) {
-  //       setFilteredSongs(filterByLanguage);
-  //     } else {
-  //       setFilteredSongs(null);
-  //     }
-  //   }, [filterTerm]);
+  useEffect(() => {
+    const filterByLanguage = allSongs?.filter(
+      (data) => data.songCategory.songCategoryName.toLowerCase() === filterTerm
+    );
+    if (filterByLanguage) {
+      setFilteredSongs(filterByLanguage);
+    } else {
+      setFilteredSongs(null);
+    }
+  }, [filterTerm]);
 
   // useEffect(() => {
   //   const filtered = allSongs?.filter((data) => data.album === albumFilter);
@@ -116,7 +155,7 @@ const ForYou = () => {
       setFilteredSongs(null);
     }
   }, [languageFilter]);
-
+  console.log(optionsPlaylist);
   return (
     <div className="relative w-full h-auto flex flex-col justify-center bg_website_02">
       <div className="md:p-20 z-0">
@@ -159,6 +198,12 @@ const ForYou = () => {
             <div className="my-2b  text-2xl">Bài hát</div>
           </div>
           <ForYou_SongCard musics={allSongs} />
+        </div>
+        <div className="my-10">
+          <div className="text-white font-medium flex justify-between">
+            <div className="my-2b text-2xl">Danh sách phát</div>
+          </div>
+          {/* vị trí hiển thị các PlaylistCard */}
         </div>
       </div>
     </div>
@@ -220,4 +265,25 @@ export const AlbumCard = ({ data, index }) => {
   );
 };
 
+export const PlaylistCard = ({ data, index }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, translateX: -50 }}
+      animate={{ opacity: 1, translateX: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      className="relative overflow-hidden w-1/3 h-full min-w-180 px-2 py-4 gap-3 cursor-pointer hover:shadow-xl hover:bg-card bg-gray-100 shadow-md rounded-lg flex flex-col items-center"
+    >
+      <img
+        src={data?.playlistImageURL}
+        className="w-full h-40 object-cover rounded-md"
+        alt=""
+      />
+
+      <p className="text-base text-textColor">{data.playlistName}</p>
+      <p className="text-base text-textColor">{data.playlistItems.length}</p>
+    </motion.div>
+  );
+};
 export default ForYou;

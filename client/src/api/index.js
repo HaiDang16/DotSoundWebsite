@@ -34,7 +34,14 @@ export const getAllUsers = async () => {
     return null;
   }
 };
-
+export const getAllPlaylists = async () => {
+  try {
+    const res = await axios.get(`${baseURL}api/users/GetAllPlaylists`);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
 export const removeUser = async (userId) => {
   try {
     const res = axios.delete(`${baseURL}api/users/DeleteUser/${userId}`);
