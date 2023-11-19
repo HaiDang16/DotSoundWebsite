@@ -10,6 +10,7 @@ import { filterByLanguage } from "../utils/supportfunctions";
 import { getAllArtist } from "../api";
 import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import BackgroundLogin from "../assets/img/background_Login.jpg";
 import {
   getAllAlbums,
   deleteAlbumsById,
@@ -134,7 +135,10 @@ const ForYou = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-auto flex flex-col justify-center bg_website_02">
+    <div
+      style={{ backgroundImage: `url(${BackgroundLogin})` }}
+      className="relative w-full h-auto flex flex-col justify-center "
+    >
       <div className="md:p-20 z-0">
         <div className="my-10">
           <div className=" text-white font-medium flex justify-between">
