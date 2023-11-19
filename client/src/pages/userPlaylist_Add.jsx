@@ -374,7 +374,7 @@ const UserPlaylist_Add = () => {
               className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white mx-4 "
               onClick={handleClear}
             >
-              Xóa
+              Làm mới
             </button>
             <button
               className="min-w-[120px] h-10 rounded-xl bg_website_02 text-lg font-normal text-white"

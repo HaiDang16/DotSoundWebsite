@@ -327,7 +327,7 @@ const PlaylistItem = ({ playlistName, playlistImageURL, playlistID }) => {
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ duration: 0.3 }}
       key={playlistID}
-      className="relative overflow-hidden max-w-[260px] py-3 px-3 hover:bg-cardOverlay bg-primary h-full min-w-180 gap-3 cursor-pointer hover:shadow-xl mr-4  rounded-xl flex flex-col items-center"
+      className="relative overflow-hidden min-w-[260px] py-3 px-3 hover:bg-cardOverlay bg-primary h-full min-w-180 gap-3 cursor-pointer hover:shadow-xl mr-4  rounded-xl flex flex-col items-center"
       onClick={handlePlayPlaylist}
     >
       <img
