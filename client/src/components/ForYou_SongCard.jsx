@@ -10,7 +10,8 @@ import {
   SET_ALL_ARTISTS,
   SET_LANGUAGE_FILTER,
   SET_SONG,
-  SET_SONG_PLAYING,SET_CURRENT_PLAYLIST
+  SET_SONG_PLAYING,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
 const NewReleaseSongContainer = ({ musics }) => {
   const dispatch = useDispatch();
@@ -104,7 +105,7 @@ export const SongContainer = ({ data }) => {
         song: index,
       });
     }
-    
+
     let songExists;
     if (playlist.length > 0) {
       songExists = playlist.some((song) => song.id === data[index].id);
@@ -119,20 +120,20 @@ export const SongContainer = ({ data }) => {
   const limitedData = data ? data.slice(0, 6) : [];
 
   return (
-    <div className="h-full w-full grid grid-cols-2 gap-10 items-center ">
+    <div className="h-full w-full grid grid-cols-3 gap-4 items-center ">
       {limitedData?.map((data, index) => (
-        <div className=" flex flex-col-2 justify-center">
+        <div className=" flex">
           <motion.div
             key={data._id}
-            whileTap={{ scale: 0.8 }}
+            whileHover={{ scale: 1.05 }}
             initial={{ opacity: 0, translateX: -50 }}
             animate={{ opacity: 1, translateX: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-            className=" cursor-pointer hover:shadow-xl hover:bg-card h-auto w-2/3 bg-slate-400 mr-16 rounded-xl border-4 border-gray-300"
+            transition={{ duration: 0.3 }}
+            className=" cursor-pointer hover:shadow-xl h-auto w-full  rounded-xl border-2 border-gray-300"
             onClick={() => addSongToContext(index)}
           >
-            <div className=" flex">
-              <div className=" h-5 min-w-[160px] w-5 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
+            <div className=" flex h-full">
+              <div className=" h-5 min-w-[160px] w-5 min-h-[130px] rounded-lg drop-shadow-lg relative overflow-hidden">
                 <motion.img
                   whileHover={{ scale: 1.05 }}
                   src={data.songImageURL}
@@ -141,11 +142,11 @@ export const SongContainer = ({ data }) => {
                 />
               </div>
 
-              <p className="text-base text-white font-semibold my-2 pl-10">
+              <p className="text-xl  items-start flex flex-col justify-center text-white font-semibold my-2 pl-6">
                 {data.songName.length > 25
                   ? `${data.songName.slice(0, 25)}`
                   : data.songName}
-                <span className="block text-sm  my-2">
+                <span className="block text-lg text-gray-300  my-2">
                   {data.songArtist.songArtistName}
                 </span>
               </p>
