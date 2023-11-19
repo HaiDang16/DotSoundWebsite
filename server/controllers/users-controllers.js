@@ -93,6 +93,9 @@ const Register = async (req, res) => {
   const { lastName, firstName, phone, email, password, avatarURL } = req.body;
   const dataReq = { lastName, firstName, phone, email, password, avatarURL };
   console.log("dataReq: ", dataReq);
+  if (avatarURL === "") {
+    avatarURL = null;
+  }
 
   // Tìm tài khoản trong cơ sở dữ liệu bằng email
   const userEmail = await User.findOne({ cusEmail: email });
