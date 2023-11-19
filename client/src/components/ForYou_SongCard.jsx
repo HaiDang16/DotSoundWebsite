@@ -10,8 +10,15 @@ import {
   SET_ALL_ARTISTS,
   SET_LANGUAGE_FILTER,
   SET_SONG,
-  SET_SONG_PLAYING,SET_CURRENT_PLAYLIST
+  SET_SONG_PLAYING,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
+import {
+  getAllAlbums,
+  deleteAlbumsById,
+  getAllCategories,
+  getAllSongs,
+} from "../api";
 const NewReleaseSongContainer = ({ musics }) => {
   const dispatch = useDispatch();
   const [filteredSongs, setFilteredSongs] = useState();
@@ -90,7 +97,30 @@ export const SongContainer = ({ data }) => {
   const isSongPlaying = useSelector(
     (state) => state.customization.isSongPlaying
   );
+
   const playlist = useSelector((state) => state.customization.playlist);
+
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  useEffect(() => {
+    if (!allSongs) {
+      getAllSongs().then((data) => {
+        dispatch({
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
+        });
+      });
+    }
+  }, []);
+
+  let songIndex;
+  const handleClick = (index) => {
+    songIndex = allSongs.findIndex(
+      (song) => song.songImageURL === data[index].songImageURL
+    );
+    console.log("songIndex: ", songIndex);
+    console.log("index: ", index);
+    addSongToContext(songIndex);
+  };
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -104,15 +134,15 @@ export const SongContainer = ({ data }) => {
         song: index,
       });
     }
-    
+
     let songExists;
     if (playlist.length > 0) {
-      songExists = playlist.some((song) => song.id === data[index].id);
+      songExists = playlist.some((song) => song.id === allSongs[index].id);
     }
     if (!songExists) {
       dispatch({
         type: SET_CURRENT_PLAYLIST,
-        playlist: data[index],
+        playlist: allSongs[index],
       });
     }
   };
@@ -129,7 +159,7 @@ export const SongContainer = ({ data }) => {
             animate={{ opacity: 1, translateX: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
             className=" cursor-pointer hover:shadow-xl hover:bg-card h-auto w-2/3 bg-slate-400 mr-16 rounded-xl border-4 border-gray-300"
-            onClick={() => addSongToContext(index)}
+            onClick={() => handleClick(index)}
           >
             <div className=" flex">
               <div className=" h-5 min-w-[160px] w-5 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">

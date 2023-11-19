@@ -9,6 +9,12 @@ import {
   SET_MINI_PLAYER,
   SET_CURRENT_PLAYLIST,
 } from "../store/actions";
+import {
+  getAllAlbums,
+  deleteAlbumsById,
+  getAllCategories,
+  getAllSongs,
+} from "../api";
 
 const CategorySongsCard = ({ musics }) => {
   const dispatch = useDispatch();
@@ -16,7 +22,29 @@ const CategorySongsCard = ({ musics }) => {
     (state) => state.customization.isSongPlaying
   );
   const song = useSelector((state) => state.customization.song);
+
   const playlist = useSelector((state) => state.customization.playlist);
+
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  useEffect(() => {
+    if (!allSongs) {
+      getAllSongs().then((data) => {
+        dispatch({
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
+        });
+      });
+    }
+  }, []);
+
+  let songIndex;
+  const handleClick = (index) => {
+    songIndex = allSongs.findIndex(
+      (song) => song.songImageURL === musics[index].songImageURL
+    );
+    console.log("songIndex: ", songIndex);
+    addSongToContext(songIndex);
+  };
 
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
@@ -34,12 +62,12 @@ const CategorySongsCard = ({ musics }) => {
 
     let songExists;
     if (playlist.length > 0) {
-      songExists = playlist.some((song) => song.id === musics[index].id);
+      songExists = playlist.some((song) => song.id === allSongs[index].id);
     }
     if (!songExists) {
       dispatch({
         type: SET_CURRENT_PLAYLIST,
-        playlist: musics[index],
+        playlist: allSongs[index],
       });
     }
   };
@@ -54,7 +82,7 @@ const CategorySongsCard = ({ musics }) => {
             animate={{ opacity: 1, translateX: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
             className=" cursor-pointer hover:shadow-xl hover:bg-card h-auto w-auto bg-slate-400 mr-10 rounded-lg border-4 border-gray-300"
-            onClick={() => addSongToContext(index)}
+            onClick={() => handleClick(index)}
           >
             <div className="h-28 min-w-[160px] w-275  rounded-lg drop-shadow-lg relative overflow-hidden">
               <motion.img

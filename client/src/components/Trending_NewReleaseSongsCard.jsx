@@ -13,6 +13,12 @@ import {
   SET_SONG_PLAYING,
   SET_CURRENT_PLAYLIST,
 } from "../store/actions";
+import {
+  getAllAlbums,
+  deleteAlbumsById,
+  getAllCategories,
+  getAllSongs,
+} from "../api";
 const NewReleaseSongContainer = ({ musics }) => {
   const dispatch = useDispatch();
   const [filteredSongs, setFilteredSongs] = useState();
@@ -92,6 +98,27 @@ export const SongContainer = ({ data }) => {
     (state) => state.customization.isSongPlaying
   );
   const playlist = useSelector((state) => state.customization.playlist);
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  useEffect(() => {
+    if (!allSongs) {
+      getAllSongs().then((data) => {
+        dispatch({
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
+        });
+      });
+    }
+  }, []);
+
+  let songIndex;
+  const handleClick = (index) => {
+    songIndex = allSongs.findIndex(
+      (song) => song.songImageURL === data[index].songImageURL
+    );
+    console.log("songIndex: ", songIndex);
+    addSongToContext(songIndex);
+  };
+
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -105,15 +132,15 @@ export const SongContainer = ({ data }) => {
         song: index,
       });
     }
-
+    console.log("data[index].id: ", data[index]);
     let songExists;
     if (playlist.length > 0) {
-      songExists = playlist.some((song) => song.id === data[index].id);
+      songExists = playlist.some((song) => song.id === allSongs[index].id);
     }
     if (!songExists) {
       dispatch({
         type: SET_CURRENT_PLAYLIST,
-        playlist: data[index],
+        playlist: allSongs[index],
       });
     }
   };
@@ -129,7 +156,7 @@ export const SongContainer = ({ data }) => {
           animate={{ opacity: 1, translateX: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
           className="relative w-full min-w-0 sm:min-w-350 p-2 m-2 cursor-pointer hover:shadow-xl border-2 bg_website hover:bg-card  shadow-md rounded-lg items-center flex"
-          onClick={() => addSongToContext(index)}
+          onClick={() => handleClick(index)}
         >
           <div className=" max-w-[80px] h-40 max-h-[80px] rounded-lg drop-shadow-lg relative overflow-hidden">
             <motion.img

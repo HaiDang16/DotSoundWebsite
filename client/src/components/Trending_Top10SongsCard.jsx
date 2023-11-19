@@ -6,9 +6,15 @@ import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
   SET_SONG,
-  SET_MINI_PLAYER,SET_CURRENT_PLAYLIST
+  SET_MINI_PLAYER,
+  SET_CURRENT_PLAYLIST,
 } from "../store/actions";
-
+import {
+  getAllAlbums,
+  deleteAlbumsById,
+  getAllCategories,
+  getAllSongs,
+} from "../api";
 const Top10SongsCard = ({ musics }) => {
   const dispatch = useDispatch();
   const isSongPlaying = useSelector(
@@ -16,6 +22,30 @@ const Top10SongsCard = ({ musics }) => {
   );
   const song = useSelector((state) => state.customization.song);
   const playlist = useSelector((state) => state.customization.playlist);
+
+  const allSongs = useSelector((state) => state.customization.allSongs);
+  useEffect(() => {
+    if (!allSongs) {
+      getAllSongs().then((data) => {
+        dispatch({
+          type: SET_ALL_SONGS,
+          allSongs: data.songs,
+        });
+      });
+    }
+  }, []);
+
+  let songIndex;
+  const handleClick = (index) => {
+    songIndex = allSongs.findIndex(
+      (song) => song.songImageURL === musics[index].songImageURL
+    );
+    console.log("songIndex: ", songIndex);
+    {
+      console.log(musics[index].songName);
+    }
+    addSongToContext(songIndex);
+  };
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -32,12 +62,12 @@ const Top10SongsCard = ({ musics }) => {
 
     let songExists;
     if (playlist.length > 0) {
-      songExists = playlist.some((song) => song.id === musics[index].id);
+      songExists = playlist.some((song) => song.id === allSongs[index].id);
     }
     if (!songExists) {
       dispatch({
         type: SET_CURRENT_PLAYLIST,
-        playlist: musics[index],
+        playlist: allSongs[index],
       });
     }
   };
@@ -52,7 +82,7 @@ const Top10SongsCard = ({ musics }) => {
             animate={{ opacity: 1, translateX: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
             className=" cursor-pointer hover:shadow-xl hover:bg-card h-auto w-auto bg-slate-400 mr-16 rounded-xl border-4 border-gray-300"
-            onClick={() => addSongToContext(index)}
+            onClick={() => handleClick(index)}
           >
             <div className="h-56 min-w-[160px] w-56 min-h-[160px] rounded-lg drop-shadow-lg relative overflow-hidden">
               <motion.img
