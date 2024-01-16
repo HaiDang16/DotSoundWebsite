@@ -1,25 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { ref, deleteObject } from "firebase/storage";
 import { motion } from "framer-motion";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
 import { getAllArtist, register } from "../api";
-import { useSelector, useDispatch } from "react-redux";
-import AlertErrorBottom from "../components/AlertErrorBottom";
-import AlertSuccessBottom from "../components/AlertSuccessBottom";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ALL_ARTISTS,
-  SET_ALL_ALBUMS,
-  SET_ALL_CATEGORIES,
-  SET_ALL_USERS,
-} from "../store/actions";
+import { SET_ALL_USERS } from "../store/actions";
 import {
   ImageLoader,
   ImageUploaderUserAvatar,
   DisabledButton,
+  AlertErrorBottom,
+  AlertSuccessBottom,
 } from "../components";
 function splitFullName(fullName) {
   const parts = fullName.split(" ");
@@ -39,12 +32,8 @@ const AddNewArtist = () => {
 
   const [isArtist, setIsArtist] = useState(false);
   const [artistProgress, setArtistProgress] = useState(0);
-  const [artistCoverImage, setArtistCoverImage] = useState(null);
-  const [artistName, setArtistName] = useState("");
-  const [twitter, setTwitter] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const dispatch = useDispatch();
-  const artists = useSelector((state) => state.customization.artists);
+  const [artistCoverImage, setArtistCoverImage] = useState(null); 
+  const dispatch = useDispatch(); 
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");

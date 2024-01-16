@@ -1,18 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AiOutlineClear } from "react-icons/ai";
 import { deleteSongById, getAllSongs } from "../api";
-import { useStateValue } from "../context/StateProvider";
-import { actionType } from "../context/reducer";
-import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
+import { IoAdd, IoPlay, IoTrash } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
-import AlertSuccess from "../components/AlertSuccess";
-import AlertError from "../components/AlertError";
-import AlertErrorBottom from "../components/AlertErrorBottom";
-import AlertSuccessBottom from "../components/AlertSuccessBottom";
+import { AlertErrorBottom, AlertSuccessBottom } from "../components";
 import { useSelector, useDispatch } from "react-redux";
-import { FaPlay } from "react-icons/fa";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
@@ -21,7 +15,6 @@ import {
 } from "../store/actions";
 const DashboardSongs = () => {
   const dispatch = useDispatch();
-
   const allSongs = useSelector((state) => state.customization.allSongs);
   const [songFilter, setSongFilter] = useState("");
   const [isFocus, setIsFocus] = useState(false);
@@ -30,7 +23,6 @@ const DashboardSongs = () => {
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
-        console.log(" data.songs: ", data.songs);
         dispatch({
           type: SET_ALL_SONGS,
           allSongs: data.songs,

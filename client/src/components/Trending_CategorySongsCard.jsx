@@ -6,15 +6,9 @@ import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
   SET_SONG,
-  SET_MINI_PLAYER,
   SET_CURRENT_PLAYLIST,
 } from "../store/actions";
-import {
-  getAllAlbums,
-  deleteAlbumsById,
-  getAllCategories,
-  getAllSongs,
-} from "../api";
+import { getAllSongs } from "../api";
 
 const CategorySongsCard = ({ musics }) => {
   const dispatch = useDispatch();
@@ -39,10 +33,7 @@ const CategorySongsCard = ({ musics }) => {
 
   let songIndex;
   const handleClick = (index) => {
-    songIndex = allSongs.findIndex(
-      (song) => song.songImageURL === musics[index].songImageURL
-    );
-    console.log("songIndex: ", songIndex);
+    songIndex = allSongs.findIndex((song) => song.id === musics[index].id);
     addSongToContext(songIndex);
   };
 
@@ -88,7 +79,7 @@ const CategorySongsCard = ({ musics }) => {
               <motion.img
                 whileHover={{ scale: 1.05 }}
                 src={data.songImageURL}
-                alt=""
+                alt="Hình ảnh"
                 className=" w-full h-full rounded-lg object-cover"
               />
             </div>

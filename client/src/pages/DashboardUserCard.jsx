@@ -2,20 +2,12 @@ import React, { useState } from "react";
 import moment from "moment";
 import { motion } from "framer-motion";
 import { changingUserRole, getAllUsers, removeUser } from "../api";
-import { actionType } from "../context/reducer";
-import { useStateValue } from "../context/StateProvider";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ARTISTS,
-  SET_ALL_ARTISTS,
-  SET_ALL_USERS,
-} from "../store/actions";
+import { SET_ALL_USERS } from "../store/actions";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const DashboardUserCard = ({ data, index }) => {
   const navigate = useNavigate();
@@ -24,10 +16,8 @@ const DashboardUserCard = ({ data, index }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdateRole, setIsUpdateRole] = useState(false);
   const [isAlert, setIsAlert] = useState("");
-  const [isHovered, setIsHovered] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  const allUsers = useSelector((state) => state.customization.allUsers);
   const user = useSelector((state) => state.customization.user);
   const createdAt = moment(new Date(data.createdAt)).format("DD/MM/YYYY");
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -81,8 +71,6 @@ const DashboardUserCard = ({ data, index }) => {
       transition={{ duration: 0.3, delay: index * 0.1 }}
       className="relative w-full rounded-md flex items-center justify-between py-4 bg-lightOverlay cursor-pointer hover:bg-gray-400 hover:shadow-md"
     >
-      {console.log("user.user: ", user.user)}
-      {console.log("user: ", user)}
       <div
         onMouseEnter={() => setDropdownVisible(true)}
         onMouseLeave={() => setDropdownVisible(false)}

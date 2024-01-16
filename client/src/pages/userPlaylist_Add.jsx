@@ -1,44 +1,25 @@
-// import AlertError from "../../components/shared/AlertError";
-// import AlertSuccess from "../../components/shared/AlertSuccess";
 import React, { useState, useEffect } from "react";
-import SongtItemCard from "../components/SongItemCard";
+import { useSelector, useDispatch } from "react-redux";
 import { storage } from "../config/firebase.config";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import { ref, deleteObject } from "firebase/storage";
 import { MdDelete } from "react-icons/md";
-// import Loading from "../../components/users/Loading";
-import { NavLink, useNavigate } from "react-router-dom";
-import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
-// import User_ChangePass from "../../components/users/User_ChangePass";
-import { FaCheckCircle } from "react-icons/fa";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { IoSearch } from "react-icons/io5";
 import { motion } from "framer-motion";
 import {
-  FilterButtonsCategory,
-  FilterButtons,
   ImageLoader,
-  ImageUploader,
   PlaylistSearchCard,
   ImageUploaderPlaylist,
+  AlertErrorBottom,
+  AlertSuccessBottom,
 } from "../components";
 import { getAllSongs, createPlaylist } from "../api";
-import SearchCard from "../pages/SearchCard";
-import { SET_ALL_SONGS, SET_SONG_PLAYING, SET_SONG } from "../store/actions";
+import { SET_ALL_SONGS } from "../store/actions";
 import SideBar from "../layouts/UserLayout/SideBar";
 import { FaWindowClose } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
-import AlertErrorBottom from "../components/AlertErrorBottom";
-import AlertSuccessBottom from "../components/AlertSuccessBottom";
-const moment = require("moment");
-const baseURL = "http://localhost:4000/";
-const OrderCard = ({ data, index, id, onDelete, songID, setQuantity }) => {
+
+const OrderCard = ({ id, onDelete, songID }) => {
   const dispatch = useDispatch();
-  const [songData, setSongData] = useState();
 
   const allSongs = useSelector((state) => state.customization.allSongs);
   const handleDelete = () => {
@@ -89,7 +70,6 @@ const UserPlaylist_Add = () => {
   const [playlistName, setPlaylistName] = useState("");
 
   //hàm lưu trữ sản phẩm đã chọn
-  const [selectedPlaylist, setSelectedPlaylist] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -193,6 +173,7 @@ const UserPlaylist_Add = () => {
       }
     });
   };
+
   const handleBack = () => {
     navigate("/UserPlaylist");
   };
@@ -202,6 +183,7 @@ const UserPlaylist_Add = () => {
     setPlaylistImage(null);
     setSelectedSongs([]);
   };
+
   const [selectedSongs, setSelectedSongs] = useState([]);
   const handleSongSelect = (song) => {
     const isSongSelected = selectedSongs.some(
@@ -215,6 +197,7 @@ const UserPlaylist_Add = () => {
       //Nếu trùng bài hát
     }
   };
+
   const deleteImageObject = (songURL) => {
     setIsLoading(true);
     setPlaylistImage(null);
@@ -229,7 +212,6 @@ const UserPlaylist_Add = () => {
     });
   };
 
-  const [searchResults, setSearchResults] = useState([]); // Thêm state cho kết quả tìm kiếm
   const [updated, setUpdated] = useState(0);
   return (
     <div className="h-auto mt-[120px] mb-16 w-full flex justify-center items-center">

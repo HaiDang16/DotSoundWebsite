@@ -1,41 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { ref, deleteObject } from "firebase/storage";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
-import { BiCloudUpload } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
-import {
-  getAllAlbums,
-  getAllArtist,
-  getAllCategories,
-  getAllSongs,
-  saveNewAlbum,
-  createArtist,
-  updateArtist,
-  saveNewSong,
-  getArtistDetails,
-} from "../api";
-import { actionType } from "../context/reducer";
-import { filterByLanguage, filters } from "../utils/supportfunctions";
-import { IoMusicalNote } from "react-icons/io5";
-import AlertSuccess from "../components/AlertSuccess";
-import AlertError from "../components/AlertError";
+import { getAllArtist, updateArtist, getArtistDetails } from "../api";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ARTISTS,
-  SET_ALL_ALBUMS,
-  SET_ALL_CATEGORIES,
-  SET_ALL_ARTISTS,
-} from "../store/actions";
+import { SET_ALL_ARTISTS } from "../store/actions";
 import { ImageLoader, ImageUploader, DisabledButton } from "../components";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
@@ -56,14 +27,11 @@ const AddNewArtist = () => {
   const [twitter, setTwitter] = useState("");
   const [instagram, setInstagram] = useState("");
   const dispatch = useDispatch();
-  const artists = useSelector((state) => state.customization.artists);
 
   let artData;
   useEffect(() => {
     getArtistDetails(artistID).then((data) => {
-      console.log("getArtistDetails res: ", data);
       artData = data.artist;
-      console.log("artData: ", artData);
       setArtistName(artData.artistName);
       setTwitter(artData.artistTwitter);
       setInstagram(artData.artistInstagram);

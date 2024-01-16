@@ -4,7 +4,7 @@ import { getAllCategories, createCategory, updateCategory } from "../api";
 import { MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_ALL_CATEGORIES } from "../store/actions";
-import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
+import { IoAdd } from "react-icons/io5";
 import { AiOutlineClear } from "react-icons/ai";
 import { LogoDotSounds } from "../assets/img";
 import AlertErrorBottom from "../components/AlertErrorBottom";
@@ -54,7 +54,6 @@ const DashboardAlbum = () => {
     } else {
       const data = { catName: catName };
       createCategory(data).then((res) => {
-        console.log("saveNewArtist res: ", res);
         if (res.status === 201) {
           setIsAlert("success");
           setAlertMsg(res.data.message);

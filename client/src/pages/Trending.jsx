@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getAllSongs } from "../api";
 import BackgroundLogin from "../assets/img/background.jpg";
-import { actionType } from "../context/reducer";
-import { useStateValue } from "../context/StateProvider";
-import { SongCard } from "./AdminManageSongs";
-import Filter from "./Filter";
-import Header from "../components/Header";
-import { motion } from "framer-motion";
 import { blue_200, blue_600, banner } from "../assets/img";
-import Release from "./Release";
-import { filterByLanguage } from "../utils/supportfunctions";
-import Footer from "../components/Footer";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_ALL_SONGS, SET_SONG_PLAYING } from "../store/actions";
+import { SET_ALL_SONGS} from "../store/actions";
 import {
   NewReleaseSongsCard,
   DiscoverySongsCard,
@@ -22,23 +13,7 @@ import {
 
 const Home = () => {
   const dispatch = useDispatch();
-  const searchTerm = useSelector((state) => state.customization.searchTerm);
-  const isSongPlaying = useSelector(
-    (state) => state.customization.isSongPlaying
-  );
-  const song = useSelector((state) => state.customization.song);
   const allSongs = useSelector((state) => state.customization.allSongs);
-  const artistFilter = useSelector((state) => state.customization.artistFilter);
-  const filterTerm = useSelector((state) => state.customization.filterTerm);
-  const albumFilter = useSelector((state) => state.customization.albumFilter);
-  const languageFilter = useSelector(
-    (state) => state.customization.languageFilter
-  );
-  const categoryFilter = useSelector(
-    (state) => state.customization.categoryFilter
-  );
-  const [filteredSongs, setFilteredSongs] = useState(null);
-
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
@@ -46,65 +21,9 @@ const Home = () => {
           type: SET_ALL_SONGS,
           allSongs: data.songs,
         });
-        console.log("data getAllSong: ", data.songs);
       });
     }
   }, []);
-
-  useEffect(() => {
-    // if (searchTerm && searchTerm.length > 0) {
-    //   const filtered = allSongs.filter(
-    //     (data) =>
-    //       data.artist.toLowerCase().includes(searchTerm) ||
-    //       data.language.toLowerCase().includes(searchTerm) ||
-    //       data.name.toLowerCase().includes(searchTerm) ||
-    //       data.artist.includes(artistFilter)
-    //   );
-    //   setFilteredSongs(filtered);
-    // } else {
-    //   setFilteredSongs(null);
-    // }
-  }, [searchTerm]);
-
-  // useEffect(() => {
-  //   const filtered = allSongs?.filter((data) => data.artist === artistFilter);
-  //   if (filtered) {
-  //     setFilteredSongs(filtered);
-  //   } else {
-  //     setFilteredSongs(null);
-  //   }
-  // }, [artistFilter]);
-
-  // useEffect(() => {
-  //   const filterByLanguage = allSongs?.filter(
-  //     (data) => data.songLanguage.toLowerCase() === languageFilter
-  //   );
-  //   if (filterByLanguage) {
-  //     setFilteredSongs(filterByLanguage);
-  //   } else {
-  //     setFilteredSongs(null);
-  //   }
-  // }, [filterTerm]);
-
-  // useEffect(() => {
-  //   const filtered = allSongs?.filter((data) => data.album === albumFilter);
-  //   if (filtered) {
-  //     setFilteredSongs(filtered);
-  //   } else {
-  //     setFilteredSongs(null);
-  //   }
-  // }, [albumFilter]);
-
-  useEffect(() => {
-    const filterByLanguage = allSongs?.filter(
-      (data) => data.songLanguage === languageFilter
-    );
-    if (filterByLanguage) {
-      setFilteredSongs(filterByLanguage);
-    } else {
-      setFilteredSongs(null);
-    }
-  }, [languageFilter]);
 
   return (
     <div
@@ -134,11 +53,6 @@ const Home = () => {
           />
         </div>
       </div>
-
-      {/*       
-      <div className="w-full h-auto flex items-center justify-evenly gap-4 flex-wrap p-4">
-        <HomeSongContainer musics={filteredSongs ? filteredSongs : allSongs} />
-      </div> */}
 
       {/* Content ThinhHanh */}
       <div className="md:px-20 z-0">

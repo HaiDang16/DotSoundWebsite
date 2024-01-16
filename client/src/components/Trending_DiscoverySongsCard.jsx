@@ -6,15 +6,11 @@ import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
   SET_SONG,
-  SET_MINI_PLAYER,
   SET_CURRENT_PLAYLIST,
 } from "../store/actions";
-import {
-  getAllAlbums,
-  deleteAlbumsById,
-  getAllCategories,
-  getAllSongs,
-} from "../api";
+import { getAllSongs } from "../api";
+
+// musics = allSong after sort
 const DiscoverySongsContainer = ({ musics }) => {
   const dispatch = useDispatch();
   const isSongPlaying = useSelector(
@@ -22,11 +18,8 @@ const DiscoverySongsContainer = ({ musics }) => {
   );
   const song = useSelector((state) => state.customization.song);
   let playlist = useSelector((state) => state.customization.playlist);
-  useEffect(() => {
-    console.log("Updated playlist:", playlist);
-  }, [playlist]);
-
   const allSongs = useSelector((state) => state.customization.allSongs);
+
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
@@ -40,12 +33,11 @@ const DiscoverySongsContainer = ({ musics }) => {
 
   let songIndex;
   const handleClick = (index) => {
-    songIndex = allSongs.findIndex(
-      (song) => song.songImageURL === musics[index].songImageURL
-    );
-    console.log("songIndex: ", songIndex);
+    // So sánh và lấy ra index trên allSongs
+    songIndex = allSongs.findIndex((song) => song.id === musics[index].id);
     addSongToContext(songIndex);
   };
+
   const addSongToContext = (index) => {
     if (!isSongPlaying) {
       dispatch({
@@ -63,17 +55,12 @@ const DiscoverySongsContainer = ({ musics }) => {
     if (playlist.length > 0) {
       songExists = playlist.some((song) => song.id === allSongs[index].id);
     }
-
-    console.log("musics[index]: ", musics[index]);
-    console.log("songExists: ", songExists);
     if (!songExists) {
       dispatch({
         type: SET_CURRENT_PLAYLIST,
         playlist: allSongs[index],
       });
     }
-
-    console.log("playlist: ", playlist);
   };
   return (
     <>
@@ -92,7 +79,7 @@ const DiscoverySongsContainer = ({ musics }) => {
               <motion.img
                 whileHover={{ scale: 1.05 }}
                 src={data.songImageURL}
-                alt=""
+                alt="Hình ảnh"
                 className=" w-full h-full rounded-lg object-cover"
               />
             </div>

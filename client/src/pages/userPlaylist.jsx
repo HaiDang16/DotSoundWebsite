@@ -1,87 +1,30 @@
-// import AlertError from "../../components/shared/AlertError";
-// import AlertSuccess from "../../components/shared/AlertSuccess";
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
-// import Loading from "../../components/users/Loading";
-// import User_ChangePass from "../../components/users/User_ChangePass";
-import { FaCheckCircle } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import {
-  FilterButtonsCategory,
-  FilterButtons,
-  ImageLoader,
-  ImageUploader,
-  DisabledButton,
-  FilterButtonsArtist,
-  FilterButtonsAlbum,
-} from "../components";
 import SideBar from "../layouts/UserLayout/SideBar";
 import { NavLink } from "react-router-dom";
-import {
-  getAllSongs,
-  createPlaylist,
-  getPlaylistByUserID,
-  getPlaylistDetails,
-} from "../api";
+import { getAllSongs, getPlaylistByUserID, getPlaylistDetails } from "../api";
 import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
-  SET_ALL_USERS,
-  SET_ARTISTS,
-  SET_ALL_ALBUMS,
-  SET_ALL_ARTISTS,
   RESET_PLAYLIST,
   SET_SONG,
   SET_CURRENT_PLAYLIST,
 } from "../store/actions";
-const moment = require("moment");
-
-function splitFullName(fullName) {
-  const parts = fullName.split(" ");
-  const firstName = parts[parts.length - 1]; // Phần tên
-
-  // Nếu có phần còn lại, nó sẽ là các phần trước phần cuối cùng
-  const restOfName = parts.slice(0, parts.length - 1).join(" ");
-
-  return {
-    firstName,
-    restOfName,
-  };
-}
 
 const UserPlaylist = () => {
-  const baseURL = "http://localhost:4000/";
   const userData = JSON.parse(window.localStorage.getItem("userData"));
-  const userDataID = userData.user._id;
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  const phoneRegex = /^\d{10,}$/;
+  const userDataID = userData?.user._id;
 
-  const [isLoadingPage, setIsLoadingPage] = useState(false);
-  const [showChangePassword, setShowChangePassword] = useState(false);
   const [loadedDetails, setLoadedDetails] = useState();
   const [updated, setUpdated] = useState(0);
-  const [userFullName, setUserFullName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userPhoneNum, setUserPhoneNum] = useState();
-  const [userDOB, setUserDOB] = useState("");
-  const [userSex, setUserSex] = useState(null);
-  const [isUpdatedPopup, setIsUpdatedPopup] = useState(false);
-  const [isChangePasswordPopup, setIsChangePasswordPopup] = useState(false);
-  const [playlistName, setPlaylistName] = useState("");
 
   useEffect(() => {
     getPlaylistByUserID(userDataID).then((res) => {
-      console.log("getPlaylistByUserID res: ", res);
       setLoadedDetails(res.playlists);
-      console.log(res.playlists);
     });
   }, []);
 
-  const samplePlaylists = [
-    { id: 1, name: "Danh sách phát 1" },
-    { id: 2, name: "Danh sách phát 2" },
-  ];
   return (
     <div className="h-auto mt-[120px] mb-16 w-full flex justify-center items-center">
       <div className="w-10/12 flex justify-center">
@@ -108,7 +51,6 @@ const UserPlaylist = () => {
 };
 
 const AddNewPlaylistForm = () => {
-  const [playlistName, setPlaylistName] = useState("");
 
   const handleSubmit = () => {};
   return (
