@@ -3,7 +3,9 @@ import { getAllSongs } from "../api";
 import BackgroundLogin from "../assets/img/background.jpg";
 import { blue_200, blue_600, banner } from "../assets/img";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_ALL_SONGS} from "../store/actions";
+import { SET_ALL_SONGS, SET_USER, SET_AUTH } from "../store/actions";
+import { getAuth } from "firebase/auth";
+import { app } from "../config/firebase.config";
 import {
   NewReleaseSongsCard,
   DiscoverySongsCard,
@@ -12,6 +14,27 @@ import {
 } from "../components";
 
 const Home = () => {
+  // useEffect =
+  //   (() => {
+  //     const firebaseAuth = getAuth(app);
+  //     firebaseAuth
+  //       .signOut()
+  //       .then(() => {
+  //         window.localStorage.setItem("auth", "false");
+  //       })
+  //       .catch((e) => console.log(e));
+  //     window.localStorage.setItem("auth", "false");
+  //     window.localStorage.removeItem("userData");
+  //     dispatch({
+  //       type: SET_AUTH,
+  //       auth: false,
+  //     });
+  //     dispatch({
+  //       type: SET_USER,
+  //       user: null,
+  //     });
+  //   },[]);
+
   const dispatch = useDispatch();
   const allSongs = useSelector((state) => state.customization.allSongs);
   useEffect(() => {

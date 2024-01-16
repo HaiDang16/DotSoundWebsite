@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Logo } from "../assets/img";
-import { useStateValue } from "../context/StateProvider";
 import { useSelector, useDispatch } from "react-redux";
-import SearchBar from "./SearchBar";
+
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
-import { IoSearch, IoCartOutline, IoPersonSharp } from "react-icons/io5";
+import { IoSearch, IoPersonSharp } from "react-icons/io5";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { motion } from "framer-motion";

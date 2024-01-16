@@ -1,14 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SET_ALL_SONGS,
-  SET_ARTISTS,
-  SET_ALL_ARTISTS,
-  SET_LANGUAGE_FILTER,
-  SET_SONG,
-  SET_SONG_PLAYING,
-} from "../store/actions";
+import { SET_SONG, SET_SONG_PLAYING } from "../store/actions";
 const SearchCard = ({
   key,
   index,

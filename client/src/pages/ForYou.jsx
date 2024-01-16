@@ -29,7 +29,7 @@ const ForYou = () => {
   const allArtists = useSelector((state) => state.customization.allArtists);
   const [filteredSongs, setFilteredSongs] = useState(null);
   const userData = JSON.parse(window.localStorage.getItem("userData"));
-  const userDataID = userData.user._id;
+  const userDataID = userData?.user?._id;
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
