@@ -8,7 +8,6 @@ import AdminLayout from "../layouts/AdminLayout";
 const Login = Loadable(lazy(() => import("../pages/Login")));
 const Register = Loadable(lazy(() => import("../pages/Register")));
 const Trending = Loadable(lazy(() => import("../pages/Trending")));
-const Dashboard = Loadable(lazy(() => import("../pages/Dashboard")));
 const UserProfile = Loadable(lazy(() => import("../pages/UserProfile")));
 
 const UserPlaylist = Loadable(lazy(() => import("../pages/userPlaylist")));
@@ -72,10 +71,6 @@ const MainRoutes = [
       {
         path: "/Trending",
         element: <Trending />,
-      },
-      {
-        path: "/Dashboard",
-        element: <Dashboard />,
       },
       {
         path: "/UserProfile",

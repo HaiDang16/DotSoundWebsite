@@ -1,16 +1,12 @@
 import React, { useEffect } from "react";
 import { actionType } from "../context/reducer";
-import { useStateValue } from "../context/StateProvider";
 import { getAllAlbums, getAllArtist } from "../api";
 import { filterByLanguage, filters } from "../utils/supportfunctions";
-import FilterButtons from "../components/FilterButtons";
-import { MdClearAll } from "react-icons/md";
-import { motion } from "framer-motion";
+
 import { useSelector, useDispatch } from "react-redux";
 
 const Filter = ({ setFilteredSongs }) => {
   const dispatch = useDispatch();
-  const filterTerm = useSelector((state) => state.customization.filterTerm);
   const filterLang = useSelector((state) => state.customization.filterLang);
   const artists = useSelector((state) => state.customization.artists);
   const allAlbums = useSelector((state) => state.customization.allAlbums);
@@ -29,12 +25,6 @@ const Filter = ({ setFilteredSongs }) => {
     }
   }, []);
 
-  const updateFilter = (value) => {
-    dispatch({
-      type: actionType.SET_FILTER_TERM,
-      filterTerm: value,
-    });
-  };
   const updateFilterLanguage = (value) => {
     dispatch({
       type: actionType.SET_LANGUAGE_FILTER,
@@ -50,8 +40,6 @@ const Filter = ({ setFilteredSongs }) => {
   };
   return (
     <div className="w-full my-4 px-6 py-4 flex items-start md:justify-start gap-10">
-
-
       <div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

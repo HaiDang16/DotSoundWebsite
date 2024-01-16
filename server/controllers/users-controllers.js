@@ -309,9 +309,6 @@ const updateUserProfile = async (req, res) => {
     CusPassword,
     userID,
   } = req.body;
-  console.log("userID: ", userID);
-  console.log("CusFirstName: ", CusFirstName);
-
   try {
     users = await User.findById(userID);
 

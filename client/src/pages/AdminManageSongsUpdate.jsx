@@ -1,14 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import { useSelector, useDispatch } from "react-redux";
+import { ref, deleteObject } from "firebase/storage";
 import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
-import { BiCloudUpload } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
 import {
@@ -16,22 +10,12 @@ import {
   getAllArtist,
   getAllCategories,
   getAllSongs,
-  createSong,
   getSongDetails,
   updateSong,
 } from "../api";
-import { actionType } from "../context/reducer";
-import { filterByLanguage, filters } from "../utils/supportfunctions";
-import { IoMusicalNote } from "react-icons/io5";
-import AlertSuccess from "../components/AlertSuccess";
-import AlertError from "../components/AlertError";
-import AlertErrorBottom from "../components/AlertErrorBottom";
-import AlertSuccessBottom from "../components/AlertSuccessBottom";
-import { useSelector, useDispatch } from "react-redux";
+import { filterByLanguage } from "../utils/supportfunctions";
 import {
   SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ARTISTS,
   SET_ALL_ALBUMS,
   SET_ALL_CATEGORIES,
   SET_ALL_ARTISTS,
@@ -39,6 +23,7 @@ import {
   SET_ALBUM_FILTER,
   SET_LANGUAGE_FILTER,
   SET_CATEGORY_FILTER,
+  SET_FILTER_TERM,
 } from "../store/actions";
 import {
   FilterButtonsCategory,
@@ -48,6 +33,8 @@ import {
   DisabledButton,
   FilterButtonsArtist,
   FilterButtonsAlbum,
+  AlertErrorBottom,
+  AlertSuccessBottom,
 } from "../components";
 
 const DashboardNewSong = () => {
@@ -111,29 +98,22 @@ const DashboardNewSong = () => {
       setAudioAsset(songData.songURL);
     });
   }, []);
-  console.log("artistFilter: ", artistFilter);
-  console.log("albumFilter: ", albumFilter);
-  console.log("languageFilter: ", languageFilter);
-  console.log("categoryFilter: ", categoryFilter);
 
   useEffect(() => {
     if (!allArtists) {
       getAllArtist().then((data) => {
-        console.log("getAllArtist res: ", data);
         dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artists });
       });
     }
 
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        console.log("getAllAlbums res: ", data);
         dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.albums });
       });
     }
 
     if (!allCategories) {
       getAllCategories().then((res) => {
-        console.log("getAllCategories res: ", res);
         dispatch({ type: SET_ALL_CATEGORIES, allCategories: res.categories });
       });
     }
@@ -240,13 +220,13 @@ const DashboardNewSong = () => {
           setSongName("");
           setSongImageUrl(null);
           setAudioAsset(null);
-          dispatch({ type: actionType.SET_ARTIST_FILTER, artistFilter: null });
+          dispatch({ type: SET_ARTIST_FILTER, artistFilter: null });
           dispatch({
-            type: actionType.SET_LANGUAGE_FILTER,
+            type: SET_LANGUAGE_FILTER,
             languageFilter: null,
           });
-          dispatch({ type: actionType.SET_ALBUM_FILTER, albumFilter: null });
-          dispatch({ type: actionType.SET_FILTER_TERM, filterTerm: null });
+          dispatch({ type: SET_ALBUM_FILTER, albumFilter: null });
+          dispatch({ type: SET_FILTER_TERM, filterTerm: null });
         } else {
           setSetAlert("error");
           setAlertMsg(res.data.message);

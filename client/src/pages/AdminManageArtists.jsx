@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, NavLink } from "react-router-dom";
 import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
 import { getAllArtist } from "../api";
-import { actionType } from "../context/reducer";
 import { MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ARTISTS,
   SET_ALL_ARTISTS,
 } from "../store/actions";
 import { AiOutlineClear } from "react-icons/ai";
-import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
+import { IoAdd} from "react-icons/io5";
 
 const DashboardArtist = () => {
   const dispatch = useDispatch();
@@ -26,7 +21,6 @@ const DashboardArtist = () => {
   useEffect(() => {
     if (!allArtists) {
       getAllArtist().then((data) => {
-        console.log("getAllArtist res: ", data.artists);
         dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artists });
       });
     }
@@ -111,7 +105,6 @@ export const AritstContainer = ({ data }) => {
 
 export const ArtistCard = ({ data, index }) => {
   const [isDelete, setIsDelete] = useState(false);
-  console.log("ArtistCard data: ", data);
   const navigate = useNavigate();
   const handleEditClick = () => {
     navigate(`/Admin/ManageArtists/Update?id=${data._id}`);

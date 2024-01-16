@@ -1,38 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import React, { useState } from "react";
+import { ref, deleteObject } from "firebase/storage";
 import { motion } from "framer-motion";
-
-import { BiCloudUpload } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
-import {
-  getAllAlbums,
-  getAllArtist,
-  getAllCategories,
-  getAllSongs,
-  saveNewAlbum,
-  createArtist,
-  saveNewSong,
-} from "../api";
-import { actionType } from "../context/reducer";
-import { filterByLanguage, filters } from "../utils/supportfunctions";
-import { IoMusicalNote } from "react-icons/io5";
+import { getAllArtist, createArtist } from "../api";
 import AlertSuccess from "../components/AlertSuccess";
 import AlertError from "../components/AlertError";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ARTISTS,
-  SET_ALL_ALBUMS,
-  SET_ALL_CATEGORIES,
-} from "../store/actions";
+import { SET_ARTISTS } from "../store/actions";
 import { ImageLoader, ImageUploader, DisabledButton } from "../components";
 
 const AddNewArtist = () => {
@@ -79,10 +54,8 @@ const AddNewArtist = () => {
         instagram: instagram,
       };
       createArtist(data).then((res) => {
-        console.log("saveNewArtist res: ", res);
-
         getAllArtist().then((artistData) => {
-          dispatch({ type: actionType.SET_ARTISTS, artists: artistData.data });
+          dispatch({ type: SET_ARTISTS, artists: artistData.data });
         });
       });
       setIsArtist(false);

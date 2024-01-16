@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineClear } from "react-icons/ai";
 import { motion } from "framer-motion";
-import { getAllUsers } from "../api";
-import { actionType } from "../context/reducer";
-import { useStateValue } from "../context/StateProvider";
+import { getAllUsers } from "../api"; 
 import DashboardUserCard from "./DashboardUserCard";
 import { useSelector, useDispatch } from "react-redux";
-import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
+import { IoAdd,   } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
+import { 
   SET_ALL_USERS,
 } from "../store/actions";
 
@@ -24,8 +20,7 @@ const DashboardUser = () => {
 
   useEffect(() => {
     if (!allUsers) {
-      getAllUsers().then((data) => {
-        console.log("getAllUsers res: ", data);
+      getAllUsers().then((data) => { 
         dispatch({
           type: SET_ALL_USERS,
           allUsers: data.users,

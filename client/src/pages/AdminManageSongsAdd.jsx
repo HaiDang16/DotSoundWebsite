@@ -1,14 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  getStorage,
   ref,
-  getDownloadURL,
-  uploadBytesResumable,
   deleteObject,
 } from "firebase/storage";
 import { motion } from "framer-motion";
-
-import { BiCloudUpload } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
 import {
@@ -19,15 +14,11 @@ import {
   createSong,
 } from "../api";
 import { actionType } from "../context/reducer";
-import { filterByLanguage, filters } from "../utils/supportfunctions";
-import { IoMusicalNote } from "react-icons/io5";
+import { filterByLanguage } from "../utils/supportfunctions";
 import AlertSuccess from "../components/AlertSuccess";
 import AlertError from "../components/AlertError";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ARTISTS,
   SET_ALL_ALBUMS,
   SET_ALL_CATEGORIES,
   SET_ALL_ARTISTS,
@@ -71,27 +62,22 @@ const DashboardNewSong = () => {
   const categoryFilter = useSelector(
     (state) => state.customization.categoryFilter
   );
-  console.log("albumFilter: ", albumFilter);
-  console.log("categoryFilter: ", categoryFilter);
 
   useEffect(() => {
     if (!allArtists) {
       getAllArtist().then((data) => {
-        console.log("getAllArtist res: ", data);
         dispatch({ type: SET_ALL_ARTISTS, allArtists: data.artists });
       });
     }
 
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        console.log("getAllAlbums res: ", data);
         dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.albums });
       });
     }
 
     if (!allCategories) {
       getAllCategories().then((res) => {
-        console.log("getAllCategories res: ", res);
         dispatch({ type: SET_ALL_CATEGORIES, allCategories: res.categories });
       });
     }

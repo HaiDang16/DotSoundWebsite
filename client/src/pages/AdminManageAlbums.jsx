@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useStateValue } from "../context/StateProvider";
-
 import { motion } from "framer-motion";
-import { MdDelete } from "react-icons/md";
-import { actionType } from "../context/reducer";
 import { getAllAlbums, deleteAlbumsById } from "../api";
 import { MdEdit } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  SET_ALL_SONGS,
-  SET_SONG_PLAYING,
-  SET_ALL_ALBUMS,
-} from "../store/actions";
+import { SET_ALL_ALBUMS } from "../store/actions";
 import { NavLink } from "react-router-dom";
-import { IoAdd, IoPause, IoPlay, IoTrash } from "react-icons/io5";
+import { IoAdd } from "react-icons/io5";
 import { AiOutlineClear } from "react-icons/ai";
 
 const DashboardAlbum = () => {
@@ -26,7 +18,6 @@ const DashboardAlbum = () => {
   useEffect(() => {
     if (!allAlbums) {
       getAllAlbums().then((data) => {
-        console.log("getAllAlbums res: ", data);
         dispatch({ type: SET_ALL_ALBUMS, allAlbums: data.albums });
       });
     }
@@ -39,7 +30,6 @@ const DashboardAlbum = () => {
           data.albumName.toLowerCase().includes(albumFilter) ||
           data.albumArtist.albumArtistName.toLowerCase().includes(albumFilter)
       );
-      console.log("filtered: ", filtered);
       setFilteredAlbums(filtered);
     } else {
       setFilteredAlbums(null);

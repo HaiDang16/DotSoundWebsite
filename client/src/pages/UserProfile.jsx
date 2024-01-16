@@ -1,59 +1,39 @@
-import AlertError from "../components/AlertError";
-
-import { useSelector, useDispatch } from "react-redux";
-// import AlertSuccess from "../../components/shared/AlertSuccess";
+import { useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
-// import Loading from "../../components/users/Loading";
 import User_ChangePass from "../components/User_ChangePass";
-import { FaCheckCircle } from "react-icons/fa";
-import axios from "axios";
 import SideBar from "../layouts/UserLayout/SideBar";
 import AlertErrorBottom from "../components/AlertErrorBottom";
 import AlertSuccessBottom from "../components/AlertSuccessBottom";
 import { getUserDetails, updateUserProfileWithOutPassword } from "../api";
 import { SET_USER } from "../store/actions";
-const moment = require("moment");
 function splitFullName(fullName) {
   const parts = fullName.split(" ");
   const firstName = parts[parts.length - 1]; // Phần tên
-
   // Nếu có phần còn lại, nó sẽ là các phần trước phần cuối cùng
   const restOfName = parts.slice(0, parts.length - 1).join(" ");
-
   return {
     firstName,
     restOfName,
   };
 }
 
-const Home = () => {
+const UserProfile = () => {
   const dispatch = useDispatch();
   const userData = JSON.parse(window.localStorage.getItem("userData"));
-  const userDataID = userData.user._id;
+  const userDataID = userData?.user._id;
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const phoneRegex = /^\d{9,10}$/;
 
-  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const [loadedDetails, setLoadedDetails] = useState();
   const [updated, setUpdated] = useState(0);
   const [userFullName, setUserFullName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPhoneNum, setUserPhoneNum] = useState();
-  const [userDOB, setUserDOB] = useState("");
-  const [userSex, setUserSex] = useState(null);
   const [isUpdatedPopup, setIsUpdatedPopup] = useState(false);
   const [isChangePasswordPopup, setIsChangePasswordPopup] = useState(false);
   const [isAlert, setIsAlert] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
-  const [handleError, setHandleError] = useState({
-    errFullName: null,
-    errEmail: null,
-    errPhoneNum: null,
-    errDOB: null,
-    errSex: null,
-  });
   const handleClose = () => {
     setShowChangePassword(false);
   };
@@ -63,36 +43,16 @@ const Home = () => {
 
   const handlePhoneNumChange = (e) => {
     setUserPhoneNum(e.target.value);
-    setHandleError({
-      errPhoneNum: "",
-    });
   };
   const handleFullNameChange = (e) => {
     setUserFullName(e.target.value);
-    setHandleError({
-      errFullName: "",
-    });
   };
   const handleEmailChange = (e) => {
     setUserEmail(e.target.value);
-    setHandleError({
-      errEmail: "",
-    });
   };
-  const clearError = () => {
-    setHandleError({
-      errFullName: null,
-      errEmail: null,
-      errPhoneNum: null,
-      errDOB: null,
-      errSex: null,
-    });
-  };
+
   useEffect(() => {
     getUserDetails(userDataID).then((res) => {
-      console.log("getUserDetails res: ", res);
-      setLoadedDetails(res.user);
-      console.log(res.user);
       setUserFullName(`${res.user.cusLastName} ${res.user.cusFirstName}`);
       setUserEmail(res.user.cusEmail);
       setUserPhoneNum(res.user.cusPhoneNum);
@@ -102,22 +62,32 @@ const Home = () => {
   const handleUpdateUserProfile = async (event) => {
     event.preventDefault();
     if (!userFullName) {
-      setHandleError({
-        errFullName: "Họ tên không được để trống",
-      });
+      setAlertMessage("Họ tên không được để trống");
+      setIsAlert("error");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
       return;
     } else if (!userEmail) {
-      setHandleError({
-        errEmail: "Email không được để trống",
-      });
+      setAlertMessage("Email không được để trống");
+      setIsAlert("error");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
       return;
     } else if (!emailRegex.test(userEmail)) {
-      setHandleError({ errEmail: "Email không hợp lệ. Vui lòng kiểm tra lại" });
+      setAlertMessage("Email không hợp lệ. Vui lòng kiểm tra lại");
+      setIsAlert("error");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
       return;
     } else if (userPhoneNum && !phoneRegex.test(userPhoneNum)) {
-      setHandleError({
-        errPhoneNum: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại",
-      });
+      setAlertMessage("Số điện thoại không hợp lệ. Vui lòng kiểm tra lại");
+      setIsAlert("error");
+      setTimeout(() => {
+        setIsAlert(null);
+      }, 2000);
       return;
     }
 
@@ -138,9 +108,6 @@ const Home = () => {
         setTimeout(() => {
           setIsAlert(null);
           getUserDetails(userDataID).then((res) => {
-            console.log("getUserDetails res: ", res);
-            setLoadedDetails(res.user);
-            console.log(res.user);
             setUserFullName(`${res.user.cusLastName} ${res.user.cusFirstName}`);
             setUserEmail(res.user.cusEmail);
             setUserPhoneNum(res.user.cusPhoneNum);
@@ -273,4 +240,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default UserProfile;

@@ -1,22 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { ref, deleteObject } from "firebase/storage";
 import { motion } from "framer-motion";
-
 import { MdDelete } from "react-icons/md";
 import { storage } from "../config/firebase.config";
 import { getAllAlbums, getAllArtist, createAlbum } from "../api";
-import { actionType } from "../context/reducer";
-import AlertSuccess from "../components/AlertSuccess";
-import AlertError from "../components/AlertError";
-import { useSelector, useDispatch } from "react-redux";
-import { SET_ALL_ARTISTS } from "../store/actions";
-import { ImageLoader, ImageUploader, DisabledButton } from "../components";
+import { SET_ALL_ARTISTS, SET_ALL_ALBUMS } from "../store/actions";
+import {
+  ImageLoader,
+  ImageUploader,
+  DisabledButton,
+  AlertSuccess,
+  AlertError,
+} from "../components";
 
 const AddNewAlbum = () => {
   const [isAlbum, setIsAlbum] = useState(false);
@@ -79,7 +75,7 @@ const AddNewAlbum = () => {
         getAllAlbums().then((albumData) => {
           console.log("getAllAlbums res:", res);
           dispatch({
-            type: actionType.SET_ALL_ALBUMS,
+            type: SET_ALL_ALBUMS,
             albumData: albumData.data,
           });
         });

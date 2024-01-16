@@ -1,53 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { getAllSongs } from "../api";
-import { actionType } from "../context/reducer";
-import { useStateValue } from "../context/StateProvider";
-import Filter from "./Filter";
 import { motion } from "framer-motion";
-import { blue_200, blue_600, banner } from "../assets/img";
-import Release from "./Release";
-import { filterByLanguage } from "../utils/supportfunctions";
-import { getAllArtist } from "../api";
-import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
 import BackgroundLogin from "../assets/img/background_Login.jpg";
 import {
   getAllAlbums,
-  deleteAlbumsById,
   getPlaylistByUserID,
   getPlaylistDetails,
+  getAllArtist,
+  getAllSongs,
 } from "../api";
 import { useSelector, useDispatch } from "react-redux";
 import {
   SET_ALL_SONGS,
   SET_SONG_PLAYING,
-  SET_ARTISTS,
   SET_ALL_ARTISTS,
   SET_ALL_ALBUMS,
   SET_SONG,
   RESET_PLAYLIST,
   SET_CURRENT_PLAYLIST,
 } from "../store/actions";
-import {
-  NewReleaseSongsCard,
-  DiscoverySongsCard,
-  Top10SongsCard,
-  CategorySongsCard,
-  ForYou_SongCard,
-} from "../components";
+import { ForYou_SongCard } from "../components";
 const ForYou = () => {
   const dispatch = useDispatch();
   const allAlbums = useSelector((state) => state.customization.allAlbums);
-  const artists = useSelector((state) => state.customization.artists);
   const languageFilter = useSelector(
     (state) => state.customization.languageFilter
   );
-  const filterTerm = useSelector((state) => state.customization.filterTerm);
   const allSongs = useSelector((state) => state.customization.allSongs);
   const allArtists = useSelector((state) => state.customization.allArtists);
   const [filteredSongs, setFilteredSongs] = useState(null);
   const userData = JSON.parse(window.localStorage.getItem("userData"));
-  const userDataID = userData.user._id;
+  const userDataID = userData?.user?._id;
   useEffect(() => {
     if (!allSongs) {
       getAllSongs().then((data) => {
